@@ -48,7 +48,7 @@ const TileGoal = ({ title, description }) => {
       extra={
         <GrExpand
           style={{
-            color: "#0052ff",
+            color: "#000",
             cursor: "pointer",
             display: isHovered ? "inline-block" : "none",
             transition: "opacity 0.3s"

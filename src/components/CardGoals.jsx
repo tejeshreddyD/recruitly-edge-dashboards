@@ -51,7 +51,7 @@ const CardGoals = () => {
             fontSize: "smaller",
           }}
         >
-          Add more
+          Customise
         </a>
       }
       title={
