@@ -2,6 +2,7 @@ import { Card } from "antd";
 import { useState } from "react";
 import { GrExpand } from "react-icons/gr";
 import { AgGauge } from "ag-charts-react";
+import "ag-charts-enterprise";
 
 const TileGoal = ({ id, title, description, onExpand }) => {
   const [isHovered, setIsHovered] = useState(false);

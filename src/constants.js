@@ -1,4 +1,4 @@
-import { iconSetQuartzBold, themeQuartz } from "@ag-grid-community/theming";
+import { iconSetQuartzBold, themeQuartz } from "ag-grid-community";
 
 export const RECRUITLY_AGGRID_THEME = themeQuartz.withPart(iconSetQuartzBold).withParams({
   borderColor: "#DADFE5",
