@@ -1,16 +1,49 @@
 import { Card } from "antd";
 import { useState } from "react";
 import { GrExpand } from "react-icons/gr";
+import { AgGauge } from "ag-charts-react";
 
 const { Meta } = Card;
 
 const TileGoal = ({ title, description }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const options = {
+    type: "radial-gauge",
+    value: 80,
+    startAngle: -135,
+    endAngle: 135,
+    scale: {
+      min: 0,
+      max: 100,
+      fill: "#e6e6ec",
+      label: {
+        enabled: false,
+      },
+    },
+    targets: [
+      {
+        value: 85,
+        shape: "star",
+        placement: "outside",
+        fill: "white",
+        strokeWidth: 2,
+        spacing: 2
+      }
+    ],
+    cornerRadius: 99,
+    cornerMode: "item",
+    bar: {
+      fill: "#35a124"
+    }
+  };
 
   return (
     <Card
       size={"small"}
-      styles={{ header: { border: "none", margin:0, fontSize: 16 } }}
+      style={{
+        backgroundColor: "#fff", // Change this to your desired color
+      }}
+      styles={{ body: { padding: 0 }, header: { border: "none", margin: 0, fontSize: 16 } }}
       title={title}
       extra={
         <GrExpand
@@ -25,9 +58,7 @@ const TileGoal = ({ title, description }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div>{description}</div>
-      <p>Card content</p>
-      <p>Card content</p>
+      <AgGauge options={options} />
     </Card>
   );
 };

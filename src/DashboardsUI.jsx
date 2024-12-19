@@ -1,6 +1,10 @@
 import CardGoals from "@components/CardGoals.jsx";
+import { RECRUITLY_AGGRID_LICENSE } from "@constants";
+import { LicenseManager } from 'ag-charts-enterprise';
 
 const DashboardsUI = ({ apiServer = "", apiKey = "", tenantId = "", userId = "" }) => {
+
+  LicenseManager.setLicenseKey(RECRUITLY_AGGRID_LICENSE);
 
   return (
     <div style={{

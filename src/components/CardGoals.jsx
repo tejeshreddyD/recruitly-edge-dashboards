@@ -1,8 +1,10 @@
-import { Card } from "antd";
+import { Card, Grid } from "antd";
 import TileGoal from "@components/TileGoal.jsx";
 import { TrophyOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import Sortable from "sortablejs";
+
+const { useBreakpoint } = Grid;
 
 const CardGoals = () => {
   const [data, setData] = useState([
@@ -11,9 +13,12 @@ const CardGoals = () => {
     { id: "3", title: "Learning", description: "Tile Desc 3" },
     { id: "4", title: "Networking", description: "Tile Desc 4" },
     { id: "5", title: "Achievements", description: "Tile Desc 5" },
+    { id: "6", title: "Interviews", description: "Tile Desc 5" },
+    { id: "7", title: "Jobs", description: "Tile Desc 5" },
   ]);
 
   const containerRef = useRef(null);
+  const screens = useBreakpoint();
 
   useEffect(() => {
     const sortable = Sortable.create(containerRef.current, {
@@ -68,7 +73,7 @@ const CardGoals = () => {
           <div
             key={item.id}
             style={{
-              width: "275px",
+              width: screens.md ? "275px" : "100%", // Full width if md is false (xs/sm), otherwise fixed width
             }}
           >
             <TileGoal title={item.title} description={item.description} />
