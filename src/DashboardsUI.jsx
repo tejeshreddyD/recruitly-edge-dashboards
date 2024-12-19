@@ -1,6 +1,7 @@
 import CardGoals from "@components/goals/CardGoals.jsx";
 import { RECRUITLY_AGGRID_LICENSE } from "@constants";
 import { LicenseManager } from 'ag-charts-enterprise';
+import CardUserPriority from "@components/userpriority/CardUserPriority.jsx";
 
 const DashboardsUI = ({ apiServer = "", apiKey = "", tenantId = "", userId = "" }) => {
 
@@ -13,7 +14,8 @@ const DashboardsUI = ({ apiServer = "", apiKey = "", tenantId = "", userId = "" 
       padding: 16,
       boxSizing: "border-box"
     }}>
-      <CardGoals title={"Hellp"} description={"Desc"} />
+      <CardGoals title={"Help"} description={"Desc"} />
+      <CardUserPriority userId={userId} tenantId={tenantId} />
     </div>
   );
 };
