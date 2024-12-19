@@ -1,4 +1,4 @@
-import CardGoals from "@components/CardGoals.jsx";
+import CardGoals from "@components/goals/CardGoals.jsx";
 import { RECRUITLY_AGGRID_LICENSE } from "@constants";
 import { LicenseManager } from 'ag-charts-enterprise';
 

@@ -1,21 +1,28 @@
 import { Alert, Card, Grid, Modal, Spin } from "antd";
-import TileGoal from "@components/TileGoal.jsx";
+import TileGoal from "@components/goals/TileGoal.jsx";
 import { TrophyOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import Sortable from "sortablejs";
-import { GoalDrillDownContext } from "@components/GoalDrillDownContext.jsx";
+import PlacementsDrillDown from "@components/goals/drilldown/PlacementsDrillDown.jsx";
+import JobsDrillDown from "@components/goals/drilldown/JobsDrillDown.jsx";
 
 const { useBreakpoint } = Grid;
 
-const CardGoals = () => {
+const drillDownComponents = {
+  placements: PlacementsDrillDown,
+  jobs: JobsDrillDown,
+};
+
+const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
+  // TODO: Load this data for the user from API
   const [data, setData] = useState([
-    { id: "1", title: "Placements", description: "Tile Desc 1" },
-    { id: "2", title: "Growth", description: "Tile Desc 2" },
-    { id: "3", title: "Learning", description: "Tile Desc 3" },
-    { id: "4", title: "Networking", description: "Tile Desc 4" },
-    { id: "5", title: "Achievements", description: "Tile Desc 5" },
-    { id: "6", title: "Interviews", description: "Tile Desc 5" },
-    { id: "7", title: "Jobs", description: "Tile Desc 5" }
+    { id: "1", drilldown: "placements", title: "Placements", description: "Tile Desc 1" },
+    { id: "2", drilldown: "placements", title: "Growth", description: "Tile Desc 2" },
+    { id: "3", drilldown: "placements", title: "Learning", description: "Tile Desc 3" },
+    { id: "4", drilldown: "jobs", title: "Networking", description: "Tile Desc 4" },
+    { id: "5", drilldown: "jobs", title: "Achievements", description: "Tile Desc 5" },
+    { id: "6", drilldown: "jobs", title: "Interviews", description: "Tile Desc 6" },
+    { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7" },
   ]);
 
   const containerRef = useRef(null);
@@ -37,25 +44,30 @@ const CardGoals = () => {
         updatedData.splice(newIndex, 0, movedItem);
 
         setData(updatedData);
-      }
+      },
     });
 
     // Cleanup on unmount
     return () => sortable.destroy();
   }, [data]);
-  const handleExpand = async (id) => {
-    console.log(`Expanding for ${id}`);
+
+  const handleExpand = async (tile) => {
     setDrillDownModalVisible(true);
     setIsDrillDownLoading(true);
     setDrillDownError(null);
     setDrillDownContent(null);
+
     try {
       // Simulate a server request with a delay
-      const response = await new Promise((resolve) =>
-        setTimeout(() => resolve({ data: `Detailed information for goal ID: ${id}` }), 500)
-      );
-      setDrillDownContent(response.data);
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
+      const ContentComponent = drillDownComponents[tile.drilldown];
+
+      if (ContentComponent) {
+        setDrillDownContent(<ContentComponent title={tile.title} />);
+      } else {
+        setDrillDownError("Unknown content type.");
+      }
     } catch (err) {
       setDrillDownError("Failed to load goal details.");
     } finally {
@@ -70,7 +82,6 @@ const CardGoals = () => {
 
   return (
     <>
-
       <Card
         style={{ backgroundColor: "#f0f2f5" }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
@@ -80,7 +91,7 @@ const CardGoals = () => {
             style={{
               cursor: "pointer",
               color: "gray",
-              fontSize: "smaller"
+              fontSize: "smaller",
             }}
           >
             Customise
@@ -88,9 +99,9 @@ const CardGoals = () => {
         }
         title={
           <span>
-          <TrophyOutlined style={{ marginRight: 8 }} />
-          My Goals
-        </span>
+            <TrophyOutlined style={{ marginRight: 8 }} />
+            My Goals
+          </span>
         }
       >
         <div
@@ -98,25 +109,28 @@ const CardGoals = () => {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "16px"
+            gap: "16px",
           }}
         >
           {data.map((item) => (
             <div
               key={item.id}
               style={{
-                width: screens.md ? "275px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
+                width: screens.md ? "275px" : "100%", // Full width if md is false (xs/sm), otherwise fixed width
               }}
             >
-              <GoalDrillDownContext.Provider value={handleExpand}>
-                <TileGoal title={item.title} description={item.description} />
-              </GoalDrillDownContext.Provider>
+              <TileGoal
+                title={item.title}
+                description={item.description}
+                onExpand={() => handleExpand(item)}
+              />
             </div>
           ))}
         </div>
       </Card>
+
       <Modal
-        width="80vw"              // Set width to 80% of the viewport width
+        width="80vw"
         style={{ top: 20 }}
         title="Goal Details"
         open={isDrillDownModalVisible}
@@ -128,7 +142,7 @@ const CardGoals = () => {
             <div style={{ minHeight: "100px" }} />
           </Spin>
         ) : drillDownError ? (
-          <Alert message={"Failed to load"} type="error" showIcon />
+          <Alert message={drillDownError} type="error" showIcon />
         ) : (
           <div style={{ minHeight: "500px" }}>{drillDownContent}</div>
         )}
