@@ -41,6 +41,7 @@ const CardGoals = () => {
 
   return (
     <Card
+      style={{ backgroundColor:"#f0f0f0"}}
       styles={{ header: { borderBottom: "none", fontSize: 18 } }}
       extra={
         <a
