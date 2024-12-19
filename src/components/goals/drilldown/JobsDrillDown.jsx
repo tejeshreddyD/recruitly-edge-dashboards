@@ -1,8 +1,8 @@
 import React from "react";
 
-const JobsDrillDown = ({ apiServer, apiKey, tenantId, userId }) => {
+const JobsDrillDown = ({ apiServer, apiKey, tenantId, userId, tile }) => {
   return (
-    <>Jobs DrillDown</>
+    <>Jobs DrillDown ${tile.title}</>
   );
 };
 

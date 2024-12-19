@@ -10,7 +10,7 @@ const { useBreakpoint } = Grid;
 
 const drillDownComponents = {
   placements: PlacementsDrillDown,
-  jobs: JobsDrillDown,
+  jobs: JobsDrillDown
 };
 
 const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
@@ -22,7 +22,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
     { id: "4", drilldown: "jobs", title: "Networking", description: "Tile Desc 4" },
     { id: "5", drilldown: "jobs", title: "Achievements", description: "Tile Desc 5" },
     { id: "6", drilldown: "jobs", title: "Interviews", description: "Tile Desc 6" },
-    { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7" },
+    { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7" }
   ]);
 
   const containerRef = useRef(null);
@@ -44,7 +44,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
         updatedData.splice(newIndex, 0, movedItem);
 
         setData(updatedData);
-      },
+      }
     });
 
     // Cleanup on unmount
@@ -64,7 +64,12 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
       const ContentComponent = drillDownComponents[tile.drilldown];
 
       if (ContentComponent) {
-        setDrillDownContent(<ContentComponent title={tile.title} />);
+        setDrillDownContent(<ContentComponent apiKey={apiKey}
+                                              apiServer={apiServer}
+                                              userId={userId}
+                                              tenantId={tenantId}
+                                              tile={tile} />
+        );
       } else {
         setDrillDownError("Unknown content type.");
       }
@@ -91,7 +96,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
             style={{
               cursor: "pointer",
               color: "gray",
-              fontSize: "smaller",
+              fontSize: "smaller"
             }}
           >
             Customise
@@ -109,14 +114,14 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "16px",
+            gap: "16px"
           }}
         >
           {data.map((item) => (
             <div
               key={item.id}
               style={{
-                width: screens.md ? "275px" : "100%", // Full width if md is false (xs/sm), otherwise fixed width
+                width: screens.md ? "275px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
               }}
             >
               <TileGoal

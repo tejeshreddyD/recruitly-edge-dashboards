@@ -1,8 +1,8 @@
 import React from "react";
 
-const PlacementsDrillDown = ({ apiServer, apiKey, tenantId, userId }) => {
+const PlacementsDrillDown = ({ apiServer, apiKey, tenantId, userId, tile }) => {
   return (
-    <>Placements DrillDown</>
+    <>Placements DrillDown - {tile.title}</>
   );
 };
 
