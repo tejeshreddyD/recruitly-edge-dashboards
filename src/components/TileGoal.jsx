@@ -1,12 +1,15 @@
-import { Card } from "antd";
-import { useState } from "react";
+import { Card, Modal, Spin, Alert } from "antd";
+import { useContext, useState } from "react";
 import { GrExpand } from "react-icons/gr";
 import { AgGauge } from "ag-charts-react";
+import { GoalDrillDownContext } from "@components/GoalDrillDownContext.jsx";
 
 const { Meta } = Card;
 
-const TileGoal = ({ title, description }) => {
+const TileGoal = ({ id = "placements", title, description }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const handleExpand = useContext(GoalDrillDownContext);
+
   const options = {
     type: "radial-gauge",
     value: 80,
@@ -17,8 +20,8 @@ const TileGoal = ({ title, description }) => {
       max: 100,
       fill: "#e6e6ec",
       label: {
-        enabled: false,
-      },
+        enabled: false
+      }
     },
     targets: [
       {
@@ -38,28 +41,32 @@ const TileGoal = ({ title, description }) => {
   };
 
   return (
-    <Card
-      size={"small"}
-      style={{
-        backgroundColor: "#fff", // Change this to your desired color
-      }}
-      styles={{ body: { padding: 0 }, header: { border: "none", margin: 0, fontSize: 16 } }}
-      title={title}
-      extra={
-        <GrExpand
-          style={{
-            color: "#000",
-            cursor: "pointer",
-            display: isHovered ? "inline-block" : "none",
-            transition: "opacity 0.3s"
-          }}
-        />
-      }
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <AgGauge options={options} />
-    </Card>
+    <>
+      <Card
+        hoverable
+        size="small"
+        style={{
+          backgroundColor: "#fff"
+        }}
+        styles={{ body: { padding: 0 }, header: { border: "none", margin: 0, fontSize: 16 } }}
+        title={title}
+        extra={
+          <GrExpand
+            onClick={() => handleExpand(id)}
+            style={{
+              color: "#000",
+              cursor: "pointer",
+              display: isHovered ? "inline-block" : "none",
+              transition: "opacity 0.3s"
+            }}
+          />
+        }
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <AgGauge options={options} />
+      </Card>
+    </>
   );
 };
 
