@@ -1,10 +1,11 @@
-import { Alert, Card, Grid, Modal, Spin } from "antd";
+import { Alert, Card, Grid, Modal, Popover, Spin } from "antd";
 import TileGoal from "@components/goals/TileGoal.jsx";
 import { TrophyFilled, TrophyOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import Sortable from "sortablejs";
 import PlacementsDrillDown from "@components/goals/drilldown/PlacementsDrillDown.jsx";
 import JobsDrillDown from "@components/goals/drilldown/JobsDrillDown.jsx";
+import GoalSelector from "@components/goals/GoalSelector.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -14,15 +15,30 @@ const drillDownComponents = {
 };
 
 const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
+
+  const [goalSelectorOpen, setGoalSelectorOpen] = useState(false);
+  const showGoalSel = () => {
+    setGoalSelectorOpen(true);
+  };
+  const onGoalSelectorClose = () => {
+    setGoalSelectorOpen(false);
+  };
+
   // TODO: Load this data for the user from API
   const [data, setData] = useState([
-    { id: "1", drilldown: "placements", title: "A very long title goes here - may be activity type", description: "Tile Desc 1", type:"currency" },
-    { id: "2", drilldown: "placements", title: "Growth", description: "Tile Desc 2", type:"currency" },
-    { id: "3", drilldown: "placements", title: "Learning", description: "Tile Desc 3", type:"currency" },
-    { id: "4", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type:"counter" },
-    { id: "5", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type:"counter"  },
-    { id: "6", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type:"counter"  },
-    { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7", type:"counter"  }
+    {
+      id: "1",
+      drilldown: "placements",
+      title: "A very long title goes here - may be activity type",
+      description: "Tile Desc 1",
+      type: "currency"
+    },
+    { id: "2", drilldown: "placements", title: "Growth", description: "Tile Desc 2", type: "currency" },
+    { id: "3", drilldown: "placements", title: "Learning", description: "Tile Desc 3", type: "currency" },
+    { id: "4", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type: "counter" },
+    { id: "5", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type: "counter" },
+    { id: "6", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type: "counter" },
+    { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7", type: "counter" }
   ]);
 
   const containerRef = useRef(null);
@@ -91,16 +107,16 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
             style={{ backgroundColor: "#1e3a8a" }}
             styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
             extra={
-              <a
-                href="#"
-                style={{
-                  cursor: "pointer",
-                  color: "white",
-                  fontSize: "smaller"
-                }}
+
+              <span onClick={showGoalSel}
+                    style={{
+                      cursor: "pointer",
+                      color: "white",
+                      fontSize: "smaller"
+                    }}
               >
                 Customise
-              </a>
+              </span>
             }
             title={
               <span>
@@ -151,6 +167,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
           <div style={{ minHeight: "500px" }}>{drillDownContent}</div>
         )}
       </Modal>
+      <GoalSelector open={goalSelectorOpen} onClose={onGoalSelectorClose}  tenantId={tenantId} userId={userId} apiServer={apiServer} apiKey={apiKey}></GoalSelector>
     </>
   );
 };
