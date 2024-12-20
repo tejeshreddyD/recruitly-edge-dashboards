@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from "react";
 import { AgCharts } from 'ag-charts-react';
 import 'ag-charts-enterprise';
 
@@ -24,6 +24,8 @@ const PriorityChart = () => {
     return data;
   }
 
+  const containerRef = useRef(null);
+
   const [options, setOptions] = useState({
     data: getData(),
     series: [
@@ -36,6 +38,7 @@ const PriorityChart = () => {
         colorKey: 'count',
         colorName: 'Count',
         strokeWidth: 1,
+        colorRange:['#D3D3D3', '#7E60BF'],
         highlightStyle: {
           fill: 'rgba(255, 255, 255, 0.2)',
         },
@@ -67,7 +70,9 @@ const PriorityChart = () => {
     ],
   });
 
-  return <AgCharts options={options} />;
+  return (<div className={"center"} ref={containerRef} style={{marginTop:"5px"}}>
+    <AgCharts options={options} />
+  </div>);
 };
 
 export default PriorityChart;
