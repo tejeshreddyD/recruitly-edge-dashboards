@@ -15,7 +15,7 @@ const CardUserPriority = () => {const [data, setData] = useState([
   { id: "2", title: "Tasks", description: "Tile Desc 2",icon:<FaTasks size={18} style={{marginRight:4}}/> },
   { id: "3", title: "Interviews", description: "Tile Desc 3", icon: <FaMicrophoneAlt size={18} style={{marginRight:4}}/> },
   { id: "4", title: "Meetings", description: "Calendar Events", icon: <FaRegCalendar size={18} style={{marginRight:4}}/> },
-  { id: "5", title: "Custom Actions", description: "Tile Desc 5", icon: <MdOutlinePendingActions size={18} style={{marginRight:4}}/> },
+  { id: "5", title: "Next Actions", description: "Tile Desc 5", icon: <MdOutlinePendingActions size={18} style={{marginRight:4}}/> },
   { id: "6", title: "Reminders", description: "Tile Desc 5", icon: <MdAlarm size={18} style={{marginRight:4}}/> },
 ]);
 
@@ -80,7 +80,7 @@ const CardUserPriority = () => {const [data, setData] = useState([
             <div
               key={item.id}
               style={{
-                width: screens.md ? "275px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
+                width: screens.md ? "225px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
               }}
             >
               <TileItem title={item.title} icon={item.icon} description={item.description} />
@@ -89,7 +89,7 @@ const CardUserPriority = () => {const [data, setData] = useState([
         </div>
       </Card>
       <Modal
-        width="80vw"              // Set width to 80% of the viewport width
+        width="80vw"
         style={{ top: 20 }}
         title="Goal Details"
         open={isDrillDownModalVisible}
