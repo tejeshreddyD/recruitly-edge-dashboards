@@ -51,7 +51,7 @@ const CardUserPriority = () => {const [data, setData] = useState([
   return (
     <>
       <Card
-        style={{ backgroundColor: "#f0f2f5", marginTop: "2rem" }}
+        style={{marginTop: "2rem" }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
         extra={
           <Segmented

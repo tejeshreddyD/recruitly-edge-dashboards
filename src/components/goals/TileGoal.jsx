@@ -12,6 +12,9 @@ const TileGoal = ({ id, title, description, onExpand }) => {
     value: 80,
     startAngle: -135,
     endAngle: 135,
+    background: {
+      fill: 'transparent',
+    },
     scale: {
       min: 0,
       max: 100,
@@ -42,7 +45,7 @@ const TileGoal = ({ id, title, description, onExpand }) => {
       hoverable
       size="small"
       style={{ backgroundColor: "#fff" }}
-      styles={{ body: { padding: 0 }, header: { border: "none", margin: 0, fontSize: 16 } }}
+      styles={{ body: { padding: 0 }, header: {border: "none", margin: 0, fontSize: 16 } } }
       title={title}
       extra={
         <GrExpand

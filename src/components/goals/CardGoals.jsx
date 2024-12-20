@@ -1,6 +1,6 @@
 import { Alert, Card, Grid, Modal, Spin } from "antd";
 import TileGoal from "@components/goals/TileGoal.jsx";
-import { TrophyOutlined } from "@ant-design/icons";
+import { TrophyFilled, TrophyOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import Sortable from "sortablejs";
 import PlacementsDrillDown from "@components/goals/drilldown/PlacementsDrillDown.jsx";
@@ -20,8 +20,8 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
     { id: "2", drilldown: "placements", title: "Growth", description: "Tile Desc 2" },
     { id: "3", drilldown: "placements", title: "Learning", description: "Tile Desc 3" },
     { id: "4", drilldown: "jobs", title: "Networking", description: "Tile Desc 4" },
-    { id: "5", drilldown: "jobs", title: "Achievements", description: "Tile Desc 5" },
-    { id: "6", drilldown: "jobs", title: "Interviews", description: "Tile Desc 6" },
+    { id: "5", drilldown: "jobs", title: "Networking", description: "Tile Desc 4" },
+    { id: "6", drilldown: "jobs", title: "Networking", description: "Tile Desc 4" },
     { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7" }
   ]);
 
@@ -87,27 +87,27 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
 
   return (
     <>
-      <Card
-        style={{ backgroundColor: "#f0f2f5" }}
-        styles={{ header: { borderBottom: "none", fontSize: 18 } }}
-        extra={
-          <a
-            href="#"
-            style={{
-              cursor: "pointer",
-              color: "gray",
-              fontSize: "smaller"
-            }}
-          >
-            Customise
-          </a>
-        }
-        title={
-          <span>
+      <Card bordered
+            style={{ backgroundColor: "#0052ac" }}
+            styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
+            extra={
+              <a
+                href="#"
+                style={{
+                  cursor: "pointer",
+                  color: "white",
+                  fontSize: "smaller"
+                }}
+              >
+                Customise
+              </a>
+            }
+            title={
+              <span>
             <TrophyOutlined style={{ marginRight: 8 }} />
-            My Goals
+            Goals
           </span>
-        }
+            }
       >
         <div
           ref={containerRef}
@@ -121,7 +121,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
             <div
               key={item.id}
               style={{
-                width: screens.md ? "275px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
+                width: screens.md ? "200px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
               }}
             >
               <TileGoal

@@ -11,6 +11,7 @@ const DashboardsUI = ({ apiServer = "", apiKey = "", tenantId = "", userId = "" 
 
   return (
     <div style={{
+      backgroundColor: "#f0f2f5",
       height: "100vh",
       overflowY: "auto",
       padding: 16,
