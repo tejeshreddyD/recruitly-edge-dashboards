@@ -1,10 +1,37 @@
-import React from "react";
-import { Card, Timeline } from "antd";
+import React, { useState } from "react";
+import { Card, Flex, Timeline } from "antd";
 import { CheckCircleOutlined, ClockCircleOutlined, UserOutlined, CalendarOutlined } from "@ant-design/icons";
+import { RiCalendarView, RiFocus2Line } from "react-icons/ri";
+import { BsCalendarDateFill, BsCalendarDay } from "react-icons/bs";
+import { MdCalendarViewDay } from "react-icons/md";
+import { GrExpand } from "react-icons/gr";
 
-const DailyTimeline = () => {
+const DailyTimeline = ({ title = "Today", color = "#f0f6ff" }) => {
+
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <Card title={"Today"} styles={{header:{borderBottom:0}}}>
+    <Card
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      extra={
+        <GrExpand
+          style={{
+            color: "#000",
+            cursor: "pointer",
+            display: isHovered ? "inline-block" : "none",
+            transition: "opacity 0.3s"
+          }}
+        />
+      }
+      title={
+        <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
+          <RiCalendarView />
+          <span>{title}</span>
+        </Flex>
+      }
+      styles={{ header: { borderBottom: 0 } }}
+      style={{ backgroundColor: `${color}`, width: "350px", overflow: "wrap", marginBottom: 10 }}>
       <Timeline mode="left" style={{ margin: "20px 0" }}>
         <Timeline.Item dot={<CheckCircleOutlined style={{ fontSize: "16px", color: "#52c41a" }} />} color="green">
           <strong>9:00 AM</strong> – Review 10 job applications 🚀
