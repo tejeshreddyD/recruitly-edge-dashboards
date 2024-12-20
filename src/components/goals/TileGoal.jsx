@@ -96,6 +96,7 @@ const TileGoal = ({ tileData, onExpand }) => {
         <Text>
           <TrendUp />
         </Text>,
+        <TrophyOutlined/>,
         <PiTelevisionBold />
       ]}
     >
