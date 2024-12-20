@@ -44,7 +44,7 @@ const TileGoal = ({ id, title, description, onExpand }) => {
     <Card
       hoverable
       size="small"
-      style={{ backgroundColor: "#fff" }}
+      style={{ backgroundImage: "linear-gradient(145deg, rgb(227 252 255) 28%, rgb(255 255 255))" }}
       styles={{ body: { padding: 0 }, header: {border: "none", margin: 0, fontSize: 16 } } }
       title={title}
       extra={

@@ -121,7 +121,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
             <div
               key={item.id}
               style={{
-                width: screens.md ? "200px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
+                width: screens.md ? "185px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
               }}
             >
               <TileGoal
