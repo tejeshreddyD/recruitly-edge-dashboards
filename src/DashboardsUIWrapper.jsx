@@ -14,6 +14,8 @@ const DashboardsUIWithProvider = (props) => (
 
 const DashboardsUIWrapper = ({ apiServer, apiKey, userId, tenantId }) => {
 
+  console.log("Initializing DashboardsUIWrapper");
+
   initializeApiManager(apiKey);
 
   return (

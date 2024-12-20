@@ -5,6 +5,7 @@ let apiManager = null;
 
 export const initializeApiManager = (apiKey) => {
   if (!apiManager) {
+    console.log("Initializing ApiManager");
     // Create an Axios instance with base configuration
     apiManager = axios.create({
       baseURL: "https://api.edge.recruitly.io/api",
