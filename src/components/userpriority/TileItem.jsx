@@ -18,7 +18,19 @@ const TileItem = ({ id = "",icon, title, onExpand }) => {
 
   const cardBodyMetricStyle = useMemo(() => {
     return { fontWeight: "inherit", fontSize: "32px" };
-  },[])
+  },[]);
+
+  const cardExpandBtn = useMemo(() => {
+    return (<GrExpand
+      title={`View ${title}`}
+      style={{
+        color: "gray",
+        cursor: "pointer",
+        display: isHovered ? "inline-block" : "none",
+        transition: "opacity 0.3s"
+      }}
+    />)
+  },[isHovered])
 
   return (
     <>
@@ -30,17 +42,7 @@ const TileItem = ({ id = "",icon, title, onExpand }) => {
         }}
         styles={{ body:cardBodyStyles, header: { border: "none", margin: 0 } }}
         title={renderTitle(title)}
-        extra={
-          <GrExpand
-            title={`View ${title}`}
-            style={{
-              color: "gray",
-              cursor: "pointer",
-              display: isHovered ? "inline-block" : "none",
-              transition: "opacity 0.3s"
-            }}
-          />
-        }
+        extra={cardExpandBtn}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
