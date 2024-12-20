@@ -7,21 +7,44 @@ import { RiFocus2Line } from "react-icons/ri";
 import Sortable from "sortablejs";
 
 import TileItem from "@components/userpriority/TileItem.jsx";
+import DayTimeline from "@components/userpriority/DayTimeline.jsx";
 
 const { useBreakpoint } = Grid;
 
-const CardUserPriority = () => {const [data, setData] = useState([
-  { id: "1", title: "Job Applications", description: "Tile Desc 1", icon:<CgWebsite size={18} style={{marginRight:4}}/> },
-  { id: "2", title: "Tasks", description: "Tile Desc 2",icon:<FaTasks size={18} style={{marginRight:4}}/> },
-  { id: "3", title: "Interviews", description: "Tile Desc 3", icon: <FaMicrophoneAlt size={18} style={{marginRight:4}}/> },
-  { id: "4", title: "Meetings", description: "Calendar Events", icon: <FaRegCalendar size={18} style={{marginRight:4}}/> },
-  { id: "5", title: "Next Actions", description: "Tile Desc 5", icon: <MdOutlinePendingActions size={18} style={{marginRight:4}}/> },
-  { id: "6", title: "Reminders", description: "Tile Desc 5", icon: <MdAlarm size={18} style={{marginRight:4}}/> },
-]);
+const CardUserPriority = () => {
+  const [data, setData] = useState([
+    {
+      id: "1",
+      title: "Job Applications",
+      description: "Tile Desc 1",
+      icon: <CgWebsite size={18} style={{ marginRight: 4 }} />
+    },
+    { id: "2", title: "Tasks", description: "Tile Desc 2", icon: <FaTasks size={18} style={{ marginRight: 4 }} /> },
+    {
+      id: "3",
+      title: "Interviews",
+      description: "Tile Desc 3",
+      icon: <FaMicrophoneAlt size={18} style={{ marginRight: 4 }} />
+    },
+    {
+      id: "4",
+      title: "Meetings",
+      description: "Calendar Events",
+      icon: <FaRegCalendar size={18} style={{ marginRight: 4 }} />
+    },
+    {
+      id: "5",
+      title: "Next Actions",
+      description: "Tile Desc 5",
+      icon: <MdOutlinePendingActions size={18} style={{ marginRight: 4 }} />
+    },
+    { id: "6", title: "Reminders", description: "Tile Desc 5", icon: <MdAlarm size={18} style={{ marginRight: 4 }} /> }
+  ]);
 
   const containerRef = useRef(null);
   const screens = useBreakpoint();
-  const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);const [drillDownContent, setDrillDownContent] = useState(null);
+  const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
+  const [drillDownContent, setDrillDownContent] = useState(null);
   const [isDrillDownLoading, setIsDrillDownLoading] = useState(false);
   const [drillDownError, setDrillDownError] = useState(null);
 
@@ -51,11 +74,11 @@ const CardUserPriority = () => {const [data, setData] = useState([
   return (
     <>
       <Card
-        style={{marginTop: "2rem" }}
+        style={{ marginTop: "2rem" }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
         extra={
           <Segmented
-            options={['Today', 'This Week', 'This Month']}
+            options={["Today", "This Week", "This Month"]}
             onChange={(value) => {
               console.log(value); // string
             }}
@@ -68,25 +91,28 @@ const CardUserPriority = () => {const [data, setData] = useState([
         </span>
         }
       >
-        <div
-          ref={containerRef}
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "16px"
-          }}
-        >
-          {data.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                width: screens.md ? "225px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
-              }}
-            >
-              <TileItem title={item.title} icon={item.icon} description={item.description} />
-            </div>
-          ))}
-        </div>
+        <>
+          <DayTimeline/>
+          <div
+            ref={containerRef}
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "16px"
+            }}
+          >
+            {data.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  width: screens.md ? "225px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
+                }}
+              >
+                <TileItem title={item.title} icon={item.icon} description={item.description} />
+              </div>
+            ))}
+          </div>
+        </>
       </Card>
       <Modal
         width="80vw"
