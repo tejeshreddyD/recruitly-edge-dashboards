@@ -101,7 +101,7 @@ const TileGoal = ({ tileData, onExpand }) => {
       ]}
     >
       <div style={{ padding: 5 }}>
-        <Flex gap={"small"} vertical align={"center"} justify={"flex-start"}>
+        <Flex gap={"middle"} vertical align={"center"} justify={"space-around"}>
           <Tag>20/20000</Tag>
           <div style={{display: "inline-block" }}>
             <AgGauge options={options} />
