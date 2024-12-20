@@ -7,6 +7,7 @@ import { RiFocus2Line } from "react-icons/ri";
 import Sortable from "sortablejs";
 
 import TileItem from "@components/userpriority/TileItem.jsx";
+import PriorityChart from "@components/userpriority/PriorityChart.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -87,6 +88,7 @@ const CardUserPriority = () => {const [data, setData] = useState([
             </div>
           ))}
         </div>
+        <PriorityChart/>
       </Card>
       <Modal
         width="80vw"

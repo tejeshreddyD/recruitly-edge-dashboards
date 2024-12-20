@@ -1,8 +1,6 @@
+import { useMemo, useState } from "react";
 import { Card, Flex } from "antd";
-import { useContext, useMemo, useState } from "react";
 import { GrExpand } from "react-icons/gr";
-
-const { Meta } = Card;
 
 const TileItem = ({ id = "",icon, title, onExpand }) => {
 
