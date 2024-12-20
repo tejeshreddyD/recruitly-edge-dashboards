@@ -14,7 +14,6 @@ const PriorityChart = () => {
         const count = Math.floor(Math.random() * 5); // Random count for demonstration
         data.push({
           day: day,
-          type:'Task',
           time: time,
           count: count,
         });
@@ -35,18 +34,17 @@ const PriorityChart = () => {
         xName: 'Date',
         yKey: 'time',
         yName: 'Time',
-        colorKey: 'count',
-        colorName: 'Count',
+        // Remove `colorKey` to prevent gradient behavior
+        fill: ({ count }) => (count > 0 ? '#7E60BF' : '#D3D3D3'), // Single color or conditionally gray for empty cells
         strokeWidth: 1,
-        colorRange:['#D3D3D3', '#7E60BF'],
         highlightStyle: {
-          fill: 'rgba(255, 255, 255, 0.2)',
+          fill: '#7E60BF',
         },
-        emptyCellFill: 'rgba(255, 255, 255, 0.5)', // Light gray for empty cells
+        emptyCellFill: '#D3D3D3', // Light gray for empty cells
       },
     ],
     legend: {
-      enabled: true,
+      enabled: false, // Disable legend since it's no longer meaningful
     },
     axes: [
       {
@@ -54,7 +52,7 @@ const PriorityChart = () => {
         type: 'category',
         label: {
           enabled: false,
-        }
+        },
       },
       {
         position: 'top',
@@ -63,16 +61,19 @@ const PriorityChart = () => {
           enabled: false,
           rotation: -45, // Rotate labels for better readability
         },
-        line:{
+        line: {
           enabled: false,
-        }
+        },
       },
     ],
   });
 
-  return (<div className={"center"} ref={containerRef} style={{marginTop:"5px"}}>
-    <AgCharts options={options} />
-  </div>);
+  return (
+    <div className={"center"} ref={containerRef} style={{ marginTop: "5px" }}>
+      <AgCharts options={options} />
+    </div>
+  );
 };
 
 export default PriorityChart;
+

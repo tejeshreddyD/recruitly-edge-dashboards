@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, Card, Flex, Grid, Modal, Segmented, Spin } from "antd";
+import { BsFunnel } from "react-icons/bs";
 import { CgWebsite } from "react-icons/cg";
 import { FaMicrophoneAlt, FaRegCalendar, FaTasks } from "react-icons/fa";
 import { MdAlarm, MdOutlinePendingActions } from "react-icons/md";
 import { RiFocus2Line } from "react-icons/ri";
 import Sortable from "sortablejs";
 
-import TileItem from "@components/userpriority/TileItem.jsx";
-import PriorityChart from "@components/userpriority/PriorityChart.jsx";
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
-import { BsFunnel } from "react-icons/bs";
 
 const { useBreakpoint } = Grid;
 
@@ -44,7 +42,7 @@ const CardUserPriority = () => {
   ]);
 
   const containerRef = useRef(null);
-  const screens = useBreakpoint();
+
   const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
   const [drillDownContent, setDrillDownContent] = useState(null);
   const [isDrillDownLoading, setIsDrillDownLoading] = useState(false);
@@ -111,26 +109,6 @@ const CardUserPriority = () => {
             <DayTimeline title={"Thursday 26th Dec"} />
             <DayTimeline title={"Friday 27th Dec"} color={"white"} />
           </div>
-          <div
-            ref={containerRef}
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "16px"
-            }}
-          >
-            {data.map((item) => (
-              <div
-                key={item.id}
-                style={{
-                  width: screens.md ? "225px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
-                }}
-              >
-                <TileItem title={item.title} icon={item.icon} description={item.description} />
-              </div>
-            ))}
-          </div>
-          <PriorityChart />
         </>
       </Card>
       <Modal
