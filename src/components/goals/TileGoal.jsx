@@ -1,19 +1,29 @@
-import { Card } from "antd";
+import { Card, Flex, Tooltip } from "antd";
 import { useState } from "react";
 import { GrExpand } from "react-icons/gr";
 import { AgGauge } from "ag-charts-react";
 import "ag-charts-enterprise";
+import { TrophyOutlined, DollarOutlined, NumberOutlined } from "@ant-design/icons";
+import { TbSum } from "react-icons/tb";
 
-const TileGoal = ({ id, title, description, onExpand }) => {
+const TileGoal = ({ tileData, onExpand }) => {
   const [isHovered, setIsHovered] = useState(false);
-
+  const getIcon = () => {
+    if (tileData.type === "currency") {
+      return <DollarOutlined style={{ marginRight: 8 }} />;
+    } else if (tileData.type === "counter") {
+      return <TbSum style={{ marginRight: 8 }} />;
+    } else {
+      return <TrophyOutlined style={{ marginRight: 8 }} />;
+    }
+  };
   const options = {
     type: "radial-gauge",
     value: 80,
     startAngle: -135,
     endAngle: 135,
     background: {
-      fill: 'transparent',
+      fill: "transparent"
     },
     scale: {
       min: 0,
@@ -45,11 +55,18 @@ const TileGoal = ({ id, title, description, onExpand }) => {
       hoverable
       size="small"
       style={{ backgroundImage: "linear-gradient(145deg, rgb(227 252 255) 28%, rgb(255 255 255))" }}
-      styles={{ body: { padding: 0 }, header: {border: "none", margin: 0, fontSize: 16 } } }
-      title={title}
+      styles={{ body: { padding: 0 }, header: { border: "none", margin: 0, fontSize: 16 } }}
+      title={
+        <Flex gap={1} align={"center"}>
+          {getIcon()}
+          <Tooltip title={tileData.title}>
+          {tileData.title}
+          </Tooltip>
+        </Flex>
+      }
       extra={
         <GrExpand
-          onClick={() => onExpand({ id, title, description })}
+          onClick={() => onExpand({ tileData })}
           style={{
             color: "#000",
             cursor: "pointer",

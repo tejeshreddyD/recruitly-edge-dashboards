@@ -16,13 +16,13 @@ const drillDownComponents = {
 const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
   // TODO: Load this data for the user from API
   const [data, setData] = useState([
-    { id: "1", drilldown: "placements", title: "Placements", description: "Tile Desc 1" },
-    { id: "2", drilldown: "placements", title: "Growth", description: "Tile Desc 2" },
-    { id: "3", drilldown: "placements", title: "Learning", description: "Tile Desc 3" },
-    { id: "4", drilldown: "jobs", title: "Networking", description: "Tile Desc 4" },
-    { id: "5", drilldown: "jobs", title: "Networking", description: "Tile Desc 4" },
-    { id: "6", drilldown: "jobs", title: "Networking", description: "Tile Desc 4" },
-    { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7" }
+    { id: "1", drilldown: "placements", title: "A very long title goes here - may be activity type", description: "Tile Desc 1", type:"currency" },
+    { id: "2", drilldown: "placements", title: "Growth", description: "Tile Desc 2", type:"currency" },
+    { id: "3", drilldown: "placements", title: "Learning", description: "Tile Desc 3", type:"currency" },
+    { id: "4", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type:"counter" },
+    { id: "5", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type:"counter"  },
+    { id: "6", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type:"counter"  },
+    { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7", type:"counter"  }
   ]);
 
   const containerRef = useRef(null);
@@ -88,7 +88,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
   return (
     <>
       <Card bordered
-            style={{ backgroundColor: "#0052ac" }}
+            style={{ backgroundColor: "#1e3a8a" }}
             styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
             extra={
               <a
@@ -125,8 +125,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
               }}
             >
               <TileGoal
-                title={item.title}
-                description={item.description}
+                tileData={item}
                 onExpand={() => handleExpand(item)}
               />
             </div>
