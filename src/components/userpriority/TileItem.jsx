@@ -6,10 +6,10 @@ const { Meta } = Card;
 
 const TileItem = ({ id = "",icon, title, onExpand }) => {
 
-  const {isHovered,setHovered} = useState(false);
+  const [isHovered,setHovered] = useState(false);
 
   const renderTitle = () => {
-    return (<div style={{fontSize: "15px", fontWeight: 450 }}><Flex align={"center"} vertical={false}>{icon}{title}</Flex></div>);
+    return (<div style={{fontSize: "16px", fontWeight: "revert" }}><Flex align={"center"} vertical={false}>{icon}{title}</Flex></div>);
   };
 
   const cardBodyStyles = useMemo(() => {
@@ -33,7 +33,8 @@ const TileItem = ({ id = "",icon, title, onExpand }) => {
         extra={
           <GrExpand
             style={{
-              color: "#000",
+              fontSize: "15px",
+              color: "gray",
               cursor: "pointer",
               display: isHovered ? "inline-block" : "none",
               transition: "opacity 0.3s"
