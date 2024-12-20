@@ -7,6 +7,7 @@ import { RiFocus2Line } from "react-icons/ri";
 import Sortable from "sortablejs";
 
 import TileItem from "@components/userpriority/TileItem.jsx";
+import PriorityChart from "@components/userpriority/PriorityChart.jsx";
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
 
 const { useBreakpoint } = Grid;
@@ -92,7 +93,7 @@ const CardUserPriority = () => {
         }
       >
         <>
-          <DayTimeline/>
+          <DayTimeline />
           <div
             ref={containerRef}
             style={{
@@ -112,6 +113,7 @@ const CardUserPriority = () => {
               </div>
             ))}
           </div>
+          <PriorityChart/>
         </>
       </Card>
       <Modal
