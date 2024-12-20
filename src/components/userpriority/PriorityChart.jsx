@@ -51,7 +51,7 @@ const PriorityChart = () => {
         type: 'category',
         label: {
           enabled: false,
-        },
+        }
       },
       {
         position: 'top',
@@ -60,6 +60,9 @@ const PriorityChart = () => {
           enabled: false,
           rotation: -45, // Rotate labels for better readability
         },
+        line:{
+          enabled: false,
+        }
       },
     ],
   });
