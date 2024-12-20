@@ -5,7 +5,6 @@ import { CgWebsite } from "react-icons/cg";
 import { FaMicrophoneAlt, FaRegCalendar, FaTasks } from "react-icons/fa";
 import { MdAlarm, MdOutlinePendingActions } from "react-icons/md";
 import { RiFocus2Line } from "react-icons/ri";
-import Sortable from "sortablejs";
 
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
 
@@ -41,30 +40,10 @@ const CardUserPriority = () => {
     { id: "6", title: "Reminders", description: "Tile Desc 5", icon: <MdAlarm size={18} style={{ marginRight: 4 }} /> }
   ]);
 
-  const containerRef = useRef(null);
-
   const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
   const [drillDownContent, setDrillDownContent] = useState(null);
   const [isDrillDownLoading, setIsDrillDownLoading] = useState(false);
   const [drillDownError, setDrillDownError] = useState(null);
-
-  useEffect(() => {
-    const sortable = Sortable.create(containerRef.current, {
-      animation: 150,
-      onEnd: (evt) => {
-        const { oldIndex, newIndex } = evt;
-        if (oldIndex === newIndex) return;
-        const updatedData = Array.from(data);
-        const [movedItem] = updatedData.splice(oldIndex, 1);
-        updatedData.splice(newIndex, 0, movedItem);
-
-        setData(updatedData);
-      }
-    });
-
-    // Cleanup on unmount
-    return () => sortable.destroy();
-  }, [data]);
 
   // Function to handle modal close
   const handleModalClose = () => {
@@ -72,18 +51,18 @@ const CardUserPriority = () => {
   };
 
   return (
-    <>
+    <div>
       <Card
         extra={
-        <Flex  direction="row" align={"center"} justify={"start"} gap={"small"}>
-          <BsFunnel/>
-          <Segmented
-            options={["Interviews", "New Starters", "Meetings","Invoice Due"]}
-            onChange={(value) => {
-              console.log(value); // string
-            }}
-          />
-        </Flex>
+          <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
+            <BsFunnel />
+            <Segmented
+              options={["Interviews", "New Starters", "Meetings", "Invoice Due"]}
+              onChange={(value) => {
+                console.log(value); // string
+              }}
+            />
+          </Flex>
         }
         style={{ marginTop: "2rem", marginBottom: "2rem" }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
@@ -129,7 +108,7 @@ const CardUserPriority = () => {
           <div style={{ minHeight: "500px" }}>{drillDownContent}</div>
         )}
       </Modal>
-    </>
+    </div>
   );
 };
 
