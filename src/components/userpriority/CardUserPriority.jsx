@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Card, Grid, Modal, Segmented, Spin } from "antd";
+import { Alert, Card, Flex, Grid, Modal, Segmented, Spin } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { FaMicrophoneAlt, FaRegCalendar, FaTasks } from "react-icons/fa";
 import { MdAlarm, MdOutlinePendingActions } from "react-icons/md";
@@ -9,6 +9,7 @@ import Sortable from "sortablejs";
 import TileItem from "@components/userpriority/TileItem.jsx";
 import PriorityChart from "@components/userpriority/PriorityChart.jsx";
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
+import { BsFunnel } from "react-icons/bs";
 
 const { useBreakpoint } = Grid;
 
@@ -75,25 +76,41 @@ const CardUserPriority = () => {
   return (
     <>
       <Card
-        style={{ marginTop: "2rem" }}
-        styles={{ header: { borderBottom: "none", fontSize: 18 } }}
         extra={
+        <Flex  direction="row" align={"center"} justify={"start"} gap={"small"}>
+          <BsFunnel/>
           <Segmented
-            options={["Today", "This Week", "This Month"]}
+            options={["Interviews", "New Starters", "Meetings","Invoice Due"]}
             onChange={(value) => {
               console.log(value); // string
             }}
           />
+        </Flex>
         }
+        style={{ marginTop: "2rem", marginBottom: "2rem" }}
+        styles={{ header: { borderBottom: "none", fontSize: 18 } }}
         title={
           <span>
           <RiFocus2Line style={{ marginRight: 8 }} />
-          Your Priorities
+          Planner
         </span>
         }
       >
         <>
-          <DayTimeline />
+          <div style={{
+            display: "flex",
+            overflowX: "auto",
+            gap: "16px",
+            padding: "16px",
+            whiteSpace: "nowrap"
+          }}>
+            <DayTimeline title={"Today"} />
+            <DayTimeline title={"Monday 23rd Dec"} color={"white"} />
+            <DayTimeline title={"Tuesday 24th Dec"} />
+            <DayTimeline title={"Wednesday 25th Dec"} color={"white"} />
+            <DayTimeline title={"Thursday 26th Dec"} />
+            <DayTimeline title={"Friday 27th Dec"} color={"white"} />
+          </div>
           <div
             ref={containerRef}
             style={{
@@ -113,7 +130,7 @@ const CardUserPriority = () => {
               </div>
             ))}
           </div>
-          <PriorityChart/>
+          <PriorityChart />
         </>
       </Card>
       <Modal
