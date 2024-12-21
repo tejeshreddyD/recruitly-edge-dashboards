@@ -8,6 +8,7 @@ export const categorizeData = (apiResponse) => {
   const categorized = {
     today: {
       date: "Today",
+      applications:apiResponse.job_applications,
       items: [],
       overdueCount: 0,
     },
