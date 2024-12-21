@@ -7,6 +7,7 @@ import { GrExpand } from "react-icons/gr";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 import Link from "antd/es/typography/Link.js";
+import { CiCalendarDate } from "react-icons/ci";
 
 const { Text } = Typography;
 
@@ -28,22 +29,21 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
           </div>
         );
       case "CALL":
+      case "MEETING":
 
-        console.log(item);
-
-        let record_type = 'colleagues';
+        { let record_type = 'colleagues';
+        const label = item.type === "CALL" ? "Call":"Meeting"
 
         if (item.attendees && item.attendees.length > 0) {
           const match = item.attendees.find(attendee => attendee.type !== 'UNRECORDED' && attendee.type === 'CONTACT');
           record_type = match ? 'Client' : 'Candidate';
         }
 
-
         return (
           <div>
             <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
             <Text>
-              Call with {record_type}{" "}
+              {label} with {record_type}{" "}
               {item.attendees.map((rec, index) => (
                 <Link key={index} href="">
                   {rec.label}
@@ -51,19 +51,12 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
               ))}
             </Text>
           </div>
-        );
+        ); }
       case "APPLICATION":
         return (
           <div>
             <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
             <Text>Review your {item.count} job applications</Text>
-          </div>
-        );
-      case "MEETING":
-        return (
-          <div>
-            <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
-            <Text>Meeting with client</Text>
           </div>
         );
       case "INTERVIEW":
@@ -91,7 +84,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
       case "CALL":
         return <FaPhone style={{ fontSize: "16px", color: "#52c41a" }} />;
       case "MEETING":
-        return <FaMeetup style={{ fontSize: "16px", color: "#faad14" }} />;
+        return <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />;
       case "APPLICATION":
         return <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />;
       default:
