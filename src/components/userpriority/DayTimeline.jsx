@@ -6,6 +6,7 @@ import { FaMeetup } from "react-icons/fa6";
 import { GrExpand } from "react-icons/gr";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
+import Link from "antd/es/typography/Link.js";
 
 const { Text } = Typography;
 
@@ -27,10 +28,28 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
           </div>
         );
       case "CALL":
+
+        console.log(item);
+
+        let record_type = 'colleagues';
+
+        if (item.attendees && item.attendees.length > 0) {
+          const match = item.attendees.find(attendee => attendee.type !== 'UNRECORDED' && attendee.type === 'CONTACT');
+          record_type = match ? 'Client' : 'Candidate';
+        }
+
+
         return (
           <div>
             <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
-            <Text>Call with client</Text>
+            <Text>
+              Call with {record_type}{" "}
+              {item.attendees.map((rec, index) => (
+                <Link key={index} href="">
+                  {rec.label}
+                </Link>
+              ))}
+            </Text>
           </div>
         );
       case "APPLICATION":
