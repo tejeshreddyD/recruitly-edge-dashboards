@@ -7,10 +7,9 @@ import {
   PhoneOutlined,
   CalendarOutlined,
   UserOutlined,
-  TeamOutlined, QuestionCircleOutlined
+  TeamOutlined, CaretRightOutlined
 } from "@ant-design/icons"; // Icons for activity types
 import useUserDashboardGoalsConfigStore from "@api/userDashboardGoalsConfigStore.js";
-import { FaCircleQuestion } from "react-icons/fa6";
 
 const { Panel } = Collapse;
 
@@ -66,12 +65,15 @@ const GoalSelector = ({ open, onClose }) => {
   }, [configData]);
 
   return (
-    <Drawer title="Customise Goals" onClose={onClose} open={open}>
+    <Drawer width={550} title="Customise Goals" onClose={onClose} open={open}>
       {/* Accordion with Checkbox Groups */}
-      <Collapse accordion>
-        {/* System Actions Panel */}
+      <Collapse bordered={true}
+                expanded={true}
+                defaultActiveKey={['1']}
+                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
         <Panel
           header="System Actions"
+          styles={{header:{fontWeight: "bold"}}}
           key="1"
         >
           <Alert
@@ -83,7 +85,7 @@ const GoalSelector = ({ open, onClose }) => {
               </span>
             }
             type="info"
-            style={{ marginBottom: "16px" }}
+            style={{ marginBottom: "16px", fontSize:"12" }}
           />
           <Checkbox.Group
             value={checkedValues}
@@ -98,9 +100,9 @@ const GoalSelector = ({ open, onClose }) => {
           </Checkbox.Group>
         </Panel>
 
-        {/* User Activity Types Panel */}
         <Panel
           header="Your Activity Types"
+          styles={{header:{fontWeight: "bold"}}}
           key="2"
         >
           <Alert
@@ -111,7 +113,7 @@ const GoalSelector = ({ open, onClose }) => {
               </span>
             }
             type="info"
-            style={{ marginBottom: "16px" }}
+            style={{ marginBottom: "16px", fontSize:"12" }}
           />
           <Checkbox.Group
             value={checkedValues}
