@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { fetchUserPlannerData } from "../api/dashboardDataApi.js";
+import { fetchUserPlannerStats } from "../api/dashboardDataApi.js";
 
 const useUserPlannerDashboardStore = create((set, getState) => ({
   data: [],
@@ -11,7 +11,7 @@ const useUserPlannerDashboardStore = create((set, getState) => ({
     if (!getState().loading) {
       set({ loading: true, error: null });
       try {
-        const data = await fetchUserPlannerData();
+        const data = await fetchUserPlannerStats();
         set({ data, loading: false });
       } catch (error) {
         set({ error: error.message, loading: false });

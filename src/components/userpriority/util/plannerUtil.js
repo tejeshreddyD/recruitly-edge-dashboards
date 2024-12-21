@@ -1,3 +1,4 @@
+import { extractTimeFromTimestamp } from "@utils/dateUtil.js";
 
 export const categorizeData = (apiResponse) => {
   const now = new Date();
@@ -39,14 +40,14 @@ export const categorizeData = (apiResponse) => {
       } else if (taskDay.date <= endOfToday) {
         // Today
         categorized.today.items.push({
-          time: new Date(task.dueDate).toLocaleTimeString(),
+          time: extractTimeFromTimestamp(task.dueDate),
           type: "Task",
           count: task.count,
         });
       } else if (taskDay.date >= tomorrowStart && taskDay.date < tomorrowStart + 24 * 60 * 60 * 1000) {
         // Tomorrow
         categorized.tomorrow.items.push({
-          time: new Date(task.dueDate).toLocaleTimeString(),
+          time: extractTimeFromTimestamp(task.dueDate),
           type: "Task",
           count: task.count,
         });
@@ -59,7 +60,7 @@ export const categorizeData = (apiResponse) => {
           categorized.upcoming.push(upcomingDay);
         }
         upcomingDay.items.push({
-          time: new Date(task.dueDate).toLocaleTimeString(),
+          time: extractTimeFromTimestamp(task.dueDate),
           type: "Task",
           count: task.count,
         });

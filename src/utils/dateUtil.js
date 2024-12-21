@@ -54,6 +54,34 @@ export const calculateDaysBetween = (date1, date2) => {
   return moment(date1).diff(moment(date2), "days");
 };
 
+export const extractTimeFromTimestamp = (timestamp)  => {
+
+  if (!timestamp) {
+    return timestamp
+  }
+
+  try {
+
+    const tz = getUserTimeZone();
+
+    return moment.tz(timestamp, tz).format("hh:mm A");
+  } catch (error) {
+    console.error("Error extracting time from timestamp:", error.message);
+    return null;
+  }
+
+}
+
+function getUserTimeZone(){
+
+  if (window.COOL_GLOBALS && !!window.COOL_GLOBALS?.USER && window.COOL_GLOBALS?.USER?.timeZone) {
+    return  window.COOL_GLOBALS?.USER?.timeZone;
+  }
+
+  return "Europe/London";
+
+}
+
 export const getDateStringByUserTimeZone = (timestamp, format) => {
   let defaultFormat = "DD/MM/YYYY";
 
@@ -61,11 +89,7 @@ export const getDateStringByUserTimeZone = (timestamp, format) => {
     defaultFormat = format;
   }
 
-  let timeZone = "Europe/London";
-
-  if (window.COOL_GLOBALS && !!window.COOL_GLOBALS?.USER && window.COOL_GLOBALS?.USER?.timeZone) {
-    timeZone = window.COOL_GLOBALS?.USER?.timeZone;
-  }
+  let timeZone = getUserTimeZone();
 
   if (!format && window.COOL_GLOBALS && window.COOL_GLOBALS?.TENANT && window.COOL_GLOBALS?.TENANT?.preferredDateFormat) {
     const preferred_format = window.COOL_GLOBALS.TENANT.preferredDateFormat;

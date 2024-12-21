@@ -6,7 +6,7 @@ import { BsCalendarDateFill, BsCalendarDay } from "react-icons/bs";
 import { MdCalendarViewDay } from "react-icons/md";
 import { GrExpand } from "react-icons/gr";
 
-const DailyTimeline = ({ title = "Today", color = "#f0f6ff" }) => {
+const DailyTimeline = ({ title = "Today", color = "#f0f6ff", data }) => {
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -32,7 +32,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff" }) => {
       }
       styles={{ header: { borderBottom: 0 } }}
       style={{ backgroundColor: `${color}`, width: "350px", overflow: "wrap", marginBottom: 10 }}>
-      <Timeline mode="left" style={{ margin: "20px 0" }}>
+      <Timeline items={data} mode="left" style={{ margin: "20px 0" }}>
         <Timeline.Item dot={<CheckCircleOutlined style={{ fontSize: "16px", color: "#52c41a" }} />} color="green">
           <strong>9:00 AM</strong> – Review 10 job applications 🚀
         </Timeline.Item>
