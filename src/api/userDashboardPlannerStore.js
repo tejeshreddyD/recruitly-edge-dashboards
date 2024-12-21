@@ -6,7 +6,6 @@ const useUserPlannerDashboardStore = create((set, getState) => ({
   data: [],
   loading: false,
   error: null,
-
   fetchUserPlannerData: async () => {
     if (!getState().loading) {
       set({ loading: true, error: null });
@@ -17,7 +16,7 @@ const useUserPlannerDashboardStore = create((set, getState) => ({
         set({ error: error.message, loading: false });
       }
     }
-  },
+  }
 }));
 
 export default useUserPlannerDashboardStore;

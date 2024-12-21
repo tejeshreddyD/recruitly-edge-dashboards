@@ -15,7 +15,8 @@ export const fetchUserPlannerStats = async () => {
 export const fetchUserGoalsConfig = async ({dashboardId}) => {
   const apiManager = getApiManager();
   try {
-    const response = await apiManager.get("/dashboards/user_dashboard/goals_config?dashboardId=" + dashboardId);
+    const response = await apiManager.get("/user_dashboard/goals_config?dashboardId=" + dashboardId);
+    console.log("fetchUserGoalsConfig ",response);
     return response
   } catch (error) {
     console.error("Error fetching data:", error.message);

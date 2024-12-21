@@ -4,7 +4,7 @@ import { BsFunnel } from "react-icons/bs";
 import { RiFocus2Line } from "react-icons/ri";
 
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
-import useUserPlannerDashboardStore from "@api/userDashboardStore.js";
+import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
 import { categorizeData } from "@components/userpriority/util/plannerUtil.js";
 
 const CardUserPriority = () => {

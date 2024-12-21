@@ -1,12 +1,13 @@
 import { Alert, Card, Flex, Grid, Modal, Popover, Spin, Tag } from "antd";
 import TileGoal from "@components/goals/TileGoal.jsx";
-import { TrophyFilled, TrophyOutlined } from "@ant-design/icons";
+import { TrophyOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import Sortable from "sortablejs";
 import PlacementsDrillDown from "@components/goals/drilldown/PlacementsDrillDown.jsx";
 import JobsDrillDown from "@components/goals/drilldown/JobsDrillDown.jsx";
 import GoalSelector from "@components/goals/GoalSelector.jsx";
 import { LiaCalendar } from "react-icons/lia";
+import useUserDashboardGoalsConfigStore from "@api/userDashboardGoalsConfigStore.js";
 
 const { useBreakpoint } = Grid;
 
@@ -15,12 +16,22 @@ const drillDownComponents = {
   jobs: JobsDrillDown
 };
 
-const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
+const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
+
+  const { configData, loading, error, fetchConfig } = useUserDashboardGoalsConfigStore();
+
+  useEffect(() => {
+    if (dashboardId) {
+      fetchConfig({ dashboardId });
+    }
+  }, [dashboardId, fetchConfig]);
 
   const [goalSelectorOpen, setGoalSelectorOpen] = useState(false);
+
   const showGoalSel = () => {
     setGoalSelectorOpen(true);
   };
+
   const onGoalSelectorClose = () => {
     setGoalSelectorOpen(false);
   };
@@ -55,11 +66,9 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
       onEnd: (evt) => {
         const { oldIndex, newIndex } = evt;
         if (oldIndex === newIndex) return;
-
         const updatedData = Array.from(data);
         const [movedItem] = updatedData.splice(oldIndex, 1);
         updatedData.splice(newIndex, 0, movedItem);
-
         setData(updatedData);
       }
     });
@@ -122,7 +131,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId }) => {
             title={
               <Flex direction="row" align={"center"} justify={"start"} gap={"middle"}>
                 <span><TrophyOutlined style={{ marginRight: 4 }} /> Goals</span>
-                <Tag color={"teal"} style={{ fontSize: 14,cursor: "pointer" }}>
+                <Tag color={"teal"} style={{ fontSize: 14, cursor: "pointer" }}>
                   <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
                     <LiaCalendar /> This Week
                   </Flex>
