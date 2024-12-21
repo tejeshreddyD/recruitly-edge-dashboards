@@ -1,9 +1,5 @@
+
 import { extractTimeFromTimestamp } from "@utils/dateUtil.js";
-import { FaPhone, FaTasks } from "react-icons/fa";
-import { FaMeetup } from "react-icons/fa6";
-import { CgWebsite } from "react-icons/cg";
-import { Alarm } from "@phosphor-icons/react";
-import { MdAlarm } from "react-icons/md";
 
 export const categorizeData = (apiResponse) => {
   const now = new Date();
