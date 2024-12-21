@@ -21,7 +21,7 @@ const CardUserPriority = () => {
     return <div>Loading...</div>;
   }
 
-  console.log("RESP", categorizeData(data.data.data));
+  const updated_data = categorizeData(data.data.data);
 
   // Function to handle modal close
   const handleModalClose = () => {
@@ -59,12 +59,9 @@ const CardUserPriority = () => {
             padding: "16px",
             whiteSpace: "nowrap"
           }}>
-            <DayTimeline title={"Today"} />
-            <DayTimeline title={"Monday 23rd Dec"} color={"white"} />
-            <DayTimeline title={"Tuesday 24th Dec"} />
-            <DayTimeline title={"Wednesday 25th Dec"} color={"white"} />
-            <DayTimeline title={"Thursday 26th Dec"} />
-            <DayTimeline title={"Friday 27th Dec"} color={"white"} />
+            {updated_data.map(data => (
+              <DayTimeline title={data.date} key={data.date} color={""} items={data.items}/>
+            ))}
           </div>
         </>
       </Card>
