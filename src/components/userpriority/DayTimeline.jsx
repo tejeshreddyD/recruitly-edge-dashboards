@@ -8,6 +8,7 @@ import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 import Link from "antd/es/typography/Link.js";
 import { CiCalendarDate } from "react-icons/ci";
+import { PhoneCall } from "@phosphor-icons/react";
 
 const { Text } = Typography;
 
@@ -25,14 +26,15 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
         return (
           <div>
             <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
-            <Text>Follow-up {item.count} {item.type}(s)</Text>
+            <Text>{item.count} Task(s) to complete</Text>
           </div>
         );
       case "CALL":
       case "MEETING":
+      case "INTERVIEW":
 
         { let record_type = 'colleagues';
-        const label = item.type === "CALL" ? "Call":"Meeting"
+        const label = item.type === "CALL" ? "Call": item.type === "MEETING" ? "Meeting" : "Interview";
 
         if (item.attendees && item.attendees.length > 0) {
           const match = item.attendees.find(attendee => attendee.type !== 'UNRECORDED' && attendee.type === 'CONTACT');
@@ -59,13 +61,6 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
             <Text>Review your {item.count} job applications</Text>
           </div>
         );
-      case "INTERVIEW":
-        return (
-          <div>
-            <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
-            <Text>Interview with client</Text>
-          </div>
-        );
       default:
         return (
           <div>
@@ -82,7 +77,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
       case "Task":
         return <FaTasks style={{ fontSize: "16px", color: "#1890ff" }} />;
       case "CALL":
-        return <FaPhone style={{ fontSize: "16px", color: "#52c41a" }} />;
+        return <PhoneCall style={{ fontSize: "16px", color: "#52c41a" }} />;
       case "MEETING":
         return <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />;
       case "APPLICATION":
