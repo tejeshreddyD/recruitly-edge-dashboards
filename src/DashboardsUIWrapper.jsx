@@ -11,7 +11,7 @@ const DashboardsUIWithProvider = (props) => (
   </ConfigProvider>
 );
 
-const DashboardsUIWrapper = ({ apiServer, apiKey, userId, tenantId }) => {
+const DashboardsUIWrapper = ({ apiServer, apiKey, userId, tenantId , dashboardId}) => {
 
   console.log("Initializing DashboardsUIWrapper");
 
@@ -21,7 +21,8 @@ const DashboardsUIWrapper = ({ apiServer, apiKey, userId, tenantId }) => {
         apiServer,
         apiKey,
         userId,
-        tenantId
+        tenantId,
+        dashboardId
       }}
     />
   );

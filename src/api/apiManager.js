@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 let apiManager = null;
@@ -10,8 +9,8 @@ export const initializeApiManager = (apiKey) => {
     apiManager = axios.create({
       baseURL: "https://api.edge.recruitly.io/api",
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
 
     // Set the Authorization header dynamically
