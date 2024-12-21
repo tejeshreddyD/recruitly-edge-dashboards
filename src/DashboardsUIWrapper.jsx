@@ -1,8 +1,7 @@
 import { ConfigProvider } from "antd";
-import styleToken from "./styleToken.js";
-import DashboardsUI from "./DashboardsUI.jsx";
-import { initializeApiManager } from "@api/apiManager.js";
 
+import DashboardsUI from "./DashboardsUI.jsx";
+import styleToken from "./styleToken.js";
 /*
 NOTE: DO NOT ALTER THIS FILE. Please start from DashboardsUI.jsx
  */
@@ -15,8 +14,6 @@ const DashboardsUIWithProvider = (props) => (
 const DashboardsUIWrapper = ({ apiServer, apiKey, userId, tenantId }) => {
 
   console.log("Initializing DashboardsUIWrapper");
-
-  initializeApiManager(apiKey);
 
   return (
     <DashboardsUIWithProvider

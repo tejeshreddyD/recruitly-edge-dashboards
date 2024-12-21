@@ -4,10 +4,24 @@ import { BsFunnel } from "react-icons/bs";
 import { RiFocus2Line } from "react-icons/ri";
 
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
+import useUserPlannerDashboardStore from "@api/userDashboardStore.js";
+import { categorizeData } from "@components/userpriority/util/plannerUtil.js";
 
 const CardUserPriority = () => {
 
   const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
+
+  const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
+
+  useEffect(()=>{
+    fetchUserPlannerData();
+  },[]);
+
+  if(loading || !data || !data.data){
+    return <div>Loading...</div>;
+  }
+
+  console.log("RESP", categorizeData(data.data.data));
 
   // Function to handle modal close
   const handleModalClose = () => {

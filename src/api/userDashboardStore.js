@@ -1,20 +1,21 @@
-
-import {create} from "zustand";
+import { create } from "zustand";
 
 import { fetchUserPlannerData } from "../api/dashboardDataApi.js";
 
-const useUserPlannerDashboardStore = create((set) => ({
+const useUserPlannerDashboardStore = create((set, getState) => ({
   data: [],
   loading: false,
   error: null,
 
   fetchUserPlannerData: async () => {
-    set({ loading: true, error: null });
-    try {
-      const data = await fetchUserPlannerData();
-      set({ data, loading: false });
-    } catch (error) {
-      set({ error: error.message, loading: false });
+    if (!getState().loading) {
+      set({ loading: true, error: null });
+      try {
+        const data = await fetchUserPlannerData();
+        set({ data, loading: false });
+      } catch (error) {
+        set({ error: error.message, loading: false });
+      }
     }
   },
 }));
