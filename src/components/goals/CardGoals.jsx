@@ -1,13 +1,12 @@
-import { Alert, Card, Flex, Grid, Modal, Popover, Spin, Tag } from "antd";
+import { Alert, Card, Grid, Modal, Spin } from "antd";
 import TileGoal from "@components/goals/TileGoal.jsx";
-import { TrophyOutlined } from "@ant-design/icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import Sortable from "sortablejs";
 import PlacementsDrillDown from "@components/goals/drilldown/PlacementsDrillDown.jsx";
 import JobsDrillDown from "@components/goals/drilldown/JobsDrillDown.jsx";
 import GoalSelector from "@components/goals/GoalSelector.jsx";
-import { LiaCalendar } from "react-icons/lia";
 import useUserDashboardGoalsConfigStore from "@api/userDashboardGoalsConfigStore.js";
+import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore.js";
 import GoalPeriodHeader from "@components/goals/GoalPeriodHeader.jsx";
 
 const { useBreakpoint } = Grid;
@@ -17,9 +16,17 @@ const drillDownComponents = {
   jobs: JobsDrillDown
 };
 
-const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
+const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) => {
+  const { configData, loading: configLoading, error: configError, fetchConfig } =
+    useUserDashboardGoalsConfigStore();
+  const { periodData, loading: dataLoading, error: dataError } =
+    useUserDashboardGoalsDataStore();
 
-  const { configData, loading, error, fetchConfig } = useUserDashboardGoalsConfigStore();
+  const [goalSelectorOpen, setGoalSelectorOpen] = useState(false);
+  const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
+  const [drillDownContent, setDrillDownContent] = useState(null);
+  const [isDrillDownLoading, setIsDrillDownLoading] = useState(false);
+  const [drillDownError, setDrillDownError] = useState(null);
 
   useEffect(() => {
     if (dashboardId) {
@@ -27,39 +34,35 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
     }
   }, [dashboardId, fetchConfig]);
 
-  const [goalSelectorOpen, setGoalSelectorOpen] = useState(false);
+  const showGoalSel = () => setGoalSelectorOpen(true);
+  const onGoalSelectorClose = () => setGoalSelectorOpen(false);
 
-  const showGoalSel = () => {
-    setGoalSelectorOpen(true);
-  };
+  const matchedData = useMemo(() => {
 
-  const onGoalSelectorClose = () => {
-    setGoalSelectorOpen(false);
-  };
+    console.log('MATCHED_PERIOD_DATA',periodData);
 
-  // TODO: Load this data for the user from API
-  const [data, setData] = useState([
-    {
-      id: "1",
-      drilldown: "placements",
-      title: "A very long title goes here - may be activity type",
-      description: "Tile Desc 1",
-      type: "currency"
-    },
-    { id: "2", drilldown: "placements", title: "Growth", description: "Tile Desc 2", type: "currency" },
-    { id: "3", drilldown: "placements", title: "Learning", description: "Tile Desc 3", type: "currency" },
-    { id: "4", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type: "counter" },
-    { id: "5", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type: "counter" },
-    { id: "6", drilldown: "jobs", title: "Networking", description: "Tile Desc 4", type: "counter" },
-    { id: "7", drilldown: "jobs", title: "Jobs", description: "Tile Desc 7", type: "xmas" }
-  ]);
+    if (!periodData || !configData?.selectedKpi) return [];
+    return periodData
+      .filter((item) =>
+        configData.selectedKpi.some(
+          (kpi) =>
+            kpi.value === item.activityId &&
+            kpi.type === (item.activityType === "USER" ? "ACTIVITY" : "SYSTEM")
+        )
+      )
+      .map((item) => ({
+        id: item._id,
+        drilldown: item.activityModule.toLowerCase(), // e.g., "placements" or "jobs"
+        title: item.activityName,
+        description: `${item.actualValue} ${
+          item.targetType === "VALUE" ? "£" : ""
+        } (Dec ${item.year})`, // Display actualValue with month and year
+        type: item.targetType.toLowerCase() // e.g., "currency" or "counter"
+      }));
+  }, [periodData, configData]);
 
   const containerRef = useRef(null);
   const screens = useBreakpoint();
-  const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
-  const [drillDownContent, setDrillDownContent] = useState(null);
-  const [isDrillDownLoading, setIsDrillDownLoading] = useState(false);
-  const [drillDownError, setDrillDownError] = useState(null);
 
   useEffect(() => {
     const sortable = Sortable.create(containerRef.current, {
@@ -67,16 +70,14 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
       onEnd: (evt) => {
         const { oldIndex, newIndex } = evt;
         if (oldIndex === newIndex) return;
-        const updatedData = Array.from(data);
+        const updatedData = Array.from(matchedData);
         const [movedItem] = updatedData.splice(oldIndex, 1);
         updatedData.splice(newIndex, 0, movedItem);
-        setData(updatedData);
       }
     });
 
-    // Cleanup on unmount
     return () => sortable.destroy();
-  }, [data]);
+  }, [matchedData]);
 
   const handleExpand = async (tile) => {
     setDrillDownModalVisible(true);
@@ -85,17 +86,17 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
     setDrillDownContent(null);
 
     try {
-      // Simulate a server request with a delay
       await new Promise((resolve) => setTimeout(resolve, 500));
-
       const ContentComponent = drillDownComponents[tile.drilldown];
-
       if (ContentComponent) {
-        setDrillDownContent(<ContentComponent apiKey={apiKey}
-                                              apiServer={apiServer}
-                                              userId={userId}
-                                              tenantId={tenantId}
-                                              tile={tile} />
+        setDrillDownContent(
+          <ContentComponent
+            apiKey={apiKey}
+            apiServer={apiServer}
+            userId={userId}
+            tenantId={tenantId}
+            tile={tile}
+          />
         );
       } else {
         setDrillDownError("Unknown content type.");
@@ -107,30 +108,23 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
     }
   };
 
-  // Function to handle modal close
-  const handleModalClose = () => {
-    setDrillDownModalVisible(false);
-  };
+  const handleModalClose = () => setDrillDownModalVisible(false);
 
   return (
     <>
-      <Card bordered
-            style={{ backgroundColor: "#1e3a8a" }}
-            styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
-            extra={
-              <span onClick={showGoalSel}
-                    style={{
-                      cursor: "pointer",
-                      color: "white",
-                      fontSize: "smaller"
-                    }}
-              >
-                Customise
-              </span>
-            }
-            title={
-              <GoalPeriodHeader/>
-            }
+      <Card
+        bordered
+        style={{ backgroundColor: "#1e3a8a" }}
+        styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
+        extra={
+          <span
+            onClick={showGoalSel}
+            style={{ cursor: "pointer", color: "white", fontSize: "smaller" }}
+          >
+            Customise
+          </span>
+        }
+        title={<GoalPeriodHeader />}
       >
         <div
           ref={containerRef}
@@ -140,19 +134,27 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
             gap: "16px"
           }}
         >
-          {data.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                width: screens.md ? "185px" : "100%" // Full width if md is false (xs/sm), otherwise fixed width
-              }}
-            >
-              <TileGoal
-                tileData={item}
-                onExpand={() => handleExpand(item)}
-              />
-            </div>
-          ))}
+          {dataLoading || configLoading ? (
+            <Spin tip="Loading...">
+              <div style={{ minHeight: "100px" }} />
+            </Spin>
+          ) : dataError || configError ? (
+            <Alert message={dataError || configError} type="error" showIcon />
+          ) : (
+            matchedData.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  width: screens.md ? "185px" : "100%"
+                }}
+              >
+                <TileGoal
+                  tileData={item}
+                  onExpand={() => handleExpand(item)}
+                />
+              </div>
+            ))
+          )}
         </div>
       </Card>
 
@@ -174,8 +176,16 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
           <div style={{ minHeight: "500px" }}>{drillDownContent}</div>
         )}
       </Modal>
-      <GoalSelector dashboardId={dashboardId} open={goalSelectorOpen} onClose={onGoalSelectorClose} tenantId={tenantId} userId={userId}
-                    apiServer={apiServer} apiKey={apiKey}></GoalSelector>
+
+      <GoalSelector
+        dashboardId={dashboardId}
+        open={goalSelectorOpen}
+        onClose={onGoalSelectorClose}
+        tenantId={tenantId}
+        userId={userId}
+        apiServer={apiServer}
+        apiKey={apiKey}
+      />
     </>
   );
 };
