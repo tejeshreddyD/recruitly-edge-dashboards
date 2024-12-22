@@ -181,7 +181,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
           <div style={{ minHeight: "500px" }}>{drillDownContent}</div>
         )}
       </Modal>
-      <GoalSelector open={goalSelectorOpen} onClose={onGoalSelectorClose} tenantId={tenantId} userId={userId}
+      <GoalSelector dashboardId={dashboardId} open={goalSelectorOpen} onClose={onGoalSelectorClose} tenantId={tenantId} userId={userId}
                     apiServer={apiServer} apiKey={apiKey}></GoalSelector>
     </>
   );

@@ -1,25 +1,39 @@
-
 import { getApiManager } from "@api/apiManager.js";
 
 export const fetchUserPlannerStats = async () => {
   const apiManager = getApiManager();
   try {
     const response = await apiManager.get("/user_dashboard/planner_stats");
-    return response
+    return response;
   } catch (error) {
     console.error("Error fetching data:", error.message);
     throw new Error("Failed to fetch data. Please try again.");
   }
 };
 
-export const fetchUserGoalsConfig = async ({dashboardId}) => {
+export const fetchUserGoalsConfig = async ({ dashboardId }) => {
   const apiManager = getApiManager();
   try {
     const response = await apiManager.get("/user_dashboard/goals_config?dashboardId=" + dashboardId);
-    console.log("fetchUserGoalsConfig ",response);
-    return response
+    console.log("fetchUserGoalsConfig ", response);
+    return response;
   } catch (error) {
     console.error("Error fetching data:", error.message);
     throw new Error("Failed to fetch data. Please try again.");
+  }
+};
+
+export const saveUserGoalsConfig = async ({ dashboardId, selectedKpi }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.post("/user_dashboard/goals_config", {
+      dashboardId: dashboardId,
+      selectedKpi: selectedKpi
+    });
+    console.log("saveUserGoalsConfig response:", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error saving user goals config:", error.message);
+    throw new Error("Failed to save goals configuration. Please try again.");
   }
 };
