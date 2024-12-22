@@ -1,18 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 import { TrophyOutlined, DownOutlined } from "@ant-design/icons";
 import { Dropdown, Button, Spin, Typography } from "antd";
-import useGoalsPeriodStore from "@api/userDashboardGoalsDataStore.js";
 import { LuCalendarDays } from "react-icons/lu";
+import debounce from "lodash.debounce";
+import useGoalsPeriodStore from "@api/userDashboardGoalsDataStore.js";
 
 const { Text } = Typography;
-
-const periods = [
-  { label: "Last Quarter", value: "LAST_QUARTER" },
-  { label: "Last Month", value: "LAST_MONTH" },
-  { label: "This Month", value: "THIS_MONTH" },
-  { label: "This Quarter", value: "THIS_QUARTER" },
-  { label: "Next Quarter", value: "NEXT_QUARTER" }
-];
 
 const GoalPeriodHeader = () => {
   const {
@@ -22,33 +15,47 @@ const GoalPeriodHeader = () => {
     selectedYear,
     fetchPeriodData,
     loading,
-    error
+    error,
   } = useGoalsPeriodStore();
 
-  // Initialize the default period
+  // Set default period on mount
   useEffect(() => {
     if (!selectedPeriod) {
       const currentDate = new Date();
-      const currentMonth = currentDate.getMonth() + 1;
-      const currentYear = currentDate.getFullYear();
-      setPeriod("THIS_MONTH", currentMonth, currentYear);
+      setPeriod("THIS_MONTH", currentDate.getMonth() + 1, currentDate.getFullYear());
     }
   }, [selectedPeriod, setPeriod]);
 
-  // Fetch data whenever the selected period changes
+  // Debounced fetch to reduce unnecessary API calls
+  const fetchPeriodDataDebounced = useCallback(
+    debounce((month, year) => fetchPeriodData(month, year), 300),
+    [fetchPeriodData]
+  );
+
+  // Fetch data when selected period changes
   useEffect(() => {
     if (selectedMonth && selectedYear) {
-      fetchPeriodData(selectedMonth, selectedYear);
+      fetchPeriodDataDebounced(selectedMonth, selectedYear);
     }
-  }, [selectedMonth, selectedYear, fetchPeriodData]);
+  }, [selectedMonth, selectedYear, fetchPeriodDataDebounced]);
 
-  const handleMenuClick = ({ key }) => {
-    const period = periods.find((p) => p.value === key);
+  const menuItems = useMemo(
+    () => [
+      { key: "LAST_QUARTER", label: "Last Quarter" },
+      { key: "LAST_MONTH", label: "Last Month" },
+      { key: "THIS_MONTH", label: "This Month" },
+      { key: "NEXT_MONTH", label: "Next Month" },
+      { key: "NEXT_QUARTER", label: "Next Quarter" },
+    ],
+    []
+  );
+
+  const calculatePeriod = (period) => {
     const currentDate = new Date();
     let month = currentDate.getMonth() + 1;
     let year = currentDate.getFullYear();
 
-    switch (period.value) {
+    switch (period) {
       case "LAST_QUARTER":
         month -= 3;
         if (month <= 0) {
@@ -63,10 +70,12 @@ const GoalPeriodHeader = () => {
           year -= 1;
         }
         break;
-      case "THIS_MONTH":
-        break;
-      case "THIS_QUARTER":
-        month = Math.ceil((month + 2) / 3) * 3 - 2;
+      case "NEXT_MONTH":
+        month += 1;
+        if (month > 12) {
+          month = 1;
+          year += 1;
+        }
         break;
       case "NEXT_QUARTER":
         month += 3;
@@ -79,30 +88,35 @@ const GoalPeriodHeader = () => {
         break;
     }
 
-    setPeriod(period.value, month, year);
+    return { month, year };
   };
 
-  const menu = {
-    items: periods.map((period) => ({
-      key: period.value,
+  const handleMenuClick = ({ key }) => {
+    const { month, year } = calculatePeriod(key);
+    setPeriod(key, month, year);
+  };
+
+  const menuConfig = {
+    items: menuItems.map(({ key, label }) => ({
+      key,
       label: (
         <>
           <LuCalendarDays style={{ marginRight: 4 }} />
-          {period.label}
+          {label}
         </>
-      )
+      ),
     })),
-    onClick: handleMenuClick
+    onClick: handleMenuClick,
   };
 
-  const selectedLabel = periods.find((p) => p.value === selectedPeriod)?.label || "Select Period";
+  const selectedLabel = menuItems.find((item) => item.key === selectedPeriod)?.label || "Select Period";
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
       <span style={{ display: "flex", alignItems: "center" }}>
         <TrophyOutlined style={{ marginRight: 8 }} /> Goals
       </span>
-      <Dropdown menu={menu} trigger={["click", "hover"]}>
+      <Dropdown menu={menuConfig} trigger={["click"]}>
         <Button
           size="small"
           style={{
@@ -112,15 +126,13 @@ const GoalPeriodHeader = () => {
             boxShadow: "none",
             display: "flex",
             alignItems: "center",
-            gap: "4px"
+            gap: "4px",
           }}
         >
           {selectedLabel} <DownOutlined />
         </Button>
       </Dropdown>
-      {loading && (
-        <Spin size="small" style={{ marginLeft: 12 }} />
-      )}
+      {loading && <Spin size="small" style={{ marginLeft: 12 }} />}
       {error && (
         <Text type="danger" style={{ marginLeft: 12 }}>
           Error: {error}

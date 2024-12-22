@@ -1,36 +1,40 @@
 import { Card, Flex, Tag, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import { GrExpand } from "react-icons/gr";
-import { AgGauge } from "ag-charts-react";
+import { AgGauge, AgCharts } from "ag-charts-react";
 import "ag-charts-enterprise";
-import { TrophyOutlined, DollarOutlined, NumberOutlined } from "@ant-design/icons";
+import { TrophyOutlined, DollarCircleFilled } from "@ant-design/icons";
 import { TbSum } from "react-icons/tb";
-import { TrendUp } from "@phosphor-icons/react";
-import { PiTelevisionBold } from "react-icons/pi";
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 const TileGoal = ({ tileData, onExpand }) => {
   const [isHovered, setIsHovered] = useState(false);
+
   const getIcon = () => {
-    if (tileData.type === "currency") {
-      return <DollarOutlined style={{ marginRight: 8 }} />;
-    } else if (tileData.type === "counter") {
+    if (tileData.type === "value") {
+      return <DollarCircleFilled style={{ marginRight: 8 }} />;
+    } else if (tileData.type === "count") {
       return <TbSum style={{ marginRight: 8 }} />;
     } else {
       return <TrophyOutlined style={{ marginRight: 8 }} />;
     }
   };
-  const options = {
-    height: 120,    // Set the desired width
+
+  const progress = tileData.target > 0
+    ? Math.min((tileData.actual / tileData.target) * 100, 100) // Cap progress at 100%
+    : tileData.actual || 0;
+
+  const gaugeOptions = {
+    height: 120,
     padding: {
-      top: 0,    // Reduce top padding
+      top: 0,
       right: 20,
       bottom: 30,
       left: 20
     },
     type: "radial-gauge",
-    value: 80,
+    value: progress,
     startAngle: -135,
     endAngle: 135,
     background: {
@@ -38,45 +42,112 @@ const TileGoal = ({ tileData, onExpand }) => {
     },
     scale: {
       min: 0,
-      max: 100,
+      max: 100, // Gauge always shows progress in percentage
       fill: "#e6e6ec",
       label: {
         enabled: false
       }
     },
-    // targets: [
-    //   {
-    //     value: 85,
-    //     shape: "star",
-    //     placement: "outside",
-    //     fill: "white",
-    //     strokeWidth: 2,
-    //     spacing: 2
-    //   }
-    // ],
     cornerRadius: 99,
     cornerMode: "item",
     bar: {
-      fill: "#35a124"
+      fill: progress === 100 ? "#52c41a" : "#35a124" // Green when complete
+    },
+    label: {
+      text: tileData.target > 0 ? `${progress.toFixed(0)}%` : `${progress}`, // Show percentage or value
+      color: "#000",
+      fontSize: 14
     }
   };
+
+  const filteredPrevData = (tileData.prev || []).filter((item) => item !== null);
+
+  const miniBarChartOptions = {
+    width: 100, // Width for the sparkline chart
+    height: 120, // Height for compact design
+    data: [
+      ...filteredPrevData
+        .slice()
+        .reverse() // Reverse the order for descending chronology
+        .map((prev) => ({
+          monthName: prev.monthName,
+          actualValue: prev.actualValue || 0,
+        })),
+      {
+        monthName: tileData.monthName, // Add current month's name
+        actualValue: tileData.actual || 0, // Use current month's actual value
+      },
+    ],
+    background: {
+      fill: "transparent", // No background
+    },
+    series: [
+      {
+        type: "bar",
+        xKey: "monthName",
+        yKey: "actualValue",
+        fill: "#2450a1", // Bar fill color
+        stroke: "transparent", // No stroke for the bars
+      },
+    ],
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        line: {
+          width: 0, // Hide axis line
+        },
+        tick: {
+          width: 0, // Hide ticks
+        },
+        label: {
+          enabled: false, // Disable labels
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        line: {
+          width: 0, // Hide axis line
+        },
+        tick: {
+          width: 0, // Hide ticks
+        },
+        label: {
+          enabled: false, // Disable labels
+        },
+      },
+    ],
+    legend: {
+      enabled: false, // No legend
+    },
+    padding: {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0, // Remove padding
+    },
+  };
+
+  const gradientColor = "linear-gradient(173deg, rgb(230 247 255) 8%, rgb(255, 255, 255))";
 
   return (
     <Card
       hoverable
       size="small"
-      style={{ backgroundImage: "linear-gradient(145deg, rgb(227 252 255) 28%, rgb(255 255 255))" }}
+      style={{
+        background: gradientColor,
+        border: "none"
+      }}
       styles={{
         body: { padding: 0 },
-        header: { border: "none", margin: 0, fontSize: 16 },
-        actions: { border: "none", backgroundColor: "transparent" },
+        header: { border: "none", margin: 0, fontSize: 14 },
+        actions: { border: "none", backgroundColor: "transparent" }
       }}
       title={
         <Flex gap={1} align={"center"}>
           {getIcon()}
-          <Tooltip title={tileData.title}>
-            {tileData.title}
-          </Tooltip>
+          <Tooltip title={tileData.title}>{tileData.title}</Tooltip>
         </Flex>
       }
       extra={
@@ -92,19 +163,21 @@ const TileGoal = ({ tileData, onExpand }) => {
       }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      actions={[
-        <Text>
-          <TrendUp />
-        </Text>,
-        <TrophyOutlined/>,
-        <PiTelevisionBold />
-      ]}
     >
       <div style={{ padding: 5 }}>
         <Flex gap={"middle"} vertical align={"center"} justify={"space-around"}>
-          <Tag>20/20000</Tag>
-          <div style={{display: "inline-block" }}>
-            <AgGauge options={options} />
+          <Tag>
+            {tileData.actual || 0}
+            {tileData.target ? `/${tileData.target}` : ""}
+          </Tag>
+          <div style={{ display: "inline-block" }}>
+            {tileData.target > 0 ? (
+              <AgGauge options={gaugeOptions} />
+            ) : filteredPrevData.length > 0 ? (
+              <AgCharts options={miniBarChartOptions} />
+            ) : (
+              <Text type="secondary">No data to display</Text>
+            )}
           </div>
         </Flex>
       </div>

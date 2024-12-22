@@ -51,9 +51,12 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
         id: item._id,
         drilldown: item.activityModule.toLowerCase(), // e.g., "placements" or "jobs"
         title: item.activityName,
-        description: `${item.actualValue} ${
-          item.targetType === "VALUE" ? "£" : ""
-        } (Dec ${item.year})`, // Display actualValue with month and year
+        trackWithoutTarget:item.trackWithoutTarget,
+        target: item.targetValue,
+        actual:item.actualValue,
+        monthName: item.monthName,
+        difference:item.difference,
+        prev:item.prev,
         type: item.targetType.toLowerCase() // e.g., "currency" or "counter"
       }));
   }, [periodData, configData]);
