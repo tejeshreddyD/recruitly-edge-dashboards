@@ -1,132 +1,124 @@
 
 import { extractTimeFromTimestamp } from "@utils/dateUtil.js";
 
-export const categorizeData = (apiResponse, plannerType) => {
+export const aggregateData = (respData,plannerType) => {
+  const uniqueDayMap = new Map();
+
+  const tasks = plannerType === 'ALL' || plannerType === 'REMINDER' ?  respData.tasks || [] : [];
+  const reminders = plannerType === 'ALL' || plannerType === 'REMINDER' ? respData.reminders || [] : [];
+  const events = plannerType === 'ALL' || plannerType === 'EVENTS' ? respData.events || [] : [];
+
+  const addToMap = (date, time, type, data) => {
+    if (!uniqueDayMap.has(date)) {
+      uniqueDayMap.set(date, { day: date, times: new Map() });
+    }
+
+    const dayEntry = uniqueDayMap.get(date);
+    if (!dayEntry.times.has(time)) {
+      dayEntry.times.set(time, []);
+    }
+
+    dayEntry.times.get(time).push({ type, ...data });
+  };
+
+  tasks.forEach((task) => {
+    task.tasks.forEach((taskTime) => {
+      addToMap(task.date, taskTime.dueDate, "Task", taskTime);
+    });
+  });
+
+  reminders.forEach((reminder) => {
+    reminder.reminders.forEach((reminderTime) => {
+      addToMap(reminder.day, reminderTime.time, "Reminder", reminderTime);
+    });
+  });
+
+  events.forEach((event) => {
+    event.times.forEach((eventTime) => {
+      addToMap(event.eventDate, eventTime.time, "Event", eventTime);
+    });
+  });
+
+  const data = Array.from(uniqueDayMap.values()).map((dayEntry) => {
+    return {
+      due_date: dayEntry.day,
+      data: Array.from(dayEntry.times.entries())
+        .map(([time, items]) => ({
+          time:extractTimeFromTimestamp(time),
+          items,
+        }))
+        .sort((a, b) => a.time - b.time),
+    };
+  });
+
+  data.sort((a, b) => a.due_date - b.due_date);
+
+  return data;
+};
+
+
+export const categorizeData = (apiResponse) => {
+
+  if (!apiResponse || !apiResponse.length) {
+    return [];
+  }
+
+  console.log("APIResponse", apiResponse);
+
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const tomorrowStart = todayStart + 24 * 60 * 60 * 1000;
   const endOfToday = tomorrowStart - 1;
 
-  if(!apiResponse || !apiResponse.tasks || !apiResponse.tasks.length) {
-    return [];
-  }
-
   const result = [];
-
-  let todayItems = [];
-  let todayApplications = apiResponse.job_applications || 0;
-  let todayOverdueCount = 0;
-
-  let tomorrowItems = [];
-
   const upcomingDays = {};
 
-  let data = {
-    "REMINDER":apiResponse.tasks,
-    "EVENTS":apiResponse.events.filter((event) => event.type && event.type !== 'INTERVIEW'),
-    "INTERVIEWS":apiResponse.events.filter((event) => event.type && event.type === 'INTERVIEW'),
-    "INVOICE_DUE":apiResponse.invoice_due,
-  }
+  let todayApplications = apiResponse.job_applications || 0;
+  let todayOverdueCount = 0;
+  let todayItems = [];
+  let tomorrowItems = [];
 
-  const addCategory = (date, applications = 0, overdueCount = 0,items = []) => {
+  const addCategory = (date, applications = 0, overdueCount = 0, items = []) => {
     result.push({
       date,
       applications,
       overDueTasks: overdueCount,
-      items: items.sort((a, b) => {
-        const timeA = new Date(`1970-01-01T${a.time}`).getTime();
-        const timeB = new Date(`1970-01-01T${b.time}`).getTime();
-        return timeA - timeB;
-      }),
+      items: items.sort((a, b) => a.time - b.time), // Sort items by time
     });
   };
 
-  if(plannerType === 'ALL' || plannerType === 'REMINDER'){
-    data["REMINDER"]?.forEach((taskDay) => {
-      taskDay.tasks.forEach((task) => {
-        const taskDate = new Date(taskDay.date).getTime();
-        if (task.dueDate < todayStart) {
-          todayOverdueCount += task.count;
-        } else if (taskDate <= endOfToday) {
-          todayItems.push({
-            time: extractTimeFromTimestamp(task.dueDate),
-            type: "Task",
-            count: task.count,
-          });
-        } else if (taskDate >= tomorrowStart && taskDate < tomorrowStart + 24 * 60 * 60 * 1000) {
-          tomorrowItems.push({
-            time: extractTimeFromTimestamp(task.dueDate),
-            type: "Task",
-            count: task.count,
-          });
-        } else {
-          const upcomingDate = new Date(taskDate).toDateString();
-          if (!upcomingDays[upcomingDate]) {
-            upcomingDays[upcomingDate] = [];
-          }
-          upcomingDays[upcomingDate].push({
-            time: extractTimeFromTimestamp(task.dueDate),
-            type: "Task",
-            count: task.count,
-          });
-        }
-      });
-    });
-  }
+  apiResponse.forEach((dayData) => {
+    const dayTimestamp = dayData.due_date;
+    const dayItems = dayData.data;
 
-  if(plannerType === 'ALL' || plannerType === 'EVENTS'){
-    data["EVENTS"]?.forEach((eventDay) => {
-      const eventDate = new Date(eventDay.eventDate).getTime();
-      const events = eventDay.events.map((event) => ({
-        time: extractTimeFromTimestamp(event.date),
-        type: event.type,
-        attendees: event.attendees,
-      }));
+    if (dayTimestamp < todayStart) {
 
-      if (eventDate <= endOfToday) {
-        todayItems.push(...events);
-      } else if (eventDate >= tomorrowStart && eventDate < tomorrowStart + 24 * 60 * 60 * 1000) {
-        tomorrowItems.push(...events);
-      } else {
-        const upcomingDate = new Date(eventDate).toDateString();
-        if (!upcomingDays[upcomingDate]) {
-          upcomingDays[upcomingDate] = [];
-        }
-        upcomingDays[upcomingDate].push(...events);
+      todayOverdueCount += dayItems.filter((item) => item.type === "Task" || item.type === 'Reminder').reduce((sum, item) => sum + (item.count || 0), 0);
+    } else if (dayTimestamp <= endOfToday) {
+
+      todayItems.push(...dayItems);
+    } else if (dayTimestamp >= tomorrowStart && dayTimestamp < tomorrowStart + 24 * 60 * 60 * 1000) {
+
+      tomorrowItems.push(...dayItems);
+    } else {
+
+      if (!upcomingDays[dayTimestamp]) {
+        upcomingDays[dayTimestamp] = [];
       }
-    });
-  }
-
-  if(plannerType === 'ALL' || plannerType === 'INTERVIEWS'){
-    data["INTERVIEWS"]?.forEach((eventDay) => {
-      const eventDate = new Date(eventDay.eventDate).getTime();
-      const events = eventDay.events.map((event) => ({
-        time: extractTimeFromTimestamp(event.date),
-        type: event.type,
-        attendees: event.attendees,
-      }));
-
-      if (eventDate <= endOfToday) {
-        todayItems.push(...events);
-      } else if (eventDate >= tomorrowStart && eventDate < tomorrowStart + 24 * 60 * 60 * 1000) {
-        tomorrowItems.push(...events);
-      } else {
-        const upcomingDate = new Date(eventDate).toDateString();
-        if (!upcomingDays[upcomingDate]) {
-          upcomingDays[upcomingDate] = [];
-        }
-        upcomingDays[upcomingDate].push(...events);
-      }
-    });
-  }
+      upcomingDays[dayTimestamp].push(...dayItems);
+    }
+  });
 
   addCategory("Today", todayApplications, todayOverdueCount, todayItems);
-
   addCategory("Tomorrow", 0, 0, tomorrowItems);
 
-  Object.keys(upcomingDays).forEach((date) => {
-    addCategory(date, 0, 0, upcomingDays[date]);
-  });
+  Object.keys(upcomingDays)
+    .sort((a, b) => a - b)
+    .forEach((dayTimestamp) => {
+      addCategory(new Date(parseInt(dayTimestamp)).toDateString(), 0, 0, upcomingDays[dayTimestamp]);
+    });
+
+  console.log("TOTAL_LIST", result);
 
   return result;
 };

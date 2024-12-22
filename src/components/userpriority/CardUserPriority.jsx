@@ -6,7 +6,7 @@ import { RiFocus2Line } from "react-icons/ri";
 import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
 import PlannerDrillDownModal from "@components/userpriority/drilldown/PlannerDrillDownModal.jsx";
-import { categorizeData } from "@components/userpriority/util/plannerUtil.js";
+import { aggregateData, categorizeData } from "@components/userpriority/util/plannerUtil.js";
 
 const CardUserPriority = () => {
   const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
@@ -16,20 +16,22 @@ const CardUserPriority = () => {
   const [detailViewType, setDetailViewType] = useState(null);
   const [filteredPlanner, setFilteredPlanner] = useState([]);
 
-  // Fetch data once on mount
   useEffect(() => {
     fetchUserPlannerData();
   }, []);
 
-  // Filter planner data whenever `data` or `selectedPlannerType` changes
+
   useEffect(() => {
     if (data && data.tasks) {
-      const categorizedData = categorizeData(data, selectedPlannerType);
+
+      const aggregated_data = aggregateData(data,selectedPlannerType);
+
+      const categorizedData = categorizeData(aggregated_data);
+
       setFilteredPlanner(categorizedData);
     }
   }, [data, selectedPlannerType]);
 
-  // Handle loading and error
   if (loading) {
     return <div>Loading...</div>;
   }

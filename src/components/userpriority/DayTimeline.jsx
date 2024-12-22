@@ -19,38 +19,44 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
     dot: getTypeIcon(item.type),
   }));
 
-
   const showPlannerDetail = () => {
     showDetailView(title);
   }
 
-  function getPlannerText(item) {
+  function getPlannerText(item_data) {
+    const item = item_data.items[0];
     switch (item.type) {
       case "Task":
+      case "Reminder":
         return (
           <div>
-            <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
+            <Text style={{ fontWeight: 500 }}>{item_data.time}</Text> -{" "}
             <Text>{item.count} Task(s) to complete</Text>
           </div>
         );
       case "CALL":
       case "MEETING":
       case "INTERVIEW":
+      case "Event":
+
+      const event_size = item.events.length;
+
+      const event_data = item.events[0];
 
         { let record_type = 'colleagues';
-        const label = item.type === "CALL" ? "Call": item.type === "MEETING" ? "Meeting" : "Interview";
+        const label = event_data.type === "CALL" ? "Call": event_data.type === "MEETING" ? "Meeting" : "Interview";
 
-        if (item.attendees && item.attendees.length > 0) {
-          const match = item.attendees.find(attendee => attendee.type !== 'UNRECORDED' && attendee.type === 'CONTACT');
+        if (event_data.attendees && event_data.attendees.length > 0) {
+          const match = event_data.attendees.find(attendee => attendee.type !== 'UNRECORDED' && attendee.type === 'CONTACT');
           record_type = match ? 'Client' : 'Candidate';
         }
 
         return (
           <div>
-            <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
+            <Text style={{ fontWeight: 500 }}>{item_data.time}</Text> -{" "}
             <Text>
               {label} with {record_type}{" "}
-              {item.attendees.map((rec, index) => (
+              {event_data.attendees.map((rec, index) => (
                 <Link key={index} href="">
                   {rec.label}
                 </Link>
@@ -61,14 +67,14 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
       case "APPLICATION":
         return (
           <div>
-            <Text style={{ fontWeight: 500 }}>{item.time}</Text> -{" "}
+            <Text style={{ fontWeight: 500 }}>{item_data.time}</Text> -{" "}
             <Text>Review your {item.count} job applications</Text>
           </div>
         );
       default:
         return (
           <div>
-            <Text style={{ fontWeight: 500 }}>{item.time || "Unknown time"}</Text> -{" "}
+            <Text style={{ fontWeight: 500 }}>{item_data.time || "Unknown time"}</Text> -{" "}
             <Text>Event</Text>
           </div>
         );
@@ -86,7 +92,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
         return <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />;
       case "INTERVIEW":
         return <FaMicrophone style={{ fontSize: "16px", color: "#faad14" }} />;
-        case "REMINDER":
+        case "Reminder":
           return <Alarm style={{fontSize: "16px", color: "#faad14" }} />;
       case "APPLICATION":
         return <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />;
