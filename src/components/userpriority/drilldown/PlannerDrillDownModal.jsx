@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Alert, Modal, Spin } from "antd";
 
 
-const PlannerDrillDownModal = ({modalVisible = false, type="Today"}) => {
+const PlannerDrillDownModal = ({modalVisible = false, type="Today",onDetailViewClose}) => {
   
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -12,20 +12,32 @@ const PlannerDrillDownModal = ({modalVisible = false, type="Today"}) => {
   useEffect(() => {
     setLoading(true);
     //TODO load data based on type..
+
+    setTimeout(() => {
+      setLoading(false);
+      setContent(type);
+    },2000);
   },[type]);
 
   useEffect(() => {
     setPlannerDetailVisible(modalVisible);
+    setTitle(type);
   }, [modalVisible,type]);
 
   const handlePlannerClose = () =>{
     setPlannerDetailVisible(false);
+
+    if(onDetailViewClose){
+      onDetailViewClose();
+    }
   }
+
+  const [title, setTitle] = useState("Today");
   
   return (<Modal
-    width="80vw"
+    width="100vw"
     style={{ top: 20 }}
-    title="Planner"
+    title={title}
     open={plannerDetailVisible}
     onCancel={handlePlannerClose}
     footer={null}

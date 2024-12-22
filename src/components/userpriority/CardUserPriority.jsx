@@ -6,12 +6,15 @@ import { RiFocus2Line } from "react-icons/ri";
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
 import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
 import { categorizeData } from "@components/userpriority/util/plannerUtil.js";
+import PlannerDrillDownModal from "@components/userpriority/drilldown/PlannerDrillDownModal.jsx";
 
 const CardUserPriority = () => {
 
   const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
 
-  const [selectedPlannerType, setSelectedPlannerType] = useState(null);
+  const [selectedPlannerType, setSelectedPlannerType] = useState("All");
+  const [showPlannerDetail, setShowPlannerDetail] = useState(false);
+  const [detailViewType, setDetailViewType] = useState(null);
 
   useEffect(()=>{
     fetchUserPlannerData();
@@ -19,6 +22,15 @@ const CardUserPriority = () => {
 
   if(loading || !data || !data.data){
     return <div>Loading...</div>;
+  }
+
+  function onDetailViewClose(){
+    setShowPlannerDetail(false);
+  }
+
+  const onShowPlannerDetail = (title) => {
+    setShowPlannerDetail(true);
+    setDetailViewType(title);
   }
 
   const updated_data = categorizeData(data.data.data);
@@ -34,6 +46,7 @@ const CardUserPriority = () => {
               value={selectedPlannerType}
               onChange={(value) => {
                 console.log(value); // string
+                setSelectedPlannerType(value);
               }}
             />
           </Flex>
@@ -56,11 +69,12 @@ const CardUserPriority = () => {
             whiteSpace: "nowrap"
           }}>
             {updated_data.map(data => (
-              <DayTimeline title={data.date} key={data.date} color={""} items={data.items}/>
+              <DayTimeline title={data.date} key={data.date} color={""} items={data.items} showDetailView={onShowPlannerDetail} />
             ))}
           </div>
         </>
       </Card>
+      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType} onDetailViewClose={onDetailViewClose} />
      </div>
   );
 };

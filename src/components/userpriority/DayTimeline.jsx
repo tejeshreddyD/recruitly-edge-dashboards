@@ -7,23 +7,22 @@ import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 import { CiCalendarDate } from "react-icons/ci";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
-import PlannerDrillDownModal from "@components/userpriority/drilldown/PlannerDrillDownModal.jsx";
 
 const { Text,Link } = Typography;
 
-const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
+const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDetailView }) => {
+
   const [isHovered, setIsHovered] = useState(false);
-
-  const [showPlannerDetail, setShowPlannerDetail] = useState(false);
-
-  const showDayPlanner = () => {
-    setShowPlannerDetail(true);
-  };
 
   const timelineItems = items.map((item) => ({
     children: getPlannerText(item),
     dot: getTypeIcon(item.type),
   }));
+
+
+  const showPlannerDetail = () => {
+    showDetailView(title);
+  }
 
   function getPlannerText(item) {
     switch (item.type) {
@@ -96,15 +95,13 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
     }
   }
 
-
-
   return (
     <Card
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       extra={
         <GrExpand
-          onClick={showDayPlanner}
+          onClick={showPlannerDetail}
           style={{
             color: "#000",
             cursor: "pointer",
@@ -129,7 +126,6 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
       }}
     >
       <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0" }} />
-      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={title}/>
     </Card>
   );
 };
