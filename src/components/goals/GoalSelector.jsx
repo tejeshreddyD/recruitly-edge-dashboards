@@ -67,7 +67,7 @@ const GoalSelector = ({ open, onClose }) => {
   return (
     <Drawer width={550} title="Customise Goals" onClose={onClose} open={open}>
       {/* Accordion with Checkbox Groups */}
-      <Collapse bordered={true}
+      <Collapse accordion bordered={true}
                 expanded={true}
                 defaultActiveKey={['1']}
                 expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
