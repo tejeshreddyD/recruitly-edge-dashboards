@@ -74,7 +74,7 @@ const CardUserPriority = () => {
           </div>
         </>
       </Card>
-      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType} onDetailViewClose={onDetailViewClose} />
+      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType} filterType={selectedPlannerType} onDetailViewClose={onDetailViewClose} />
      </div>
   );
 };

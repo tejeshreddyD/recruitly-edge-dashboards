@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Alert, Modal, Spin } from "antd";
 
 
-const PlannerDrillDownModal = ({modalVisible = false, type="Today",onDetailViewClose}) => {
+const PlannerDrillDownModal = ({modalVisible = false, type="Today",filterType="All", onDetailViewClose}) => {
   
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -11,13 +11,13 @@ const PlannerDrillDownModal = ({modalVisible = false, type="Today",onDetailViewC
 
   useEffect(() => {
     setLoading(true);
-    //TODO load data based on type..
+    //TODO load data based on type and filter..
 
     setTimeout(() => {
       setLoading(false);
-      setContent(type);
+      setContent(`${type} of ${filterType}`);
     },2000);
-  },[type]);
+  },[type,filterType]);
 
   useEffect(() => {
     setPlannerDetailVisible(modalVisible);
