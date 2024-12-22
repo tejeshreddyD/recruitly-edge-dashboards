@@ -38,9 +38,6 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   const onGoalSelectorClose = () => setGoalSelectorOpen(false);
 
   const matchedData = useMemo(() => {
-
-    console.log('MATCHED_PERIOD_DATA',periodData);
-
     if (!periodData || !configData?.selectedKpi) return [];
     return periodData
       .filter((item) =>
@@ -64,20 +61,20 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   const containerRef = useRef(null);
   const screens = useBreakpoint();
 
-  useEffect(() => {
-    const sortable = Sortable.create(containerRef.current, {
-      animation: 150,
-      onEnd: (evt) => {
-        const { oldIndex, newIndex } = evt;
-        if (oldIndex === newIndex) return;
-        const updatedData = Array.from(matchedData);
-        const [movedItem] = updatedData.splice(oldIndex, 1);
-        updatedData.splice(newIndex, 0, movedItem);
-      }
-    });
-
-    return () => sortable.destroy();
-  }, [matchedData]);
+  // useEffect(() => {
+  //   const sortable = Sortable.create(containerRef.current, {
+  //     animation: 150,
+  //     onEnd: (evt) => {
+  //       const { oldIndex, newIndex } = evt;
+  //       if (oldIndex === newIndex) return;
+  //       const updatedData = Array.from(matchedData);
+  //       const [movedItem] = updatedData.splice(oldIndex, 1);
+  //       updatedData.splice(newIndex, 0, movedItem);
+  //     }
+  //   });
+  //
+  //   return () => sortable.destroy();
+  // }, [matchedData]);
 
   const handleExpand = async (tile) => {
     setDrillDownModalVisible(true);

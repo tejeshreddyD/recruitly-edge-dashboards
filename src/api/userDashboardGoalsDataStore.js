@@ -15,7 +15,6 @@ const useUserDashboardGoalsDataStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await fetchUserGoalsData({ month, year });
-      console.log("FetchPeriodData", response);
       set({ periodData: response.data, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
