@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { TrophyOutlined, DownOutlined } from "@ant-design/icons";
-import { Dropdown, Button } from "antd";
-import useGoalsPeriodStore from "@api/useDashboardGoalsPeriodStore.js";
-import { BsCalendar2Range } from "react-icons/bs";
+import { Dropdown, Button, Spin, Typography } from "antd";
+import useGoalsPeriodStore from "@api/userDashboardGoalsDataStore.js";
+import { LuCalendarDays } from "react-icons/lu";
+
+const { Text } = Typography;
 
 const periods = [
   { label: "Last Quarter", value: "LAST_QUARTER" },
@@ -13,8 +15,17 @@ const periods = [
 ];
 
 const GoalPeriodHeader = () => {
-  const { selectedPeriod, setPeriod, selectedMonth, selectedYear } = useGoalsPeriodStore();
+  const {
+    selectedPeriod,
+    setPeriod,
+    selectedMonth,
+    selectedYear,
+    fetchPeriodData,
+    loading,
+    error
+  } = useGoalsPeriodStore();
 
+  // Initialize the default period
   useEffect(() => {
     if (!selectedPeriod) {
       const currentDate = new Date();
@@ -23,6 +34,13 @@ const GoalPeriodHeader = () => {
       setPeriod("THIS_MONTH", currentMonth, currentYear);
     }
   }, [selectedPeriod, setPeriod]);
+
+  // Fetch data whenever the selected period changes
+  useEffect(() => {
+    if (selectedMonth && selectedYear) {
+      fetchPeriodData(selectedMonth, selectedYear);
+    }
+  }, [selectedMonth, selectedYear, fetchPeriodData]);
 
   const handleMenuClick = ({ key }) => {
     const period = periods.find((p) => p.value === key);
@@ -67,7 +85,12 @@ const GoalPeriodHeader = () => {
   const menu = {
     items: periods.map((period) => ({
       key: period.value,
-      label: period.label
+      label: (
+        <>
+          <LuCalendarDays style={{ marginRight: 4 }} />
+          {period.label}
+        </>
+      )
     })),
     onClick: handleMenuClick
   };
@@ -92,9 +115,17 @@ const GoalPeriodHeader = () => {
             gap: "4px"
           }}
         >
-          <BsCalendar2Range style={{ marginRight: 4 }} /> {selectedLabel} <DownOutlined />
+          {selectedLabel} <DownOutlined />
         </Button>
       </Dropdown>
+      {loading && (
+        <Spin size="small" style={{ marginLeft: 12 }} />
+      )}
+      {error && (
+        <Text type="danger" style={{ marginLeft: 12 }}>
+          Error: {error}
+        </Text>
+      )}
     </div>
   );
 };

@@ -37,3 +37,16 @@ export const saveUserGoalsConfig = async ({ dashboardId, selectedKpi }) => {
     throw new Error("Failed to save goals configuration. Please try again.");
   }
 };
+
+
+export const fetchUserGoalsData = async ({ month,year }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.get("/kpi_user_data_by_month?month=" + month+"&year=" + year);
+    console.log("fetchUserGoalsData ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching goals data:", error.message);
+    throw new Error("Failed to fetch goals data. Please try again.");
+  }
+};
