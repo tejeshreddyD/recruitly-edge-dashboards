@@ -8,6 +8,7 @@ import JobsDrillDown from "@components/goals/drilldown/JobsDrillDown.jsx";
 import GoalSelector from "@components/goals/GoalSelector.jsx";
 import { LiaCalendar } from "react-icons/lia";
 import useUserDashboardGoalsConfigStore from "@api/userDashboardGoalsConfigStore.js";
+import GoalPeriodHeader from "@components/goals/GoalPeriodHeader.jsx";
 
 const { useBreakpoint } = Grid;
 
@@ -117,7 +118,6 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
             style={{ backgroundColor: "#1e3a8a" }}
             styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
             extra={
-
               <span onClick={showGoalSel}
                     style={{
                       cursor: "pointer",
@@ -129,14 +129,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId="" }) => {
               </span>
             }
             title={
-              <Flex direction="row" align={"center"} justify={"start"} gap={"middle"}>
-                <span><TrophyOutlined style={{ marginRight: 4 }} /> Goals</span>
-                <Tag color={"teal"} style={{ fontSize: 14, cursor: "pointer" }}>
-                  <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
-                    <LiaCalendar /> This Week
-                  </Flex>
-                </Tag>
-              </Flex>
+              <GoalPeriodHeader/>
             }
       >
         <div
