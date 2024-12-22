@@ -9,7 +9,7 @@ export const categorizeData = (apiResponse) => {
 
   const result = [];
 
-  const addCategory = (date, applications = null, overdueCount = null, items = []) => {
+  const addCategory = (date, applications = 0, overdueCount = 0,items = []) => {
     result.push({
       date,
       applications,

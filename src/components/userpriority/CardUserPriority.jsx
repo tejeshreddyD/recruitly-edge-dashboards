@@ -9,9 +9,9 @@ import { categorizeData } from "@components/userpriority/util/plannerUtil.js";
 
 const CardUserPriority = () => {
 
-  const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
-
   const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
+
+  const [selectedPlannerType, setSelectedPlannerType] = useState(null);
 
   useEffect(()=>{
     fetchUserPlannerData();
@@ -23,11 +23,6 @@ const CardUserPriority = () => {
 
   const updated_data = categorizeData(data.data.data);
 
-  // Function to handle modal close
-  const handleModalClose = () => {
-    setDrillDownModalVisible(false);
-  };
-
   return (
     <div>
       <Card
@@ -35,7 +30,8 @@ const CardUserPriority = () => {
           <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
             <BsFunnel />
             <Segmented
-              options={["Interviews", "New Starters", "Meetings", "Invoice Due"]}
+              options={["All","Interviews", "New Starters", "Meetings", "Invoice Due"]}
+              value={selectedPlannerType}
               onChange={(value) => {
                 console.log(value); // string
               }}
@@ -65,16 +61,7 @@ const CardUserPriority = () => {
           </div>
         </>
       </Card>
-      <Modal
-        width="80vw"
-        style={{ top: 20 }}
-        title="Goal Details"
-        open={isDrillDownModalVisible}
-        onCancel={handleModalClose}
-        footer={null}
-      >
-      </Modal>
-    </div>
+     </div>
   );
 };
 

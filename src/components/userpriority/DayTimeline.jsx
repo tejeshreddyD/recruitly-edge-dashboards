@@ -1,19 +1,24 @@
 import { useState } from "react";
 import { Card, Flex, Timeline, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
-import { FaPhone, FaTasks } from "react-icons/fa";
-import { FaMeetup } from "react-icons/fa6";
+import { FaMicrophone, FaTasks } from "react-icons/fa";
 import { GrExpand } from "react-icons/gr";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
-import Link from "antd/es/typography/Link.js";
 import { CiCalendarDate } from "react-icons/ci";
-import { PhoneCall } from "@phosphor-icons/react";
+import { Alarm, PhoneCall } from "@phosphor-icons/react";
+import PlannerDrillDownModal from "@components/userpriority/drilldown/PlannerDrillDownModal.jsx";
 
-const { Text } = Typography;
+const { Text,Link } = Typography;
 
 const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  const [showPlannerDetail, setShowPlannerDetail] = useState(false);
+
+  const showDayPlanner = () => {
+    setShowPlannerDetail(true);
+  };
 
   const timelineItems = items.map((item) => ({
     children: getPlannerText(item),
@@ -80,6 +85,10 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
         return <PhoneCall style={{ fontSize: "16px", color: "#52c41a" }} />;
       case "MEETING":
         return <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />;
+      case "INTERVIEW":
+        return <FaMicrophone style={{ fontSize: "16px", color: "#faad14" }} />;
+        case "REMINDER":
+          return <Alarm style={{fontSize: "16px", color: "#faad14" }} />;
       case "APPLICATION":
         return <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />;
       default:
@@ -87,12 +96,15 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
     }
   }
 
+
+
   return (
     <Card
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       extra={
         <GrExpand
+          onClick={showDayPlanner}
           style={{
             color: "#000",
             cursor: "pointer",
@@ -117,6 +129,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [] }) => {
       }}
     >
       <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0" }} />
+      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={title}/>
     </Card>
   );
 };
