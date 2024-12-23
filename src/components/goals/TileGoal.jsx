@@ -1,154 +1,118 @@
-import { Card, Flex, Tag, Tooltip, Typography } from "antd";
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { Card, Flex, Tooltip, Typography } from "antd";
 import { GrExpand } from "react-icons/gr";
 import { AgGauge, AgCharts } from "ag-charts-react";
 import "ag-charts-enterprise";
 import { TrophyOutlined } from "@ant-design/icons";
 import { TbSum } from "react-icons/tb";
 import { AiOutlineDollarCircle } from "react-icons/ai";
-import { PiTelevisionBold, PiTrendUp } from "react-icons/pi";
-import { FiTarget } from "react-icons/fi";
 import { BiTargetLock } from "react-icons/bi";
 
 const { Text } = Typography;
 
 const formatNumber = (num) => {
-
   if (!num) return num;
-
-  if (num < 1000) {
-    return num.toString(); // Show exact numbers for small values
-  }
-  const fmt = new Intl.NumberFormat(undefined, {
-    notation: "compact", // Enables formatting like 1.2K, 3M
-    maximumFractionDigits: 1 // One decimal point
-  }).format(num); // Properly format large numbers
-
-  console.log("NUMBER", num, " FORMATED ", fmt);
-
-  return fmt;
+  if (num < 1000) return num.toString();
+  return new Intl.NumberFormat(undefined, {
+    notation: "compact",
+    maximumFractionDigits: 1
+  }).format(num);
 };
 
 const TileGoal = ({ tileData, onExpand }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const getIcon = () => {
-    if (tileData.type === "value") {
-      return <AiOutlineDollarCircle style={{ marginRight: 8 }} />;
-    } else if (tileData.type === "count") {
-      return <TbSum style={{ marginRight: 8 }} />;
-    } else {
-      return <TrophyOutlined style={{ marginRight: 8 }} />;
+    switch (tileData.type) {
+      case "value":
+        return <AiOutlineDollarCircle style={{ marginRight: 8 }} />;
+      case "count":
+        return <TbSum style={{ marginRight: 8 }} />;
+      default:
+        return <TrophyOutlined style={{ marginRight: 8 }} />;
     }
   };
 
-  const progress = tileData.target > 0
-    ? Math.min((tileData.actual / tileData.target) * 100, 100) // Cap progress at 100%
-    : tileData.actual || 0;
+  const progress = useMemo(() => {
+    if (tileData.target > 0) {
+      return Math.min((tileData.actual / tileData.target) * 100, 100);
+    }
+    return tileData.actual || 0;
+  }, [tileData.actual, tileData.target]);
 
-  const gaugeOptions = {
+  const gaugeOptions = useMemo(() => ({
     height: 120,
-    padding: {
-      top: 0,
-      right: 20,
-      bottom: 30,
-      left: 20
-    },
+    padding: { top: 0, right: 20, bottom: 30, left: 20 },
     type: "radial-gauge",
     value: progress,
     startAngle: -135,
     endAngle: 135,
-    background: {
-      fill: "transparent"
-    },
+    background: { fill: "transparent" },
     scale: {
       min: 0,
-      max: 100, // Gauge always shows progress in percentage
+      max: 100,
       fill: "#e6e6ec",
-      label: {
-        enabled: false
-      }
+      label: { enabled: false }
     },
     cornerRadius: 99,
     cornerMode: "item",
     bar: {
-      fill: progress === 100 ? "#52c41a" : "#35a124" // Green when complete
+      fill: progress === 100 ? "#52c41a" : "#35a124"
     },
     label: {
-      text: tileData.target > 0 ? `${progress.toFixed(0)}%` : `${progress}`, // Show percentage or value
+      text: tileData.target > 0 ? `${progress.toFixed(0)}%` : `${progress}`,
       color: "#000",
       fontSize: 14
     }
-  };
+  }), [progress, tileData.target]);
 
-  const filteredPrevData = (tileData.prev || []).filter((item) => item !== null);
+  const filteredPrevData = useMemo(
+    () => (tileData.prev || []).filter((item) => item !== null),
+    [tileData.prev]
+  );
 
-  const miniBarChartOptions = {
-    width: 100, // Width for the sparkline chart
-    height: 120, // Height for compact design
+  const miniBarChartOptions = useMemo(() => ({
+    width: 100,
+    height: 120,
     data: [
-      ...filteredPrevData
-        .slice()
-        .reverse() // Reverse the order for descending chronology
-        .map((prev) => ({
-          monthName: prev.monthName,
-          actualValue: prev.actualValue || 0
-        })),
+      ...filteredPrevData.slice().reverse().map((prev) => ({
+        monthName: prev.monthName,
+        actualValue: prev.actualValue || 0
+      })),
       {
-        monthName: tileData.monthName, // Add current month's name
-        actualValue: tileData.actual || 0 // Use current month's actual value
+        monthName: tileData.monthName,
+        actualValue: tileData.actual || 0
       }
     ],
-    background: {
-      fill: "transparent" // No background
-    },
+    background: { fill: "transparent" },
     series: [
       {
         type: "bar",
         xKey: "monthName",
         yKey: "actualValue",
-        fill: "#2450a1", // Bar fill color
-        stroke: "transparent" // No stroke for the bars
+        fill: "#2450a1",
+        stroke: "transparent"
       }
     ],
     axes: [
       {
         type: "category",
         position: "bottom",
-        line: {
-          width: 0 // Hide axis line
-        },
-        tick: {
-          width: 0 // Hide ticks
-        },
-        label: {
-          enabled: false // Disable labels
-        }
+        line: { width: 0 },
+        tick: { width: 0 },
+        label: { enabled: false }
       },
       {
         type: "number",
         position: "left",
-        line: {
-          width: 0 // Hide axis line
-        },
-        tick: {
-          width: 0 // Hide ticks
-        },
-        label: {
-          enabled: false // Disable labels
-        }
+        line: { width: 0 },
+        tick: { width: 0 },
+        label: { enabled: false }
       }
     ],
-    legend: {
-      enabled: false // No legend
-    },
-    padding: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0 // Remove padding
-    }
-  };
+    legend: { enabled: false },
+    padding: { top: 0, right: 0, bottom: 0, left: 0 }
+  }), [filteredPrevData, tileData.monthName, tileData.actual]);
 
   const gradientColor = "linear-gradient(173deg, rgb(230 247 255) 8%, rgb(255, 255, 255))";
 
@@ -156,10 +120,7 @@ const TileGoal = ({ tileData, onExpand }) => {
     <Card
       hoverable
       size="small"
-      style={{
-        background: gradientColor,
-        border: "none"
-      }}
+      style={{ background: gradientColor, border: "none" }}
       styles={{
         body: { padding: 0 },
         header: { border: "none", margin: 0, fontSize: 14 },
@@ -168,7 +129,9 @@ const TileGoal = ({ tileData, onExpand }) => {
       title={
         <Flex gap={1} align={"center"}>
           {getIcon()}
-          <Tooltip title={tileData.title}><Text ellipsis>{tileData.title}</Text></Tooltip>
+          <Tooltip title={tileData.title}>
+            <Text ellipsis>{tileData.title}</Text>
+          </Tooltip>
         </Flex>
       }
       extra={
@@ -201,7 +164,9 @@ const TileGoal = ({ tileData, onExpand }) => {
                     /{formatNumber(tileData.target)} <BiTargetLock />
                   </Flex>
                 </Tooltip>
-              ) : <>&nbsp;</>}
+              ) : (
+                <>&nbsp;</>
+              )}
             </Flex>
           </Text>
           <div style={{ display: "inline-block" }}>
