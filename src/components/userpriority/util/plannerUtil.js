@@ -1,5 +1,5 @@
 
-import { extractTimeFromTimestamp } from "@utils/dateUtil.js";
+import { extractTimeFromTimestamp, getTimestampByDay } from "@utils/dateUtil.js";
 
 export const aggregateData = (respData,plannerType) => {
   const uniqueDayMap = new Map();
@@ -7,6 +7,9 @@ export const aggregateData = (respData,plannerType) => {
   const tasks = plannerType === 'ALL' || plannerType === 'REMINDER' ?  respData.tasks || [] : [];
   const reminders = plannerType === 'ALL' || plannerType === 'REMINDER' ? respData.reminders || [] : [];
   const events = plannerType === 'ALL' || plannerType === 'EVENTS' ? respData.events || [] : [];
+  const starters = plannerType === 'ALL' || plannerType === 'STARTERS' ? respData.placement_starters : [];
+  const action_items  = plannerType === 'ALL' || plannerType === 'REMINDER' ? respData.action_items || [] : [];
+  const invoices_due = plannerType === 'ALL' || plannerType === 'INVOICE_DUE' ? respData.invoice_due || [] : [];
 
   const addToMap = (date, time, type, data) => {
     if (!uniqueDayMap.has(date)) {
@@ -39,6 +42,11 @@ export const aggregateData = (respData,plannerType) => {
     });
   });
 
+  starters.forEach((starter) => {
+    const time = getTimestampByDay(starter.day);
+    addToMap(starter.day, time,"Placement",{count:starter.count,time:time});
+  });
+
   const data = Array.from(uniqueDayMap.values()).map((dayEntry) => {
     return {
       due_date: dayEntry.day,
@@ -62,10 +70,6 @@ export const aggregateData = (respData,plannerType) => {
 
 
 export const categorizeData = (apiResponse) => {
-
-  if (!apiResponse || !apiResponse.data || !apiResponse.data.length) {
-    return [];
-  }
 
   //console.log("APIResponse", apiResponse);
 

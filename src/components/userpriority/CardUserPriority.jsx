@@ -40,7 +40,7 @@ const CardUserPriority = () => {
     return <Alert message="Error loading data" type="error" />;
   }
 
-  if (!filteredPlanner || filteredPlanner.length === 0) {
+  if (!filteredPlanner) {
     return <div>No data available</div>;
   }
 
