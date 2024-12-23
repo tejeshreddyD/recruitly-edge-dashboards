@@ -135,9 +135,9 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
           }}
         >
           {dataLoading || configLoading ? (
-            <Spin tip="Loading...">
-              <div style={{ minHeight: "100px" }} />
-            </Spin>
+            <div style={{textAlign: "center",alignContent:'center',width: "100%",color:"#fff"}}>
+              Generating your goals...
+            </div>
           ) : dataError || configError ? (
             <Alert message={dataError || configError} type="error" showIcon />
           ) : (

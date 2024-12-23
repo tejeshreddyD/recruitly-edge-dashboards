@@ -132,7 +132,7 @@ const GoalPeriodHeader = () => {
           {selectedLabel} <DownOutlined />
         </Button>
       </Dropdown>
-      {loading && <Spin size="small" style={{ marginLeft: 12 }} />}
+      {loading && <></>}
       {error && (
         <Text type="danger" style={{ marginLeft: 12 }}>
           Error: {error}

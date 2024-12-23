@@ -3,8 +3,9 @@ import { useState } from "react";
 import { GrExpand } from "react-icons/gr";
 import { AgGauge, AgCharts } from "ag-charts-react";
 import "ag-charts-enterprise";
-import { TrophyOutlined, DollarCircleFilled } from "@ant-design/icons";
+import { TrophyOutlined } from "@ant-design/icons";
 import { TbSum } from "react-icons/tb";
+import { AiOutlineDollarCircle } from "react-icons/ai";
 
 const { Text } = Typography;
 
@@ -13,7 +14,7 @@ const TileGoal = ({ tileData, onExpand }) => {
 
   const getIcon = () => {
     if (tileData.type === "value") {
-      return <DollarCircleFilled style={{ marginRight: 8 }} />;
+      return <AiOutlineDollarCircle style={{ marginRight: 8 }} />;
     } else if (tileData.type === "count") {
       return <TbSum style={{ marginRight: 8 }} />;
     } else {
@@ -71,15 +72,15 @@ const TileGoal = ({ tileData, onExpand }) => {
         .reverse() // Reverse the order for descending chronology
         .map((prev) => ({
           monthName: prev.monthName,
-          actualValue: prev.actualValue || 0,
+          actualValue: prev.actualValue || 0
         })),
       {
         monthName: tileData.monthName, // Add current month's name
-        actualValue: tileData.actual || 0, // Use current month's actual value
-      },
+        actualValue: tileData.actual || 0 // Use current month's actual value
+      }
     ],
     background: {
-      fill: "transparent", // No background
+      fill: "transparent" // No background
     },
     series: [
       {
@@ -87,46 +88,46 @@ const TileGoal = ({ tileData, onExpand }) => {
         xKey: "monthName",
         yKey: "actualValue",
         fill: "#2450a1", // Bar fill color
-        stroke: "transparent", // No stroke for the bars
-      },
+        stroke: "transparent" // No stroke for the bars
+      }
     ],
     axes: [
       {
         type: "category",
         position: "bottom",
         line: {
-          width: 0, // Hide axis line
+          width: 0 // Hide axis line
         },
         tick: {
-          width: 0, // Hide ticks
+          width: 0 // Hide ticks
         },
         label: {
-          enabled: false, // Disable labels
-        },
+          enabled: false // Disable labels
+        }
       },
       {
         type: "number",
         position: "left",
         line: {
-          width: 0, // Hide axis line
+          width: 0 // Hide axis line
         },
         tick: {
-          width: 0, // Hide ticks
+          width: 0 // Hide ticks
         },
         label: {
-          enabled: false, // Disable labels
-        },
-      },
+          enabled: false // Disable labels
+        }
+      }
     ],
     legend: {
-      enabled: false, // No legend
+      enabled: false // No legend
     },
     padding: {
       top: 0,
       right: 0,
       bottom: 0,
-      left: 0, // Remove padding
-    },
+      left: 0 // Remove padding
+    }
   };
 
   const gradientColor = "linear-gradient(173deg, rgb(230 247 255) 8%, rgb(255, 255, 255))";
