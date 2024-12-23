@@ -186,9 +186,7 @@ const TileGoal = ({ tileData, onExpand }) => {
       onMouseLeave={() => setIsHovered(false)}
       actions={[
         <Flex direction="row" align="center" justify="end" gap="large" style={{ paddingRight: 16 }}>
-          <PiTrendUp />
           <TrophyOutlined />
-          <PiTelevisionBold />
         </Flex>
       ]}
     >
