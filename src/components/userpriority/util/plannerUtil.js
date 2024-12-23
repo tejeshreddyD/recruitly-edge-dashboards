@@ -40,6 +40,7 @@ export const aggregateData = (respData,plannerType) => {
     event.times.forEach((eventTime) => {
 
       eventTime.events.forEach((event_data) => {
+        console.log(event.eventDate,eventTime.time,event_data.type);
         addToMap(event.eventDate, eventTime.time, event_data.type, event_data);
       })
 
