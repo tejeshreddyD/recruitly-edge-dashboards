@@ -7,6 +7,7 @@ import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
 import DayTimeline from "@components/userpriority/DayTimeline.jsx";
 import PlannerDrillDownModal from "@components/userpriority/drilldown/PlannerDrillDownModal.jsx";
 import { aggregateData, categorizeData } from "@components/userpriority/util/plannerUtil.js";
+import { Spinner } from "@phosphor-icons/react";
 
 const CardUserPriority = () => {
   const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
@@ -32,17 +33,6 @@ const CardUserPriority = () => {
     }
   }, [data, selectedPlannerType]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <Alert message="Error loading data" type="error" />;
-  }
-
-  if (!filteredPlanner) {
-    return <div>No data available</div>;
-  }
 
   const onDetailViewClose = () => {
     setShowPlannerDetail(false);
@@ -98,8 +88,28 @@ const CardUserPriority = () => {
             padding: "16px",
             whiteSpace: "nowrap",
           }}
-        >
-          {filteredPlanner.map((data) => (
+        >{loading ? <Flex
+            gap={8}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center"
+            }}
+          >
+            <Spinner
+              size={40}
+              style={{
+                color: "#1890ff",
+                animation: "spin 1s linear infinite",
+              }}
+            />
+            <div>
+              <h4 style={{ fontWeight: "normal", fontSize: "1rem", margin: 0 }}>
+                Organizing your planner
+              </h4>
+            </div>
+          </Flex>
+          : error ? <Alert message="Error loading data" type="error" /> : filteredPlanner.map((data) => (
             <DayTimeline title={data.date} key={data.date} color="" items={data.items} showDetailView={onShowPlannerDetail} />
           ))}
         </div>
