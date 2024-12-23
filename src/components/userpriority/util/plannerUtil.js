@@ -44,7 +44,8 @@ export const aggregateData = (respData,plannerType) => {
       due_date: dayEntry.day,
       data: Array.from(dayEntry.times.entries())
         .map(([time, items]) => ({
-          time:extractTimeFromTimestamp(time),
+          time,
+          formatted_time:extractTimeFromTimestamp(time),
           items,
         }))
         .sort((a, b) => a.time - b.time),
@@ -53,13 +54,16 @@ export const aggregateData = (respData,plannerType) => {
 
   data.sort((a, b) => a.due_date - b.due_date);
 
-  return data;
+  return {
+    job_applications:respData.job_applications,
+    data:data
+  };
 };
 
 
 export const categorizeData = (apiResponse) => {
 
-  if (!apiResponse || !apiResponse.length) {
+  if (!apiResponse || !apiResponse.data || !apiResponse.data.length) {
     return [];
   }
 
@@ -87,7 +91,7 @@ export const categorizeData = (apiResponse) => {
     });
   };
 
-  apiResponse.forEach((dayData) => {
+  apiResponse.data.forEach((dayData) => {
     const dayTimestamp = dayData.due_date;
     const dayItems = dayData.data;
 
