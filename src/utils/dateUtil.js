@@ -37,7 +37,7 @@ export const getTodayTimestampByTimeZone = () => {
 
   return moment.tz(tz)
     .startOf("day")
-    .add(9, "hours")
+    .add(0, "hours")
     .valueOf();
 };
 
