@@ -49,7 +49,7 @@ const PlannerDrillDownModal = ({modalVisible = false, type="Today",filterType="A
       </Spin>
     ) : dataLoadError ? (
       <Alert message={dataLoadError} type="error" showIcon />
-    ) : (<PlannerDrillDownData/>)}
+    ) : (<PlannerDrillDownData type={type} filterType={filterType} />)}
   </Modal>)
 }
 

@@ -1,14 +1,15 @@
-import React from 'react';
-import { Breadcrumb, Layout, Menu } from 'antd';
+import React, { useRef } from "react";
+import { Breadcrumb, Card, Layout, Menu } from "antd";
 
 import { CalendarOutlined, LaptopOutlined, NotificationOutlined, UserOutlined } from "@ant-design/icons";
 import { FaTasks } from "react-icons/fa";
 import { Alarm, Handshake, Microphone } from "@phosphor-icons/react";
 import { CgWebsite } from "react-icons/cg";
+import { AgGridReact } from "ag-grid-react";
 
 const { Header, Content, Sider } = Layout;
 
-const PlannerDrillDownData = () => {
+const PlannerDrillDownData = ({type="Today",filterType="ALL"}) => {
 
   const items1 = ['1', '2', '3'].map((key) => ({
     key,
@@ -34,6 +35,13 @@ const PlannerDrillDownData = () => {
       };
     },
   );
+
+  const gridRef = useRef(null);
+
+  const columnDef = [{
+    field: "name",
+    title: "Name",
+  }]
 
   return (
       <Layout>
@@ -72,17 +80,12 @@ const PlannerDrillDownData = () => {
           />
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              //background: colorBgContainer,
-              //borderRadius: borderRadiusLG,
-            }}
-          >
-            Content
-          </Content>
+          <Card bordered={false} title={type} styles={{header:{border:0},body:{height:100}}} content={"Content goes here..."}>
+           <AgGridReact
+                        gridRef={gridRef}
+           columnDefs={[]}/>
+          </Card>
+
         </Layout>
       </Layout>
   );
