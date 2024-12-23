@@ -67,7 +67,7 @@ export const categorizeData = (apiResponse) => {
     return [];
   }
 
-  console.log("APIResponse", apiResponse);
+  //console.log("APIResponse", apiResponse);
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -97,7 +97,9 @@ export const categorizeData = (apiResponse) => {
 
     if (dayTimestamp < todayStart) {
 
-      todayOverdueCount += dayItems.filter((item) => item.type === "Task" || item.type === 'Reminder').reduce((sum, item) => sum + (item.count || 0), 0);
+     // console.log("DAY_ITEMS:",dayItems);
+
+      todayOverdueCount += dayItems.forEach((item) => item.items.filter((item) => item.type === "Task" || item.type === 'Reminder').reduce((sum, item) => sum + (item.count || 0), 0));
     } else if (dayTimestamp <= endOfToday) {
 
       todayItems.push(...dayItems);
@@ -122,7 +124,7 @@ export const categorizeData = (apiResponse) => {
       addCategory(new Date(parseInt(dayTimestamp)).toDateString(), 0, 0, upcomingDays[dayTimestamp]);
     });
 
-  console.log("TOTAL_LIST", result);
+  //console.log("TOTAL_LIST", result);
 
   return result;
 };
