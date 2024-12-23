@@ -1,5 +1,5 @@
 import React, { useMemo,useState } from "react";
-import { Card, Flex, Timeline, Typography } from "antd";
+import { Button, Card, Empty, Flex, Timeline, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
@@ -8,6 +8,8 @@ import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
+import { SmileOutlined } from "@ant-design/icons";
+import Title from "antd/es/skeleton/Title.js";
 
 const { Text, Link } = Typography;
 
@@ -119,7 +121,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
     <Card
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      extra={
+      extra={timelineItems.length > 0 ?
         <GrExpand
           onClick={showPlannerDetail}
           style={{
@@ -128,8 +130,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
             display: isHovered ? "inline-block" : "none",
             transition: "opacity 0.3s",
           }}
-        />
-      }
+        />:''}
       styles={{ header: { borderBottom: 0 } }}
       title={
         <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
@@ -145,7 +146,26 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         borderRadius: "8px",
       }}
     >
-      <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0" }} />
+      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0" }} /> : (<><Empty style={{
+        backgroundColor: color,
+        overflowWrap: "break-word",
+        marginBottom: 10,
+        borderRadius: "8px",
+      }}
+        image={<SmileOutlined style={{ fontSize: 50, color: "#d1c42e" }} />}
+        description={
+          <>
+            <Text type="secondary" style={{
+              backgroundColor: color,
+              overflowWrap: "break-word",
+              marginBottom: 10,
+              borderRadius: "8px",
+            }}>
+              It seems like you don’t have any activity scheduled.
+            </Text>
+          </>
+        }
+      /></>)}
     </Card>
   );
 });
