@@ -6,6 +6,7 @@ import "ag-charts-enterprise";
 import { TrophyOutlined } from "@ant-design/icons";
 import { TbSum } from "react-icons/tb";
 import { AiOutlineDollarCircle } from "react-icons/ai";
+import { PiTelevisionBold, PiTrendUp } from "react-icons/pi";
 
 const { Text } = Typography;
 
@@ -148,7 +149,7 @@ const TileGoal = ({ tileData, onExpand }) => {
       title={
         <Flex gap={1} align={"center"}>
           {getIcon()}
-          <Tooltip title={tileData.title}>{tileData.title}</Tooltip>
+          <Tooltip title={tileData.title}><Text ellipsis>{tileData.title}</Text></Tooltip>
         </Flex>
       }
       extra={
@@ -164,6 +165,13 @@ const TileGoal = ({ tileData, onExpand }) => {
       }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      actions={[
+        <Flex direction="row" align="center" justify="end" gap="large" style={{ paddingRight: 16 }}>
+          <PiTrendUp />
+          <TrophyOutlined />
+          <PiTelevisionBold />
+        </Flex>
+      ]}
     >
       <div style={{ padding: 5 }}>
         <Flex gap={"middle"} vertical align={"center"} justify={"space-around"}>
