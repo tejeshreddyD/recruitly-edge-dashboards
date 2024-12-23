@@ -1,114 +1,130 @@
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Card, Flex, Timeline, Typography } from "antd";
-import { CgWebsite } from "react-icons/cg";
-import { FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
-import { GrExpand } from "react-icons/gr";
-import { MdAlarm } from "react-icons/md";
-import { RiCalendarView } from "react-icons/ri";
+import { FaTasks, FaMicrophone, FaHandshake } from "react-icons/fa";
+
 import { CiCalendarDate } from "react-icons/ci";
+import { MdAlarm } from "react-icons/md";
+
+import { CgWebsite } from "react-icons/cg";
+import { GrExpand } from "react-icons/gr";
+import { RiCalendarView } from "react-icons/ri";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
 
-const { Text,Link } = Typography;
+const { Text, Link } = Typography;
 
-const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDetailView }) => {
-
+const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = [], showDetailView }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const timelineItems = items.map((item) => ({
-    children: getPlannerText(item),
-    dot: getTypeIcon(item.items[0].type),
-  }));
+  const getTypeIcon = useMemo(() => {
+    const iconMap = {
+      TASK: <FaTasks style={{ fontSize: "16px", color: "#1890ff" }} />,
+      CALL: <PhoneCall style={{ fontSize: "16px", color: "#52c41a" }} />,
+      MEETING: <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />,
+      INTERVIEW: <FaMicrophone style={{ fontSize: "16px", color: "#faad14" }} />,
+      REMINDER: <Alarm style={{ fontSize: "16px", color: "#faad14" }} />,
+      APPLICATION: <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />,
+      PLACEMENT_STARTER: <FaHandshake style={{ fontSize: "16px", color: "#faad14" }} />,
+      DEFAULT: <MdAlarm style={{ fontSize: "16px", color: "#f5222d" }} />,
+    };
 
+    return (type) => iconMap[type] || iconMap.DEFAULT;
+  }, []);
+
+  // Helper to generate planner text
+  const getPlannerText = useMemo(() => {
+    const textStyle = {
+      display: "block",
+      whiteSpace: "normal",
+      wordBreak: "break-word",
+      overflowWrap: "break-word",
+    };
+
+    return (itemData) => {
+      const item = itemData.items[0];
+      if (!item) return null;
+
+      switch (item.type) {
+        case "TASK":
+        case "REMINDER":
+          return (
+            <div style={textStyle}>
+              <Text style={{ fontWeight: 500 }}>{itemData.formatted_time}</Text> -{" "}
+              <Text>{item.count} Task(s) to complete</Text>
+            </div>
+          );
+        case "CALL":
+        case "MEETING":
+        case "INTERVIEW":
+        case "CAL_EVENT": {
+          const eventData = item.events[0];
+          let recordType = "colleagues";
+          const label =
+            eventData.type === "CALL"
+              ? "Call"
+              : eventData.type === "MEETING"
+                ? "Meeting"
+                : "Interview";
+
+          if (eventData.attendees && eventData.attendees.length > 0) {
+            const match = eventData.attendees.find(
+              (attendee) => attendee.type !== "UNRECORDED" && attendee.type === "CONTACT"
+            );
+            recordType = match ? "Client" : "Candidate";
+          }
+
+          return (
+            <div style={textStyle}>
+              <Text style={{ fontWeight: 500 }}>{itemData.formatted_time}</Text> -{" "}
+              <Text>
+                {label} with {recordType}{" "}
+                {eventData.attendees.map((rec, index) => (
+                  <Link key={index} href="">
+                    {rec.label}
+                  </Link>
+                ))}
+              </Text>
+            </div>
+          );
+        }
+        case "PLACEMENT_STARTER":
+          return (
+            <div style={textStyle}>
+              <Text style={{ fontWeight: 500 }}>{itemData.formatted_time}</Text> -{" "}
+              <Text>Follow-up {item.count} Placement(s) starting</Text>
+            </div>
+          );
+        case "APPLICATION":
+          return (
+            <div style={textStyle}>
+              <Text style={{ fontWeight: 500 }}>{itemData.formatted_time}</Text> -{" "}
+              <Text>Review your {item.count} pending job applications</Text>
+            </div>
+          );
+        default:
+          return (
+            <div style={textStyle}>
+              <Text style={{ fontWeight: 500 }}>{itemData.formatted_time || "Unknown time"}</Text> -{" "}
+              <Text>Event</Text>
+            </div>
+          );
+      }
+    };
+  }, []);
+
+  // Memoized timeline items
+  const timelineItems = useMemo(
+    () =>
+      items.map((item) => ({
+        children: getPlannerText(item),
+        dot: getTypeIcon(item.items[0]?.type),
+      })),
+    [items, getPlannerText]
+  );
+
+  // Show planner detail callback
   const showPlannerDetail = () => {
     showDetailView(title);
-  }
-
-  function getPlannerText(item_data) {
-    const item = item_data.items[0];
-    switch (item.type) {
-      case "TASK":
-      case "REMINDER":
-        return (
-          <div>
-            <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
-            <Text>{item.count} Task(s) to complete</Text>
-          </div>
-        );
-      case "CALL":
-      case "MEETING":
-      case "INTERVIEW":
-      case "CAL_EVENT":
-
-      const event_size = item.events.length;
-
-      const event_data = item.events[0];
-
-        { let record_type = 'colleagues';
-        const label = event_data.type === "CALL" ? "Call": event_data.type === "MEETING" ? "Meeting" : "Interview";
-
-        if (event_data.attendees && event_data.attendees.length > 0) {
-          const match = event_data.attendees.find(attendee => attendee.type !== 'UNRECORDED' && attendee.type === 'CONTACT');
-          record_type = match ? 'Client' : 'Candidate';
-        }
-
-        return (
-          <div>
-            <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
-            <Text>
-              {label} with {record_type}{" "}
-              {event_data.attendees.map((rec, index) => (
-                <Link key={index} href="">
-                  {rec.label}
-                </Link>
-              ))}
-            </Text>
-          </div>
-        ); }
-      case "PLACEMENT_STARTER":
-        return (
-        <div>
-          <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
-          <Text>Follow-up {item.count} Placement(s) starting</Text>
-        </div>
-      );
-      case "APPLICATION":
-        return (
-          <div>
-            <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
-            <Text>Review your {item.count} pending job applications</Text>
-          </div>
-        );
-      default:
-        return (
-          <div>
-            <Text style={{ fontWeight: 500 }}>{item_data.formatted_time || "Unknown time"}</Text> -{" "}
-            <Text>Event</Text>
-          </div>
-        );
-    }
-  }
-
-  // Get Icon by Type
-  function getTypeIcon(type) {
-    switch (type) {
-      case "TASK":
-        return <FaTasks style={{ fontSize: "16px", color: "#1890ff" }} />;
-      case "CALL":
-        return <PhoneCall style={{ fontSize: "16px", color: "#52c41a" }} />;
-      case "MEETING":
-        return <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />;
-      case "INTERVIEW":
-        return <FaMicrophone style={{ fontSize: "16px", color: "#faad14" }} />;
-        case "REMINDER":
-          return <Alarm style={{fontSize: "16px", color: "#faad14" }} />;
-      case "APPLICATION":
-        return <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />;
-      case "PLACEMENT_STARTER":
-        return <FaHandshake style={{ fontSize: "16px", color: "#faad14" }} />;
-      default:
-        return <MdAlarm style={{ fontSize: "16px", color: "#f5222d" }} />;
-    }
-  }
+  };
 
   return (
     <Card
@@ -143,6 +159,6 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
       <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0" }} />
     </Card>
   );
-};
+});
 
 export default DailyTimeline;
