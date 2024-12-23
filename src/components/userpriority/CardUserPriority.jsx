@@ -89,8 +89,7 @@ const CardUserPriority = () => {
               Week Planner
             </span>
           </Flex>
-        }
-      >
+        }>
         <div
           style={{
             display: "flex",
