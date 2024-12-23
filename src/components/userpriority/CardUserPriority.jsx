@@ -66,7 +66,7 @@ const CardUserPriority = () => {
                 { label: "Interviews", value: "INTERVIEWS" },
                 { label: "Tasks/Reminders", value: "REMINDER" },
                 { label: "Events", value: "EVENTS" },
-                { label: "Invoice Due", value: "INVOICE_DUE" }
+                { label: "Invoice Due", value: "INVOICE_DUE" },
               ]}
               value={selectedPlannerType}
               onChange={(value) => setSelectedPlannerType(value)}
@@ -79,14 +79,16 @@ const CardUserPriority = () => {
           backgroundImage: "url('https://recruitlycdn.com/edge/plannerbg.png')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          border: "none"
+          border: "none",
         }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
         title={
-          <span>
-            <RiFocus2Line style={{ marginRight: 8 }} />
-            Planner
-          </span>
+          <Flex gap={1} align={"center"} justify={"flex-start"}>
+            <span>
+              <RiFocus2Line style={{ marginRight: 8 }} />
+              Week Planner
+            </span>
+          </Flex>
         }
       >
         <div
@@ -95,26 +97,15 @@ const CardUserPriority = () => {
             overflowX: "auto",
             gap: "16px",
             padding: "16px",
-            whiteSpace: "nowrap"
+            whiteSpace: "nowrap",
           }}
         >
           {filteredPlanner.map((data) => (
-            <DayTimeline
-              title={data.date}
-              key={data.date}
-              color=""
-              items={data.items}
-              showDetailView={onShowPlannerDetail}
-            />
+            <DayTimeline title={data.date} key={data.date} color="" items={data.items} showDetailView={onShowPlannerDetail} />
           ))}
         </div>
       </Card>
-      <PlannerDrillDownModal
-        modalVisible={showPlannerDetail}
-        type={detailViewType}
-        filterType={selectedPlannerType}
-        onDetailViewClose={onDetailViewClose}
-      />
+      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType} filterType={selectedPlannerType} onDetailViewClose={onDetailViewClose} />
     </div>
   );
 };

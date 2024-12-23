@@ -68,7 +68,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
         return (
         <div>
           <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
-          <Text>{item.count} Placement(s) starting today</Text>
+          <Text>Follow-up {item.count} Placement(s) starting</Text>
         </div>
       );
       case "APPLICATION":
