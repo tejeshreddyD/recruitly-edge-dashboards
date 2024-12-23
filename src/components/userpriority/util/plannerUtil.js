@@ -38,7 +38,11 @@ export const aggregateData = (respData,plannerType) => {
 
   events.forEach((event) => {
     event.times.forEach((eventTime) => {
-      addToMap(event.eventDate, eventTime.time, "CAL_EVENT", eventTime);
+
+      eventTime.events.forEach((event_data) => {
+        addToMap(event.eventDate, eventTime.time, event_data.type, event_data);
+      })
+
     });
   });
 

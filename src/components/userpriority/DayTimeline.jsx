@@ -30,7 +30,6 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
     return (type) => iconMap[type] || iconMap.DEFAULT;
   }, []);
 
-  // Helper to generate planner text
   const getPlannerText = useMemo(() => {
     const textStyle = {
       display: "block",
