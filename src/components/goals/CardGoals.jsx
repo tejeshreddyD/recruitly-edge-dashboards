@@ -114,7 +114,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
     <>
       <Card
         bordered
-        style={{ backgroundColor: "#1e3a8a" }}
+        style={{ backgroundColor: "#1e3a8a",border:"none" }}
         styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
         extra={
           <span

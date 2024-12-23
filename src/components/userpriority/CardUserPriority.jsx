@@ -24,7 +24,7 @@ const CardUserPriority = () => {
   useEffect(() => {
     if (data && data.tasks) {
 
-      const aggregated_data = aggregateData(data,selectedPlannerType);
+      const aggregated_data = aggregateData(data, selectedPlannerType);
 
       const categorizedData = categorizeData(aggregated_data);
 
@@ -66,14 +66,21 @@ const CardUserPriority = () => {
                 { label: "Interviews", value: "INTERVIEWS" },
                 { label: "Tasks/Reminders", value: "REMINDER" },
                 { label: "Events", value: "EVENTS" },
-                { label: "Invoice Due", value: "INVOICE_DUE" },
+                { label: "Invoice Due", value: "INVOICE_DUE" }
               ]}
               value={selectedPlannerType}
               onChange={(value) => setSelectedPlannerType(value)}
             />
           </Flex>
         }
-        style={{ marginTop: "2rem", marginBottom: "2rem" }}
+        style={{
+          marginTop: "2rem",
+          marginBottom: "2rem",
+          backgroundImage: "url('https://recruitlycdn.com/edge/plannerbg.png')",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          border: "none"
+        }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
         title={
           <span>
@@ -88,7 +95,7 @@ const CardUserPriority = () => {
             overflowX: "auto",
             gap: "16px",
             padding: "16px",
-            whiteSpace: "nowrap",
+            whiteSpace: "nowrap"
           }}
         >
           {filteredPlanner.map((data) => (
