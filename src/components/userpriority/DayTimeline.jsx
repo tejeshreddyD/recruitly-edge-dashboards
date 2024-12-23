@@ -16,7 +16,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
 
   const timelineItems = items.map((item) => ({
     children: getPlannerText(item),
-    dot: getTypeIcon(item.type),
+    dot: getTypeIcon(item.items[0].type),
   }));
 
   const showPlannerDetail = () => {
@@ -30,7 +30,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
       case "Reminder":
         return (
           <div>
-            <Text style={{ fontWeight: 500 }}>{item_data.time}</Text> -{" "}
+            <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
             <Text>{item.count} Task(s) to complete</Text>
           </div>
         );
@@ -53,7 +53,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
 
         return (
           <div>
-            <Text style={{ fontWeight: 500 }}>{item_data.time}</Text> -{" "}
+            <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
             <Text>
               {label} with {record_type}{" "}
               {event_data.attendees.map((rec, index) => (
@@ -67,14 +67,14 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
       case "APPLICATION":
         return (
           <div>
-            <Text style={{ fontWeight: 500 }}>{item_data.time}</Text> -{" "}
-            <Text>Review your {item.count} job applications</Text>
+            <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
+            <Text>Review your {item.count} pending job applications</Text>
           </div>
         );
       default:
         return (
           <div>
-            <Text style={{ fontWeight: 500 }}>{item_data.time || "Unknown time"}</Text> -{" "}
+            <Text style={{ fontWeight: 500 }}>{item_data.formatted_time || "Unknown time"}</Text> -{" "}
             <Text>Event</Text>
           </div>
         );

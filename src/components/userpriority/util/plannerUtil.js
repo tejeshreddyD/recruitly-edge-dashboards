@@ -44,7 +44,8 @@ export const aggregateData = (respData,plannerType) => {
       due_date: dayEntry.day,
       data: Array.from(dayEntry.times.entries())
         .map(([time, items]) => ({
-          time:extractTimeFromTimestamp(time),
+          time,
+          formatted_time:extractTimeFromTimestamp(time),
           items,
         }))
         .sort((a, b) => a.time - b.time),
@@ -53,17 +54,20 @@ export const aggregateData = (respData,plannerType) => {
 
   data.sort((a, b) => a.due_date - b.due_date);
 
-  return data;
+  return {
+    job_applications:respData.job_applications,
+    data:data
+  };
 };
 
 
 export const categorizeData = (apiResponse) => {
 
-  if (!apiResponse || !apiResponse.length) {
+  if (!apiResponse || !apiResponse.data || !apiResponse.data.length) {
     return [];
   }
 
-  console.log("APIResponse", apiResponse);
+  //console.log("APIResponse", apiResponse);
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -87,13 +91,15 @@ export const categorizeData = (apiResponse) => {
     });
   };
 
-  apiResponse.forEach((dayData) => {
+  apiResponse.data.forEach((dayData) => {
     const dayTimestamp = dayData.due_date;
     const dayItems = dayData.data;
 
     if (dayTimestamp < todayStart) {
 
-      todayOverdueCount += dayItems.filter((item) => item.type === "Task" || item.type === 'Reminder').reduce((sum, item) => sum + (item.count || 0), 0);
+     // console.log("DAY_ITEMS:",dayItems);
+
+      todayOverdueCount += dayItems.forEach((item) => item.items.filter((item) => item.type === "Task" || item.type === 'Reminder').reduce((sum, item) => sum + (item.count || 0), 0));
     } else if (dayTimestamp <= endOfToday) {
 
       todayItems.push(...dayItems);
@@ -118,7 +124,7 @@ export const categorizeData = (apiResponse) => {
       addCategory(new Date(parseInt(dayTimestamp)).toDateString(), 0, 0, upcomingDays[dayTimestamp]);
     });
 
-  console.log("TOTAL_LIST", result);
+  //console.log("TOTAL_LIST", result);
 
   return result;
 };
