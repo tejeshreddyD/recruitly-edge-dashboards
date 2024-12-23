@@ -6,10 +6,29 @@ export const aggregateData = (respData,plannerType) => {
 
   const tasks = plannerType === 'ALL' || plannerType === 'REMINDER' ?  respData.tasks || [] : [];
   const reminders = plannerType === 'ALL' || plannerType === 'REMINDER' ? respData.reminders || [] : [];
-  const events = plannerType === 'ALL' || plannerType === 'EVENTS' ? respData.events || [] : [];
   const starters = plannerType === 'ALL' || plannerType === 'STARTERS' ? respData.placement_starters : [];
   const action_items  = plannerType === 'ALL' || plannerType === 'REMINDER' ? respData.action_items || [] : [];
   const invoices_due = plannerType === 'ALL' || plannerType === 'INVOICE_DUE' ? respData.invoice_due || [] : [];
+
+  console.log(respData.events);
+
+  const events =
+    plannerType === 'ALL'
+      ? respData.events
+      : plannerType === 'EVENTS'
+        ? respData.events.filter((event) =>
+          event.times.some((event_time) =>
+            event_time.events.some((event_type) => event_type.type !== 'INTERVIEW')
+          )
+        )
+        : plannerType === 'INTERVIEWS'
+          ? respData.events.filter((event) =>
+            event.times.some((event_time) =>
+              event_time.events.some((event_type) => event_type.type === 'INTERVIEW')
+            )
+          )
+          : [];
+
 
   const addToMap = (date, time, type, data) => {
     if (!uniqueDayMap.has(date)) {
@@ -52,12 +71,13 @@ export const aggregateData = (respData,plannerType) => {
     addToMap(starter.day, time,"PLACEMENT_STARTER",{count:starter.count,time:time});
   });
 
-  if(respData.job_applications && respData.job_applications > 0) {
+  if(plannerType === 'ALL' && respData.job_applications && respData.job_applications > 0) {
 
     const today = getTodayTimestampByTimeZone();
     const time = getTimestampByDay(today);
 
     addToMap(today,time,"APPLICATION",{count:respData.job_applications,time:time});
+
   }
 
   const data = Array.from(uniqueDayMap.values()).map((dayEntry) => {
