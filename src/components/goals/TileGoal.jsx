@@ -7,8 +7,27 @@ import { TrophyOutlined } from "@ant-design/icons";
 import { TbSum } from "react-icons/tb";
 import { AiOutlineDollarCircle } from "react-icons/ai";
 import { PiTelevisionBold, PiTrendUp } from "react-icons/pi";
+import { FiTarget } from "react-icons/fi";
+import { BiTargetLock } from "react-icons/bi";
 
 const { Text } = Typography;
+
+const formatNumber = (num) => {
+
+  if (!num) return num;
+
+  if (num < 1000) {
+    return num.toString(); // Show exact numbers for small values
+  }
+  const fmt = new Intl.NumberFormat(undefined, {
+    notation: "compact", // Enables formatting like 1.2K, 3M
+    maximumFractionDigits: 1 // One decimal point
+  }).format(num); // Properly format large numbers
+
+  console.log("NUMBER", num, " FORMATED ", fmt);
+
+  return fmt;
+};
 
 const TileGoal = ({ tileData, onExpand }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -175,10 +194,18 @@ const TileGoal = ({ tileData, onExpand }) => {
     >
       <div style={{ padding: 5 }}>
         <Flex gap={"middle"} vertical align={"center"} justify={"space-around"}>
-          <Tag>
-            {tileData.actual || 0}
-            {tileData.target ? `/${tileData.target}` : ""}
-          </Tag>
+          <Text strong style={{ fontSize: 16 }}>
+            <Flex direction="row" align="center" justify="start" gap={1}>
+              {formatNumber(tileData.actual || 0)}
+              {tileData.target && tileData.target > 0 ? (
+                <Tooltip title="Target">
+                  <Flex direction="row" align="center" justify="start" gap={1}>
+                    /{formatNumber(tileData.target)} <BiTargetLock />
+                  </Flex>
+                </Tooltip>
+              ) : <>&nbsp;</>}
+            </Flex>
+          </Text>
           <div style={{ display: "inline-block" }}>
             {tileData.target > 0 ? (
               <AgGauge options={gaugeOptions} />
