@@ -17,13 +17,17 @@ export const getDateObjectInTimeZone = (timestamp, timeZone) => {
   return moment.tz(timestamp, timeZone).toDate();
 };
 
-export const getTimestampByDay = (inputTimestamp) => {
+export const getTimestampByDay = (inputTimestamp,increaseminute) => {
   const tz = getUserTimeZone();
+
+  if(!inputTimestamp){
+    increaseminute = 0;
+  }
 
   return moment(inputTimestamp)
     .tz(tz)
     .startOf("day")
-    .add(9, "hours")
+    .add(9, "hours").add(increaseminute, "minutes")
     .valueOf();
 };
 

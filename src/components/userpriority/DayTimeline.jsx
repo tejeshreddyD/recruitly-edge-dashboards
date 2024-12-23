@@ -17,10 +17,12 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
   const getTypeIcon = (type) => {
     const iconMap = {
       TASK: <FaTasks style={{ fontSize: "16px", color: "#1890ff" }} />,
+      OVERDUE_TASK:<FaTasks style={{ fontSize: "16px", color: "#8bbdee" }} />,
       CALL: <PhoneCall style={{ fontSize: "16px", color: "#52c41a" }} />,
       MEETING: <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />,
       INTERVIEW: <FaMicrophone style={{ fontSize: "16px", color: "#faad14" }} />,
       REMINDER: <Alarm style={{ fontSize: "16px", color: "#faad14" }} />,
+      OVERDUE_REMINDER: <Alarm style={{ fontSize: "16px", color: "#d8a977" }} />,
       APPLICATION: <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />,
       PLACEMENT_STARTER: <FaHandshake style={{ fontSize: "16px", color: "#faad14" }} />,
       DEFAULT: <MdAlarm style={{ fontSize: "16px", color: "#f5222d" }} />,
@@ -29,12 +31,16 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
     return iconMap[type] || iconMap.DEFAULT;
   };
 
-  const getTimelineText = (item) => {
+  const getTimelineText = (item,index) => {
     switch (item.type) {
       case "TASK":
+        return <Text>{item.count} Task(s) is due</Text>;
+      case "OVERDUE_TASK":
+        return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Text>;
       case "REMINDER":
-        return <Text>{item.count} Task(s) to complete</Text>;
-
+        return <Text>{item.count} Reminder(s) is due</Text>;
+      case "OVERDUE_REMINDER":
+        return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)</Text>;
       case "CALL":
       case "MEETING":
       case "INTERVIEW":
@@ -68,10 +74,8 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
       case "PLACEMENT_STARTER":
         return <Text>Follow-up {item.count} Placement(s) starting</Text>;
-
       case "APPLICATION":
         return <Text>Review your {item.count} pending job applications</Text>;
-
       default:
         return <Text>Event</Text>;
     }
@@ -91,7 +95,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         {itemData.items.map((item, index) => (
           <React.Fragment key={index}>
             {index > 0 && " and "}
-            {getTimelineText(item)}
+            {getTimelineText(item,index)}
           </React.Fragment>
         ))}
       </div>

@@ -4,13 +4,37 @@ import { extractTimeFromTimestamp, getTimestampByDay, getTodayTimestampByTimeZon
 export const aggregateData = (respData,plannerType) => {
   const uniqueDayMap = new Map();
 
-  const tasks = plannerType === 'ALL' || plannerType === 'REMINDER' ?  respData.tasks || [] : [];
-  const reminders = plannerType === 'ALL' || plannerType === 'REMINDER' ? respData.reminders || [] : [];
-  const starters = plannerType === 'ALL' || plannerType === 'STARTERS' ? respData.placement_starters : [];
+  const today = getTodayTimestampByTimeZone();
+
+  const overduetasks = respData.tasks ? respData.tasks.filter((task) => task.date < today) :[];
+  const overdueReminders = respData.reminders ? respData.reminders.filter((reminder) => reminder.day < today) : [];
+
+  let overduetasks_count = 0;
+  let overduereminders_count = 0;
+
+  if(overduetasks.length > 0){
+
+    overduetasks_count += overduetasks.reduce((total, task) => {
+      const taskCount = task.tasks.reduce((sum, item) => sum + (item.count || 0), 0);
+      return total + taskCount;
+    }, 0);
+
+  }
+
+  if(overdueReminders.length > 0){
+
+    overduereminders_count +=  overdueReminders.reduce((total, reminder) => {
+      const reminderCount = reminder.reminders.reduce((sum, item) => sum + (item.count || 0), 0);
+      return total + reminderCount;
+    }, 0);
+
+  }
+
+  const tasks = plannerType === 'ALL' || plannerType === 'REMINDER' ?  respData.tasks.filter((task) => task.date >= today) || [] : [];
+  const reminders = plannerType === 'ALL' || plannerType === 'REMINDER' ? respData.reminders.filter((reminder) => reminder.day >= today) || [] : [];
+  const starters = plannerType === 'ALL' || plannerType === 'PLACEMENT_STARTER' ? respData.placement_starters : [];
   const action_items  = plannerType === 'ALL' || plannerType === 'REMINDER' ? respData.action_items || [] : [];
   const invoices_due = plannerType === 'ALL' || plannerType === 'INVOICE_DUE' ? respData.invoice_due || [] : [];
-
-  console.log(respData.events);
 
   const events =
     plannerType === 'ALL'
@@ -59,7 +83,6 @@ export const aggregateData = (respData,plannerType) => {
     event.times.forEach((eventTime) => {
 
       eventTime.events.forEach((event_data) => {
-        console.log(event.eventDate,eventTime.time,event_data.type);
         addToMap(event.eventDate, eventTime.time, event_data.type, event_data);
       })
 
@@ -71,14 +94,32 @@ export const aggregateData = (respData,plannerType) => {
     addToMap(starter.day, time,"PLACEMENT_STARTER",{count:starter.count,time:time});
   });
 
-  if(plannerType === 'ALL' && respData.job_applications && respData.job_applications > 0) {
+  if(plannerType === 'ALL'){
 
     const today = getTodayTimestampByTimeZone();
-    const time = getTimestampByDay(today);
+    let time = getTimestampByDay(today);
 
-    addToMap(today,time,"APPLICATION",{count:respData.job_applications,time:time});
+    if(respData.job_applications && respData.job_applications > 0) {
+
+      addToMap(today,time,"APPLICATION",{count:respData.job_applications,time:time});
+
+    }
+
+    time = getTimestampByDay(time,30);
+
+    if(overduetasks_count >0){
+      addToMap(today,time,"OVERDUE_TASK",{count:overduetasks_count,time:time});
+    }
+
+    time = getTimestampByDay(time,30);
+
+    if(overduereminders_count >0){
+      addToMap(today,time,"OVERDUE_REMINDER",{count:overduereminders_count,time:time});
+    }
 
   }
+
+
 
   const data = Array.from(uniqueDayMap.values()).map((dayEntry) => {
     return {
@@ -101,10 +142,7 @@ export const aggregateData = (respData,plannerType) => {
   };
 };
 
-
 export const categorizeData = (apiResponse) => {
-
-  //console.log("APIResponse", apiResponse);
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -134,8 +172,6 @@ export const categorizeData = (apiResponse) => {
 
     if (dayTimestamp < todayStart) {
 
-     // console.log("DAY_ITEMS:",dayItems);
-
       todayOverdueCount += dayItems.forEach((item) => item.items.filter((item) => item.type === "Task" || item.type === 'Reminder').reduce((sum, item) => sum + (item.count || 0), 0));
     } else if (dayTimestamp <= endOfToday) {
 
@@ -160,8 +196,6 @@ export const categorizeData = (apiResponse) => {
     .forEach((dayTimestamp) => {
       addCategory(new Date(parseInt(dayTimestamp)).toDateString(), 0, 0, upcomingDays[dayTimestamp]);
     });
-
-  //console.log("TOTAL_LIST", result);
 
   return result;
 };
