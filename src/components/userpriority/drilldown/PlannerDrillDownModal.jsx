@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert, Modal, Spin } from "antd";
+import PlannerDrillDownData from "@components/userpriority/drilldown/PlannerDrillDownData.jsx";
 
 
 const PlannerDrillDownModal = ({modalVisible = false, type="Today",filterType="All", onDetailViewClose}) => {
@@ -48,9 +49,7 @@ const PlannerDrillDownModal = ({modalVisible = false, type="Today",filterType="A
       </Spin>
     ) : dataLoadError ? (
       <Alert message={dataLoadError} type="error" showIcon />
-    ) : (
-      <div style={{ minHeight: "500px" }}>{content}</div>
-    )}
+    ) : (<PlannerDrillDownData/>)}
   </Modal>)
 }
 
