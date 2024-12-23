@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, Flex, Timeline, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
-import { FaMicrophone, FaTasks } from "react-icons/fa";
+import { FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
 import { GrExpand } from "react-icons/gr";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
@@ -26,8 +26,8 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
   function getPlannerText(item_data) {
     const item = item_data.items[0];
     switch (item.type) {
-      case "Task":
-      case "Reminder":
+      case "TASK":
+      case "REMINDER":
         return (
           <div>
             <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
@@ -37,7 +37,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
       case "CALL":
       case "MEETING":
       case "INTERVIEW":
-      case "Event":
+      case "CAL_EVENT":
 
       const event_size = item.events.length;
 
@@ -64,7 +64,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
             </Text>
           </div>
         ); }
-      case "Placement":
+      case "PLACEMENT_STARTER":
         return (
         <div>
           <Text style={{ fontWeight: 500 }}>{item_data.formatted_time}</Text> -{" "}
@@ -91,7 +91,7 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
   // Get Icon by Type
   function getTypeIcon(type) {
     switch (type) {
-      case "Task":
+      case "TASK":
         return <FaTasks style={{ fontSize: "16px", color: "#1890ff" }} />;
       case "CALL":
         return <PhoneCall style={{ fontSize: "16px", color: "#52c41a" }} />;
@@ -99,10 +99,12 @@ const DailyTimeline = ({ title = "Today", color = "#f0f6ff", items = [], showDet
         return <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />;
       case "INTERVIEW":
         return <FaMicrophone style={{ fontSize: "16px", color: "#faad14" }} />;
-        case "Reminder":
+        case "REMINDER":
           return <Alarm style={{fontSize: "16px", color: "#faad14" }} />;
       case "APPLICATION":
         return <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />;
+      case "PLACEMENT_STARTER":
+        return <FaHandshake style={{ fontSize: "16px", color: "#faad14" }} />;
       default:
         return <MdAlarm style={{ fontSize: "16px", color: "#f5222d" }} />;
     }

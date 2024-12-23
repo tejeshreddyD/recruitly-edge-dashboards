@@ -18,13 +18,23 @@ export const getDateObjectInTimeZone = (timestamp, timeZone) => {
 };
 
 export const getTimestampByDay = (inputTimestamp) => {
-  const tz = getUserTimeZone(); // Fetch the user's time zone
+  const tz = getUserTimeZone();
 
   return moment(inputTimestamp)
-    .tz(tz) // Apply the user's time zone
-    .startOf("day") // Start of the day in that time zone
-    .add(9, "hours") // Add 9 hours to get 9 AM
-    .valueOf(); // Convert to timestamp in milliseconds
+    .tz(tz)
+    .startOf("day")
+    .add(9, "hours")
+    .valueOf();
+};
+
+export const getTodayTimestampByTimeZone = () => {
+
+  const tz = getUserTimeZone();
+
+  return moment.tz(tz)
+    .startOf("day")
+    .add(9, "hours")
+    .valueOf();
 };
 
 export const getDateMoment = (timestamp) => {

@@ -1,5 +1,5 @@
 
-import { extractTimeFromTimestamp, getTimestampByDay } from "@utils/dateUtil.js";
+import { extractTimeFromTimestamp, getTimestampByDay, getTodayTimestampByTimeZone } from "@utils/dateUtil.js";
 
 export const aggregateData = (respData,plannerType) => {
   const uniqueDayMap = new Map();
@@ -26,26 +26,34 @@ export const aggregateData = (respData,plannerType) => {
 
   tasks.forEach((task) => {
     task.tasks.forEach((taskTime) => {
-      addToMap(task.date, taskTime.dueDate, "Task", taskTime);
+      addToMap(task.date, taskTime.dueDate, "TASK", taskTime);
     });
   });
 
   reminders.forEach((reminder) => {
     reminder.reminders.forEach((reminderTime) => {
-      addToMap(reminder.day, reminderTime.time, "Reminder", reminderTime);
+      addToMap(reminder.day, reminderTime.time, "REMINDER", reminderTime);
     });
   });
 
   events.forEach((event) => {
     event.times.forEach((eventTime) => {
-      addToMap(event.eventDate, eventTime.time, "Event", eventTime);
+      addToMap(event.eventDate, eventTime.time, "CAL_EVENT", eventTime);
     });
   });
 
   starters.forEach((starter) => {
     const time = getTimestampByDay(starter.day);
-    addToMap(starter.day, time,"Placement",{count:starter.count,time:time});
+    addToMap(starter.day, time,"PLACEMENT_STARTER",{count:starter.count,time:time});
   });
+
+  if(respData.job_applications && respData.job_applications > 0) {
+
+    const today = getTodayTimestampByTimeZone();
+    const time = getTimestampByDay(today);
+
+    addToMap(today,time,"APPLICATION",{count:respData.job_applications,time:time});
+  }
 
   const data = Array.from(uniqueDayMap.values()).map((dayEntry) => {
     return {
