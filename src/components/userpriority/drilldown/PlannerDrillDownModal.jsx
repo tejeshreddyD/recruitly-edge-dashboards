@@ -36,21 +36,24 @@ const PlannerDrillDownModal = ({modalVisible = false, type="Today",filterType="A
   const [title, setTitle] = useState("Today");
   
   return (<Modal
-    width="100vw"
-    style={{ top: 20 }}
-    title={title}
-    open={plannerDetailVisible}
-    onCancel={handlePlannerClose}
-    footer={null}
-  >
-    {loading ? (
-      <Spin tip="Loading...">
-        <div style={{ minHeight: "100px" }} />
-      </Spin>
-    ) : dataLoadError ? (
-      <Alert message={dataLoadError} type="error" showIcon />
-    ) : (<PlannerDrillDownData type={type} filterType={filterType} />)}
-  </Modal>)
+      width="90vw"
+      style={{ top: 20 }}
+      title={title}
+      open={plannerDetailVisible}
+      onCancel={handlePlannerClose}
+      footer={null}
+    >
+      {loading ? (
+        <Spin tip="Loading...">
+          <div style={{ minHeight: "100px" }} />
+        </Spin>
+      ) : dataLoadError ? (
+        <Alert message={dataLoadError} type="error" showIcon />
+      ) : (
+        <PlannerDrillDownData type={type} filterType={filterType} />
+      )}
+    </Modal>
+  )
 }
 
 export default PlannerDrillDownModal;

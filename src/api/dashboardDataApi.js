@@ -75,3 +75,15 @@ export const fetchUserGoalsDataByYear = async ({ year, trackAssigned = false }) 
   }
 };
 
+export const fetchUserPlannerTasksByDate = async ({ start_date, end_date }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.get(`/tasks/list?start_date=${start_date}&end_date=${end_date}`);
+    console.log("fetchUserPlannerTasksByDate ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching planner tasks data for date:", error.message);
+    throw new Error("Failed to fetch planner tasks data. Please try again.");
+  }
+};
+
