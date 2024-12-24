@@ -6,7 +6,8 @@ import {
 } from "react";
 import {
   ClientSideRowModelModule,
-  ModuleRegistry
+  ModuleRegistry,
+  RowSelectionModule
 } from "ag-grid-community";
 import { LicenseManager } from "ag-grid-enterprise";
 import { AgGridReact } from "ag-grid-react";
@@ -20,7 +21,8 @@ import {
 } from "@utils/dateUtil.js";
 import { Card, Tag } from "antd";
 ModuleRegistry.registerModules([
-  ClientSideRowModelModule
+  ClientSideRowModelModule,
+  RowSelectionModule
 ]);
 
 LicenseManager.setLicenseKey(RECRUITLY_AGGRID_LICENSE)
@@ -51,22 +53,57 @@ const PlannerGridTasks = ({type = "TODAY",filterType = "ALL",date = ""}) => {
 
         return (<Tag color={"blue"}>{due_date_formatted}</Tag>);
       }},
-    { field: "subject", label: "Subject" },
-    { field: "ownerName", label: "Assignee" },
+    { field: "subject", headerName: "Subject" },
+    { field: "assignedBy.name", headerName: "Assigned By" },
+    { field: "status", headerName: "Status",
+      cellRenderer:(params) => {
+      const value = params.value;
+
+      if(value === 'TODO'){
+        return 'Todo'
+      }
+
+      if(value === 'DOING'){
+        return 'In progress';
+      }
+
+      return 'Done';
+
+      } },
+    { field: "linkedRecords.label",
+      headerName: "Linked Records",
+      cellRenderer:(params) => {
+
+        const linked_recs = params.data.linkedRecords;
+
+        if (linked_recs.length > 0) {
+          return linked_recs.map((rec, index) => (<div><Tag color="blue" key={index}>
+              <a href="javascript:void(0)" rel="noopener noreferrer">
+                {rec.name}
+              </a>
+            </Tag></div>
+          ));
+        }
+
+        return "";
+      }},
     { field: "createdOn",
       cellRenderer:(params) => {
-        console.log(params);
         return (getDateStringByUserTimeZone(params.value));
-      }},
-    { field: "status" },
+      }}
   ]);
 
   const defaultColDef = useMemo(() => {
     return {
       flex: 1,
-      resize:false,
+      suppressMovable:false,
+      resizable: false,
       minWidth: 100,
     };
+  }, []);
+
+  const rowSelection = useMemo(() => {
+    return { mode: "singleRow" };
   }, []);
 
   const autoGroupColumnDef = useMemo(() => {
