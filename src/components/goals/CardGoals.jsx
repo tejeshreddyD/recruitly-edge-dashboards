@@ -38,7 +38,11 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   const onGoalSelectorClose = () => setGoalSelectorOpen(false);
 
   const matchedData = useMemo(() => {
-    if (!periodData || !configData?.selectedKpi) return [];
+
+    if (!periodData || !periodData.length  || periodData.length<=0 || !configData?.selectedKpi) {
+      return [];
+    }
+
     return periodData
       .filter((item) =>
         configData.selectedKpi.some(
@@ -48,16 +52,16 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
         )
       )
       .map((item) => ({
-        id: item._id,
+        id: item.activityId, // Use activityId as id
         drilldown: item.activityModule.toLowerCase(), // e.g., "placements" or "jobs"
         title: item.activityName,
-        trackWithoutTarget:item.trackWithoutTarget,
+        trackWithoutTarget: item.trackWithoutTarget,
         target: item.targetValue,
-        actual:item.actualValue,
-        monthName: item.monthName,
-        difference:item.difference,
-        prev:item.prev,
-        type: item.targetType.toLowerCase() // e.g., "currency" or "counter"
+        actual: item.actualValue,
+        monthName: item.monthName || "N/A", // Default for quarters/years
+        difference: item.difference,
+        prev: item.prev || [], // Ensure prev data is passed
+        type: item.targetType.toLowerCase(), // e.g., "currency" or "counter"
       }));
   }, [periodData, configData]);
 
@@ -78,7 +82,6 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   //
   //   return () => sortable.destroy();
   // }, [matchedData]);
-
   const handleExpand = async (tile) => {
     setDrillDownModalVisible(true);
     setIsDrillDownLoading(true);
@@ -107,6 +110,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
       setIsDrillDownLoading(false);
     }
   };
+
 
   const handleModalClose = () => setDrillDownModalVisible(false);
 

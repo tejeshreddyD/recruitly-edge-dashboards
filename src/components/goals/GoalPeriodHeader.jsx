@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useCallback } from "react";
 import { TrophyOutlined, DownOutlined } from "@ant-design/icons";
-import { Dropdown, Button, Spin, Typography } from "antd";
+import { Dropdown, Button, Spin, Typography, Divider } from "antd";
 import { LuCalendarDays } from "react-icons/lu";
 import debounce from "lodash.debounce";
 import useGoalsPeriodStore from "@api/userDashboardGoalsDataStore.js";
@@ -13,7 +13,10 @@ const GoalPeriodHeader = () => {
     setPeriod,
     selectedMonth,
     selectedYear,
-    fetchPeriodData,
+    selectedQuarter,
+    fetchPeriodDataByMonth,
+    fetchPeriodDataByQuarter,
+    fetchPeriodDataByYear,
     loading,
     error,
   } = useGoalsPeriodStore();
@@ -22,46 +25,94 @@ const GoalPeriodHeader = () => {
   useEffect(() => {
     if (!selectedPeriod) {
       const currentDate = new Date();
-      setPeriod("THIS_MONTH", currentDate.getMonth() + 1, currentDate.getFullYear());
+      setPeriod("THIS_MONTH", currentDate.getMonth() + 1, currentDate.getFullYear(), "CURRENT_QUARTER");
     }
   }, [selectedPeriod, setPeriod]);
 
-  // Debounced fetch to reduce unnecessary API calls
-  const fetchPeriodDataDebounced = useCallback(
-    debounce((month, year) => fetchPeriodData(month, year), 300),
-    [fetchPeriodData]
+  // Debounced fetch for month-based data
+  const fetchPeriodDataDebouncedByMonth = useCallback(
+    debounce((month, year) => fetchPeriodDataByMonth(month, year), 300),
+    [fetchPeriodDataByMonth]
+  );
+
+  // Debounced fetch for quarter-based data
+  const fetchPeriodDataDebouncedByQuarter = useCallback(
+    debounce((quarterCode) => fetchPeriodDataByQuarter(quarterCode), 300),
+    [fetchPeriodDataByQuarter]
+  );
+
+  // Debounced fetch for year-based data
+  const fetchPeriodDataDebouncedByYear = useCallback(
+    debounce((year) => fetchPeriodDataByYear(year), 300),
+    [fetchPeriodDataByYear]
   );
 
   // Fetch data when selected period changes
   useEffect(() => {
-    if (selectedMonth && selectedYear) {
-      fetchPeriodDataDebounced(selectedMonth, selectedYear);
+    if (selectedPeriod === "THIS_MONTH" && selectedMonth && selectedYear) {
+      fetchPeriodDataDebouncedByMonth(selectedMonth, selectedYear);
+    } else if (selectedPeriod.includes("QUARTER") && selectedQuarter) {
+      fetchPeriodDataDebouncedByQuarter(selectedQuarter);
+    } else if (selectedPeriod.includes("YEAR") && selectedYear) {
+      fetchPeriodDataDebouncedByYear(selectedYear);
     }
-  }, [selectedMonth, selectedYear, fetchPeriodDataDebounced]);
+  }, [selectedPeriod, selectedMonth, selectedYear, selectedQuarter, fetchPeriodDataDebouncedByMonth, fetchPeriodDataDebouncedByQuarter, fetchPeriodDataDebouncedByYear]);
+  const menuItems = useMemo(() => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
 
-  const menuItems = useMemo(
-    () => [
-      { key: "LAST_QUARTER", label: "Last Quarter" },
-      { key: "LAST_MONTH", label: "Last Month" },
-      { key: "THIS_MONTH", label: "This Month" },
-      { key: "NEXT_MONTH", label: "Next Month" },
-      { key: "NEXT_QUARTER", label: "Next Quarter" },
-    ],
-    []
-  );
+    const getQuarterRange = (date) => {
+      const startMonth = Math.floor(date.getMonth() / 3) * 3; // First month of the quarter
+      const endMonth = startMonth + 2; // Last month of the quarter
+      const start = new Date(date.getFullYear(), startMonth, 1);
+      const end = new Date(date.getFullYear(), endMonth + 1, 0); // Last day of the quarter
+      return `${start.toLocaleString("default", { month: "short" })} - ${end.toLocaleString("default", { month: "short" })}`;
+    };
+
+    const getMonthName = (date, offset = 0) => {
+      const adjustedDate = new Date(date.getTime());
+      adjustedDate.setMonth(adjustedDate.getMonth() + offset);
+      return adjustedDate.toLocaleString("default", { month: "long" });
+    };
+
+    return [
+      { key: "CURRENT_YEAR", label: `This Year (${currentYear})` },
+      { key: "CURRENT_QUARTER", label: `This Quarter (${getQuarterRange(now)})` },
+      { key: "THIS_MONTH", label: `This Month (${getMonthName(now)})` },
+      {type: 'divider'},
+      { key: "PREVIOUS_YEAR", label: `Last Year (${currentYear - 1})` },
+      { key: "PREVIOUS_QUARTER", label: `Last Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() - 3, 1))})` },
+      { key: "LAST_MONTH", label: `Last Month (${getMonthName(now, -1)})` },
+      {type: 'divider'},
+      { key: "NEXT_YEAR", label: `Next Year (${currentYear + 1})` },
+      { key: "NEXT_QUARTER", label: `Next Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() + 3, 1))})` },
+      { key: "NEXT_MONTH", label: `Next Month (${getMonthName(now, 1)})` },
+    ];
+  }, []);
 
   const calculatePeriod = (period) => {
     const currentDate = new Date();
     let month = currentDate.getMonth() + 1;
     let year = currentDate.getFullYear();
+    let quarter = "CURRENT_QUARTER";
 
     switch (period) {
-      case "LAST_QUARTER":
-        month -= 3;
-        if (month <= 0) {
-          month += 12;
-          year -= 1;
-        }
+      case "PREVIOUS_QUARTER":
+        quarter = "PREVIOUS_QUARTER";
+        break;
+      case "NEXT_QUARTER":
+        quarter = "NEXT_QUARTER";
+        break;
+      case "PREVIOUS_YEAR":
+        year -= 1;
+        quarter = null;
+        break;
+      case "NEXT_YEAR":
+        year += 1;
+        quarter = null;
+        break;
+      case "THIS_YEAR":
+        quarter = null;
         break;
       case "LAST_MONTH":
         month -= 1;
@@ -77,35 +128,20 @@ const GoalPeriodHeader = () => {
           year += 1;
         }
         break;
-      case "NEXT_QUARTER":
-        month += 3;
-        if (month > 12) {
-          month -= 12;
-          year += 1;
-        }
-        break;
       default:
         break;
     }
 
-    return { month, year };
+    return { month, year, quarter };
   };
 
   const handleMenuClick = ({ key }) => {
-    const { month, year } = calculatePeriod(key);
-    setPeriod(key, month, year);
+    const { month, year, quarter } = calculatePeriod(key);
+    setPeriod(key, month, year, quarter);
   };
 
   const menuConfig = {
-    items: menuItems.map(({ key, label }) => ({
-      key,
-      label: (
-        <>
-          <LuCalendarDays style={{ marginRight: 4 }} />
-          {label}
-        </>
-      ),
-    })),
+    items: menuItems,
     onClick: handleMenuClick,
   };
 
@@ -132,7 +168,7 @@ const GoalPeriodHeader = () => {
           {selectedLabel} <DownOutlined />
         </Button>
       </Dropdown>
-      {loading && <></>}
+      {loading && <Spin size="small" />}
       {error && (
         <Text type="danger" style={{ marginLeft: 12 }}>
           Error: {error}

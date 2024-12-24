@@ -39,10 +39,10 @@ export const saveUserGoalsConfig = async ({ dashboardId, selectedKpi }) => {
 };
 
 
-export const fetchUserGoalsData = async ({ month,year }) => {
+export const fetchUserGoalsData = async ({ month, year }) => {
   const apiManager = getApiManager();
   try {
-    const response = await apiManager.get("/kpi_user_data_by_month?month=" + month+"&year=" + year);
+    const response = await apiManager.get("/kpi_user_data_by_month?month=" + month + "&year=" + year);
     console.log("fetchUserGoalsData ", response);
     return response.data;
   } catch (error) {
@@ -50,3 +50,28 @@ export const fetchUserGoalsData = async ({ month,year }) => {
     throw new Error("Failed to fetch goals data. Please try again.");
   }
 };
+
+export const fetchUserGoalsDataByQuarter = async ({ quarterCode, trackAssigned = false }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.get(`/kpi_user_data_by_quarter?quarter=${quarterCode}&assigned=${trackAssigned}`);
+    console.log("fetchUserGoalsDataByQuarter ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching goals data for quarter:", error.message);
+    throw new Error("Failed to fetch goals data for the quarter. Please try again.");
+  }
+};
+
+export const fetchUserGoalsDataByYear = async ({ year, trackAssigned = false }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.get(`/kpi_user_data_by_year?year=${year}&assigned=${trackAssigned}`);
+    console.log("fetchUserGoalsDataByYear ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching goals data for year:", error.message);
+    throw new Error("Failed to fetch goals data for the year. Please try again.");
+  }
+};
+
