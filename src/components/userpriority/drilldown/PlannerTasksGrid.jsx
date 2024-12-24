@@ -14,6 +14,7 @@ import { AgGridReact } from "ag-grid-react";
 import { RECRUITLY_AGGRID_THEME } from "@constants";
 import userDashboardPlannerDataStore from "@api/userDashboardPlannerDataStore.js";
 import { getTodayTimestampByTimeZone } from "@utils/dateUtil.js";
+import { Card } from "antd";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   RowGroupingModule,
@@ -30,7 +31,7 @@ const PlannerGridTasks = () => {
 
   const [columnDefs, setColumnDefs] = useState([
     { field: "subject" },
-    { field: "dueDate"},
+    { field: "dueDate",rowGroup: false },
     { field: "ownerName" },
     { field: "sport" },
     { field: "status" },
@@ -49,8 +50,6 @@ const PlannerGridTasks = () => {
     };
   }, []);
 
-
-
   const onGridReady = useCallback((params) => {
 
     const date = getTodayTimestampByTimeZone();
@@ -65,8 +64,7 @@ const PlannerGridTasks = () => {
     setRowData(data);
 
   }, [data]);
-  return (
-    <div style={containerStyle}>
+  return (<Card title={"Tasks"} bordered={false} styles={{header:{border:0},body:{height:"60vh"}}} style={{boxShadow:"none"}}>
       <div style={gridStyle}>
         <AgGridReact
           theme={RECRUITLY_AGGRID_THEME}
@@ -75,13 +73,11 @@ const PlannerGridTasks = () => {
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           autoGroupColumnDef={autoGroupColumnDef}
-          rowGroupPanelShow={"always"}
+          rowGroupPanelShow={"onlyWhenGrouping"}
           groupDefaultExpanded={1}
           onGridReady={onGridReady}
         />
-      </div>
-    </div>
-  );
+    </div></Card>);
 };
 
 export default PlannerGridTasks;
