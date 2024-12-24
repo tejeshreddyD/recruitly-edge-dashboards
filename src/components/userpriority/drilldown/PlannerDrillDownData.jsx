@@ -8,9 +8,10 @@ import PlannerGridTasks from "@components/userpriority/drilldown/PlannerTasksGri
 import { Handshake, Microphone } from "@phosphor-icons/react";
 import { useState } from "react";
 
+
 const { Sider } = Layout;
 
-const PlannerDrillDownData = ({type="Today",filterType="ALL"}) => {
+const PlannerDrillDownData = ({type="TODAY",filterType="ALL",date = ""}) => {
 
   const [selectedKey, setSelectedKey] = useState("/tasks");
 
@@ -58,7 +59,7 @@ const PlannerDrillDownData = ({type="Today",filterType="ALL"}) => {
         <Layout style={{height: "80vh" }}>
 
           <Routes>
-            <Route path={"/tasks"} element={<PlannerGridTasks/>}/>
+            <Route path={"/tasks"} element={<PlannerGridTasks type={type} filterType={filterType} date={date}/>}/>
             <Route path={"/job_applications"} element={<div>Job Applications</div>}/>
             <Route path={"/events"} element={<div>Events</div>}/>
             <Route path={"/interviews"} element={<div>Interviews</div>}/>

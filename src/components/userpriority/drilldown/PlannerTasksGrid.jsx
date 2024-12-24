@@ -6,23 +6,26 @@ import {
 } from "react";
 import {
   ClientSideRowModelModule,
-  ModuleRegistry,
-  ValidationModule,
+  ModuleRegistry
 } from "ag-grid-community";
-import { RowGroupingModule, RowGroupingPanelModule } from "ag-grid-enterprise";
+import { LicenseManager } from "ag-grid-enterprise";
 import { AgGridReact } from "ag-grid-react";
-import { RECRUITLY_AGGRID_THEME } from "@constants";
+import { RECRUITLY_AGGRID_LICENSE, RECRUITLY_AGGRID_THEME } from "@constants";
 import userDashboardPlannerDataStore from "@api/userDashboardPlannerDataStore.js";
-import { getTodayTimestampByTimeZone } from "@utils/dateUtil.js";
-import { Card } from "antd";
+import {
+  calculateDaysBetween,
+  getDateMoment,
+  getDateStringByUserTimeZone,
+  getTodayTimestampByTimeZone
+} from "@utils/dateUtil.js";
+import { Card, Tag } from "antd";
 ModuleRegistry.registerModules([
-  ClientSideRowModelModule,
-  RowGroupingModule,
-  RowGroupingPanelModule,
-  ValidationModule
+  ClientSideRowModelModule
 ]);
 
-const PlannerGridTasks = () => {
+LicenseManager.setLicenseKey(RECRUITLY_AGGRID_LICENSE)
+
+const PlannerGridTasks = ({type = "TODAY",filterType = "ALL",date = ""}) => {
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
   const [rowData, setRowData] = useState();
@@ -30,16 +33,38 @@ const PlannerGridTasks = () => {
   const {data,loading,error,fetchUserPlannerTasksData} = userDashboardPlannerDataStore()
 
   const [columnDefs, setColumnDefs] = useState([
-    { field: "subject" },
-    { field: "dueDate",rowGroup: false },
-    { field: "ownerName" },
-    { field: "sport" },
+    { field: "dueDate",
+      label: "Due Date",
+      cellRenderer:(params) => {
+
+        const today = getTodayTimestampByTimeZone();
+        const due_date = params.value
+
+        const due_date_formatted = getDateMoment(params.value);
+
+        if(due_date && due_date < today){
+
+          const day_diff = calculateDaysBetween(today,due_date);
+
+          return (<Tag color={"red"} title={due_date_formatted} content={"Past due"}>Past due {day_diff} day(s)</Tag>)
+        }
+
+        return (<Tag color={"blue"}>{due_date_formatted}</Tag>);
+      }},
+    { field: "subject", label: "Subject" },
+    { field: "ownerName", label: "Assignee" },
+    { field: "createdOn",
+      cellRenderer:(params) => {
+        console.log(params);
+        return (getDateStringByUserTimeZone(params.value));
+      }},
     { field: "status" },
   ]);
 
   const defaultColDef = useMemo(() => {
     return {
       flex: 1,
+      resize:false,
       minWidth: 100,
     };
   }, []);
