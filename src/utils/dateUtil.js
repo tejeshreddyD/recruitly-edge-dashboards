@@ -31,6 +31,10 @@ export const getTimestampByDay = (inputTimestamp,increaseminute) => {
     .valueOf();
 };
 
+export const getEndOfDayTimestamp = (timestamp) => {
+  return moment(timestamp).endOf('day').valueOf();
+};
+
 export const getTodayTimestampByTimeZone = () => {
 
   const tz = getUserTimeZone();

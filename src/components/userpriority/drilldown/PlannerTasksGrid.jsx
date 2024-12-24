@@ -18,7 +18,7 @@ import { RECRUITLY_AGGRID_LICENSE, RECRUITLY_AGGRID_THEME } from "@constants";
 import {
   calculateDaysBetween,
   getDateMoment,
-  getDateStringByUserTimeZone,
+  getDateStringByUserTimeZone, getEndOfDayTimestamp,
   getTodayTimestampByTimeZone
 } from "@utils/dateUtil.js";
 ModuleRegistry.registerModules([
@@ -115,9 +115,11 @@ const PlannerGridTasks = ({type = "TODAY",filterType = "ALL",date = ""}) => {
 
   const onGridReady = useCallback((params) => {
 
-    const date = getTodayTimestampByTimeZone();
+    const start_date = getTodayTimestampByTimeZone();
 
-    fetchUserPlannerTasksData({start_date:date,end_date:date});
+    const end_date = getEndOfDayTimestamp(start_date);
+
+    fetchUserPlannerTasksData({start_date:start_date,end_date:end_date});
 
   }, []);
 
