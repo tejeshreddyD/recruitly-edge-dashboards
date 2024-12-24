@@ -13,7 +13,7 @@ const { Sider } = Layout;
 
 const PlannerDrillDownData = ({type="TODAY",filterType="ALL",date = ""}) => {
 
-  const [selectedKey, setSelectedKey] = useState("/tasks");
+  const [selectedKey, setSelectedKey] = useState("tasks");
 
   const handleMenuClick = (e) => {
     setSelectedKey(e.key); // Navigate to the route
@@ -25,6 +25,7 @@ const PlannerDrillDownData = ({type="TODAY",filterType="ALL",date = ""}) => {
           <Menu
             mode="inline"
             selectedKey={selectedKey}
+            defaultSelectedKey={selectedKey}
             style={{ borderRight: 0 }}
             onClick={handleMenuClick}
             items={[

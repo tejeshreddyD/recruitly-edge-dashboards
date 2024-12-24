@@ -134,6 +134,7 @@ const PlannerGridTasks = ({type = "TODAY",filterType = "ALL",date = ""}) => {
           loading={loading}
           rowData={rowData}
           columnDefs={columnDefs}
+          rowSelection={rowSelection}
           defaultColDef={defaultColDef}
           autoGroupColumnDef={autoGroupColumnDef}
           rowGroupPanelShow={"onlyWhenGrouping"}
