@@ -11,15 +11,16 @@ import {
 } from "ag-grid-community";
 import { LicenseManager } from "ag-grid-enterprise";
 import { AgGridReact } from "ag-grid-react";
-import { RECRUITLY_AGGRID_LICENSE, RECRUITLY_AGGRID_THEME } from "@constants";
+import { Card, Tag } from "antd";
+
 import userDashboardPlannerDataStore from "@api/userDashboardPlannerDataStore.js";
+import { RECRUITLY_AGGRID_LICENSE, RECRUITLY_AGGRID_THEME } from "@constants";
 import {
   calculateDaysBetween,
   getDateMoment,
   getDateStringByUserTimeZone,
   getTodayTimestampByTimeZone
 } from "@utils/dateUtil.js";
-import { Card, Tag } from "antd";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   RowSelectionModule
