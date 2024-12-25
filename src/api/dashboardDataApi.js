@@ -87,3 +87,15 @@ export const fetchUserPlannerTasksByDate = async ({ start_date, end_date }) => {
   }
 };
 
+export const fetchUserPlannerPendingJobApplications = async ({ page, page_size }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.get(`/job_application/pending`);
+    console.log("fetchUserPlannerJobApplications", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching planner job applications data for date:", error.message);
+    throw new Error("Failed to fetch planner job applications data. Please try again.");
+  }
+};
+

@@ -7,6 +7,7 @@ import { CalendarOutlined } from "@ant-design/icons";
 import PlannerGridTasks from "@components/userpriority/drilldown/PlannerTasksGrid.jsx";
 import { Handshake, Microphone } from "@phosphor-icons/react";
 import { useState } from "react";
+import PlannerJobApplicationsGrid from "@components/userpriority/drilldown/PlannerJobApplicationsGrid.jsx";
 
 
 const { Sider } = Layout;
@@ -61,7 +62,7 @@ const PlannerDrillDownData = ({type="TODAY",filterType="ALL",date = ""}) => {
 
           <Routes>
             <Route path={"/tasks"} element={<PlannerGridTasks type={type} filterType={filterType} date={date}/>}/>
-            <Route path={"/job_applications"} element={<div>Job Applications</div>}/>
+            <Route path={"/job_applications"} element={<PlannerJobApplicationsGrid/>}/>
             <Route path={"/events"} element={<div>Events</div>}/>
             <Route path={"/interviews"} element={<div>Interviews</div>}/>
             <Route path={"/placement_starters"} element={<div>Placement starters</div>}/>
