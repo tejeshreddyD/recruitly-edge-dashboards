@@ -10,6 +10,7 @@ import { RiCalendarView } from "react-icons/ri";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
 import { SmileOutlined } from "@ant-design/icons";
 import Title from "antd/es/skeleton/Title.js";
+import { IoFlash } from "react-icons/io5";
 
 const { Text, Link } = Typography;
 
@@ -27,6 +28,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       OVERDUE_REMINDER: <Alarm style={{ fontSize: "16px", color: "#d8a977" }} />,
       APPLICATION: <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />,
       PLACEMENT_STARTER: <FaHandshake style={{ fontSize: "16px", color: "#faad14" }} />,
+      CUSTOM_ACTION:<IoFlash style={{ fontSize: "16px", color: "#faad14" }} />,
       DEFAULT: <MdAlarm style={{ fontSize: "16px", color: "#f5222d" }} />,
     };
 
@@ -41,6 +43,8 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Text>;
       case "REMINDER":
         return <Text>{item.count} Reminder(s) is due</Text>;
+      case "CUSTOM_ACTION":
+        return <Text>{item.count} custom next action(s) is due</Text>;
       case "OVERDUE_REMINDER":
         return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)</Text>;
       case "CALL":

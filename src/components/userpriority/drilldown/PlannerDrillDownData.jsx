@@ -6,7 +6,7 @@ import { HashRouter as Router, Link, Route, Routes } from "react-router-dom";
 import { CalendarOutlined } from "@ant-design/icons";
 import PlannerGridTasks from "@components/userpriority/drilldown/PlannerTasksGrid.jsx";
 import { Handshake, Microphone } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlannerJobApplicationsGrid from "@components/userpriority/drilldown/PlannerJobApplicationsGrid.jsx";
 
 
@@ -20,13 +20,17 @@ const PlannerDrillDownData = ({type="TODAY",filterType="ALL",date = ""}) => {
     setSelectedKey(e.key); // Navigate to the route
   };
 
+  useEffect(() => {
+    console.log(window.location.pathname);
+  }, []);
+
   return (<Router>
       <Layout>
         <Sider width={200} style={{background :"#ffffff",height:"100%"}}>
           <Menu
             mode="inline"
             selectedKey={selectedKey}
-            defaultSelectedKey={selectedKey}
+            selectedKeys={[selectedKey]}
             style={{ borderRight: 0 }}
             onClick={handleMenuClick}
             items={[

@@ -79,6 +79,12 @@ export const aggregateData = (respData,plannerType) => {
     });
   });
 
+  action_items.forEach((action) => {
+    action.actions.forEach((actionTime) => {
+      addToMap(action.day, actionTime.time, "CUSTOM_ACTION", actionTime);
+    });
+  });
+
   events.forEach((event) => {
     event.times.forEach((eventTime) => {
 
@@ -118,8 +124,6 @@ export const aggregateData = (respData,plannerType) => {
     }
 
   }
-
-
 
   const data = Array.from(uniqueDayMap.values()).map((dayEntry) => {
     return {
