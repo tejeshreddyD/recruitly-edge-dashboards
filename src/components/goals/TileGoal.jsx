@@ -126,6 +126,7 @@ const TileGoal = ({ tileData, onExpand }) => {
         header: { border: "none", margin: 0, fontSize: 14 },
         actions: { border: "none", backgroundColor: "transparent" }
       }}
+      onClick={() => onExpand({ tileData })}
       title={
         <Flex gap={1} align={"center"}>
           {getIcon()}
@@ -147,11 +148,6 @@ const TileGoal = ({ tileData, onExpand }) => {
       }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      actions={[
-        <Flex direction="row" align="center" justify="end" gap="large" style={{ paddingRight: 16 }}>
-          <TrophyOutlined />
-        </Flex>
-      ]}
     >
       <div style={{ padding: 5 }}>
         <Flex gap={"middle"} vertical align={"center"} justify={"space-around"}>

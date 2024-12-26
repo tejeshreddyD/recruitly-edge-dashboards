@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { TrophyOutlined, DownOutlined } from "@ant-design/icons";
-import { Dropdown, Button, Spin, Typography, Divider, Menu } from "antd";
+import { Dropdown, Button, Spin, Typography } from "antd";
 import debounce from "lodash.debounce";
 import useGoalsPeriodStore from "@api/userDashboardGoalsDataStore.js";
 
@@ -46,11 +46,17 @@ const GoalPeriodHeader = ({ selectedPeriodLabel }) => {
       { key: "THIS_MONTH", label: `This Month (${getMonthName(now)})` },
       { type: "divider" },
       { key: "PREVIOUS_YEAR", label: `Last Year (${currentYear - 1})` },
-      { key: "PREVIOUS_QUARTER", label: `Last Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() - 3, 1))})` },
+      {
+        key: "PREVIOUS_QUARTER",
+        label: `Last Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() - 3, 1))})`
+      },
       { key: "LAST_MONTH", label: `Last Month (${getMonthName(now, -1)})` },
       { type: "divider" },
       { key: "NEXT_YEAR", label: `Next Year (${currentYear + 1})` },
-      { key: "NEXT_QUARTER", label: `Next Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() + 3, 1))})` },
+      {
+        key: "NEXT_QUARTER",
+        label: `Next Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() + 3, 1))})`
+      },
       { key: "NEXT_MONTH", label: `Next Month (${getMonthName(now, 1)})` }
     ];
   }, []);
@@ -126,7 +132,7 @@ const GoalPeriodHeader = ({ selectedPeriodLabel }) => {
         items: menuItems,
         onClick: handleMenuClick
       }}
-        trigger={["click"]}
+                trigger={["click"]}
       >
         <Button
           size="small"
