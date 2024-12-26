@@ -1,5 +1,11 @@
 
-import { extractTimeFromTimestamp, getTimestampByDay, getTodayTimestampByTimeZone } from "@utils/dateUtil.js";
+import {
+  extractTimeFromTimestamp,
+  getEndOfDayTimestamp,
+  getTimestampByDay,
+  getTodayTimestampByTimeZone
+} from "@utils/dateUtil.js";
+import moment from "moment-timezone";
 
 export const aggregateData = (respData,plannerType) => {
   const uniqueDayMap = new Map();
@@ -161,9 +167,10 @@ export const categorizeData = (apiResponse) => {
   let todayItems = [];
   let tomorrowItems = [];
 
-  const addCategory = (date, applications = 0, overdueCount = 0, items = []) => {
+  const addCategory = (date, dayTimestamp, applications = 0, overdueCount = 0, items = []) => {
     result.push({
       date,
+      dayTimestamp,
       applications,
       overDueTasks: overdueCount,
       items: items.sort((a, b) => a.time - b.time), // Sort items by time
@@ -192,14 +199,34 @@ export const categorizeData = (apiResponse) => {
     }
   });
 
-  addCategory("Today", todayApplications, todayOverdueCount, todayItems);
-  addCategory("Tomorrow", 0, 0, tomorrowItems);
+  addCategory("Today", todayStart, todayApplications, todayOverdueCount, todayItems);
+  addCategory("Tomorrow",tomorrowStart, 0, 0, tomorrowItems);
 
   Object.keys(upcomingDays)
     .sort((a, b) => a - b)
     .forEach((dayTimestamp) => {
-      addCategory(new Date(parseInt(dayTimestamp)).toDateString(), 0, 0, upcomingDays[dayTimestamp]);
+      addCategory(new Date(parseInt(dayTimestamp)).toDateString(),dayTimestamp, 0, 0, upcomingDays[dayTimestamp]);
     });
 
   return result;
 };
+
+export const getDateRangeByCodeAndDate = (code,date) => {
+
+  const start_day = getTodayTimestampByTimeZone();
+
+  if(date){
+    return {start_date: date, end_date: date};
+  }
+
+  console.log(code,date)
+
+  switch (code) {
+    case 'TODAY':
+      return {start_date:start_day,end_date:getEndOfDayTimestamp(start_day)}
+    case 'TOMORROW':
+      return {start_date: moment(start_day).add(1,'days').valueOf(),end_date:moment(getEndOfDayTimestamp(start_day).add(1,'days').valueOf())}
+
+  }
+
+}

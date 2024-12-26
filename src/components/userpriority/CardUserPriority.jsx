@@ -14,7 +14,7 @@ const CardUserPriority = () => {
 
   const [selectedPlannerType, setSelectedPlannerType] = useState("ALL");
   const [showPlannerDetail, setShowPlannerDetail] = useState(false);
-  const [detailViewType, setDetailViewType] = useState(null);
+  const [detailViewType, setDetailViewType] = useState({title:'',date:0});
   const [filteredPlanner, setFilteredPlanner] = useState([]);
 
   useEffect(() => {
@@ -39,9 +39,9 @@ const CardUserPriority = () => {
   };
 
 
-  const onShowPlannerDetail = (title) => {
+  const onShowPlannerDetail = ({ title, date }) => {
     setShowPlannerDetail(true);
-    setDetailViewType(title);
+    setDetailViewType({ title, date });
   };
 
   return (
@@ -110,11 +110,11 @@ const CardUserPriority = () => {
             </div>
           </Flex>
           : error ? <Alert message="Error loading data" type="error" /> : filteredPlanner.map((data) => (
-            <DayTimeline title={data.date} key={data.date} color="" items={data.items} showDetailView={onShowPlannerDetail} />
+            <DayTimeline title={data.date} date={data.dayTimestamp} key={data.date} color="" items={data.items} showDetailView={onShowPlannerDetail} />
           ))}
         </div>
       </Card>
-      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType} filterType={selectedPlannerType} onDetailViewClose={onDetailViewClose} />
+      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType.title} date={detailViewType.date} filterType={selectedPlannerType} onDetailViewClose={onDetailViewClose} />
     </div>
   );
 };
