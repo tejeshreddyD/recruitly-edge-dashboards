@@ -29,7 +29,7 @@ ModuleRegistry.registerModules([
 
 LicenseManager.setLicenseKey(RECRUITLY_AGGRID_LICENSE)
 
-const PlannerGridTasks = ({type = "TODAY",date = 0}) => {
+const PlannerGridTasks = ({type = "TODAY",date = 0, viewType="FULL_DAY"}) => {
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
   const [rowData, setRowData] = useState();
@@ -116,7 +116,7 @@ const PlannerGridTasks = ({type = "TODAY",date = 0}) => {
 
   const onGridReady = useCallback((params) => {
 
-    const {start_date,end_date } = getDateRangeByCodeAndDate(type,date);
+    const {start_date,end_date } = getDateRangeByCodeAndDate(type,date,viewType);
 
     fetchUserPlannerTasksData({start_date:start_date,end_date:end_date});
 

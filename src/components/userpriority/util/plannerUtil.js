@@ -211,15 +211,19 @@ export const categorizeData = (apiResponse) => {
   return result;
 };
 
-export const getDateRangeByCodeAndDate = (code,date) => {
+export const getDateRangeByCodeAndDate = (code,date, viewType) => {
 
   const start_day = getTodayTimestampByTimeZone();
 
-  if(date){
+  console.log(code,date)
+
+  if(date && (!viewType || viewType !== 'FULL_DAY')){
     return {start_date: date, end_date: date};
   }
 
-  console.log(code,date)
+  if(date && viewType && viewType === 'FULL_DAY'){
+    return {start_date: date, end_date: getEndOfDayTimestamp(date)};
+  }
 
   switch (code) {
     case 'TODAY':
