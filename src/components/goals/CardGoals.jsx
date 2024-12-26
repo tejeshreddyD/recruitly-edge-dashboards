@@ -20,6 +20,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
   const [drillDownTile, setDrillDownTile] = useState(null);
   const [matchedData, setMatchedData] = useState([]);
+  const [selectedPeriodLabel, setSelectedPeriodLabel] = useState("");
 
   useEffect(() => {
     if (dashboardId) {
@@ -100,7 +101,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
             Customise
           </span>
         }
-        title={<GoalPeriodHeader />}
+        title={<GoalPeriodHeader selectedPeriodLabel={setSelectedPeriodLabel} />}
       >
         <div
           ref={containerRef}
@@ -137,13 +138,13 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
       <Modal
         width="80vw"
         style={{ top: 20 }}
-        title="Goal Details"
+        title={`Goals ${selectedPeriodLabel}`}
         open={isDrillDownModalVisible}
         onCancel={handleModalClose}
         footer={null}
       >
         <GoalsDrillDown apiKey={apiKey} apiServer={apiServer} tenantId={tenantId} userId={userId}
-                        tile={drillDownTile} matchedData={matchedData} />
+                        tile={drillDownTile} matchedData={matchedData} selectedPeriodLabel={selectedPeriodLabel} />
       </Modal>
 
       <GoalSelector

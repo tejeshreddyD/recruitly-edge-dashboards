@@ -8,7 +8,7 @@ import { RECRUITLY_AGGRID_THEME } from "@constants";
 import { Tabs, Tooltip } from "antd";
 import { DollarCircleFilled } from "@ant-design/icons";
 
-const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tile, matchedData }) => {
+const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tile, matchedData,selectedPeriodLabel }) => {
 
   const [rowData, setRowData] = useState([
     { make: "Tesla", model: "Model Y", price: 64950, electric: true },
