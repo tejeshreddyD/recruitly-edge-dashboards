@@ -34,10 +34,15 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
     return iconMap[type] || iconMap.DEFAULT;
   };
 
-  const getTimelineText = (item,index) => {
+  const handleActualsClick = (itemData) => {
+    console.log(itemData);
+    showDetailView({title:title,date:itemData.time,view_type:"ACTUAL"});
+  }
+
+  const getTimelineText = (itemData,item,index) => {
     switch (item.type) {
       case "TASK":
-        return <Text>{item.count} Task(s) is due</Text>;
+        return <Text onClick={() => handleActualsClick(itemData)}>{item.count} Task(s) is due</Text>;
       case "OVERDUE_TASK":
         return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Text>;
       case "REMINDER":
@@ -100,7 +105,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
         {itemData.items.map((item, index) => (
           <React.Fragment key={index}>
             {index > 0 && " and "}
-            {getTimelineText(item,index)}
+            {getTimelineText(itemData,item,index)}
           </React.Fragment>
         ))}
       </div>
@@ -117,7 +122,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
   );
 
   const showPlannerDetail = () => {
-    showDetailView({ title:title, date:date });
+    showDetailView({ title:title, date:date});
   };
 
   return (

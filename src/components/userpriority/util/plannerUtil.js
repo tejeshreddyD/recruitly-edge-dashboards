@@ -215,9 +215,9 @@ export const getDateRangeByCodeAndDate = (code,date, viewType) => {
 
   const start_day = getTodayTimestampByTimeZone();
 
-  console.log(code,date)
+  console.log(code,date,viewType)
 
-  if(date && (!viewType || viewType !== 'FULL_DAY')){
+  if(date && viewType === 'ACTUAL'){
     return {start_date: date, end_date: date};
   }
 
