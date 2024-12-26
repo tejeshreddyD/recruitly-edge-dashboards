@@ -2,19 +2,13 @@ import { Alert, Card, Grid, Modal, Spin } from "antd";
 import TileGoal from "@components/goals/TileGoal.jsx";
 import { useEffect, useRef, useMemo, useState } from "react";
 import Sortable from "sortablejs";
-import PlacementsDrillDown from "@components/goals/drilldown/PlacementsDrillDown.jsx";
-import JobsDrillDown from "@components/goals/drilldown/JobsDrillDown.jsx";
 import GoalSelector from "@components/goals/GoalSelector.jsx";
 import useUserDashboardGoalsConfigStore from "@api/userDashboardGoalsConfigStore.js";
 import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore.js";
 import GoalPeriodHeader from "@components/goals/GoalPeriodHeader.jsx";
+import GoalsDrillDown from "@components/goals/drilldown/GoalsDrillDown.jsx";
 
 const { useBreakpoint } = Grid;
-
-const drillDownComponents = {
-  placements: PlacementsDrillDown,
-  jobs: JobsDrillDown
-};
 
 const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) => {
   const { configData, loading: configLoading, error: configError, fetchConfig } =
@@ -24,9 +18,8 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
 
   const [goalSelectorOpen, setGoalSelectorOpen] = useState(false);
   const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
-  const [drillDownContent, setDrillDownContent] = useState(null);
-  const [isDrillDownLoading, setIsDrillDownLoading] = useState(false);
-  const [drillDownError, setDrillDownError] = useState(null);
+  const [drillDownTile, setDrillDownTile] = useState(null);
+  const [matchedData, setMatchedData] = useState([]);
 
   useEffect(() => {
     if (dashboardId) {
@@ -37,13 +30,13 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   const showGoalSel = () => setGoalSelectorOpen(true);
   const onGoalSelectorClose = () => setGoalSelectorOpen(false);
 
-  const matchedData = useMemo(() => {
+  useMemo(() => {
 
-    if (!periodData || !periodData.length  || periodData.length<=0 || !configData?.selectedKpi) {
-      return [];
+    if (!periodData || !periodData.length || periodData.length <= 0 || !configData?.selectedKpi) {
+      setMatchedData([]);
     }
 
-    return periodData
+    const matchedDataItems = periodData
       .filter((item) =>
         configData.selectedKpi.some(
           (kpi) =>
@@ -61,9 +54,13 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
         monthName: item.monthName || "N/A", // Default for quarters/years
         difference: item.difference,
         prev: item.prev || [], // Ensure prev data is passed
-        type: item.targetType.toLowerCase(), // e.g., "currency" or "counter"
+        type: item.targetType.toLowerCase() // e.g., "currency" or "counter"
       }));
+
+    setMatchedData(matchedDataItems);
+
   }, [periodData, configData]);
+
 
   const containerRef = useRef(null);
   const screens = useBreakpoint();
@@ -82,35 +79,10 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   //
   //   return () => sortable.destroy();
   // }, [matchedData]);
-  const handleExpand = async (tile) => {
+  const handleExpand = async ({ tile }) => {
+    setDrillDownTile(tile);
     setDrillDownModalVisible(true);
-    setIsDrillDownLoading(true);
-    setDrillDownError(null);
-    setDrillDownContent(null);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      const ContentComponent = drillDownComponents[tile.drilldown];
-      if (ContentComponent) {
-        setDrillDownContent(
-          <ContentComponent
-            apiKey={apiKey}
-            apiServer={apiServer}
-            userId={userId}
-            tenantId={tenantId}
-            tile={tile}
-          />
-        );
-      } else {
-        setDrillDownError("Unknown content type.");
-      }
-    } catch (err) {
-      setDrillDownError("Failed to load goal details.");
-    } finally {
-      setIsDrillDownLoading(false);
-    }
   };
-
 
   const handleModalClose = () => setDrillDownModalVisible(false);
 
@@ -118,7 +90,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
     <>
       <Card
         bordered
-        style={{ backgroundColor: "#1e3a8a",border:"none" }}
+        style={{ backgroundColor: "#1e3a8a", border: "none" }}
         styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
         extra={
           <span
@@ -139,7 +111,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
           }}
         >
           {dataLoading || configLoading ? (
-            <div style={{textAlign: "center",alignContent:'center',width: "100%",color:"#fff"}}>
+            <div style={{ textAlign: "center", alignContent: "center", width: "100%", color: "#fff" }}>
               Generating your goals...
             </div>
           ) : dataError || configError ? (
@@ -154,7 +126,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
               >
                 <TileGoal
                   tileData={item}
-                  onExpand={() => handleExpand(item)}
+                  onExpand={() => handleExpand({ tile: item })}
                 />
               </div>
             ))
@@ -170,15 +142,8 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
         onCancel={handleModalClose}
         footer={null}
       >
-        {isDrillDownLoading ? (
-          <Spin tip="Loading...">
-            <div style={{ minHeight: "100px" }} />
-          </Spin>
-        ) : drillDownError ? (
-          <Alert message={drillDownError} type="error" showIcon />
-        ) : (
-          <div style={{ minHeight: "500px" }}>{drillDownContent}</div>
-        )}
+        <GoalsDrillDown apiKey={apiKey} apiServer={apiServer} tenantId={tenantId} userId={userId}
+                        tile={drillDownTile} matchedData={matchedData} />
       </Modal>
 
       <GoalSelector
