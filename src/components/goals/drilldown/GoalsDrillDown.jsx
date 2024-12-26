@@ -7,6 +7,10 @@ import { DollarCircleFilled, TrophyOutlined } from "@ant-design/icons";
 import { AgCharts } from "ag-charts-react";
 import { DiDatabase } from "react-icons/di";
 import { ChartBar } from "@phosphor-icons/react";
+import LeaderBoard from "@components/goals/drilldown/LeaderBoard.jsx";
+import "./tabstats.css";
+import { IoPulse } from "react-icons/io5";
+import { FaRegChartBar } from "react-icons/fa";
 
 const formatNumber = (num) => {
   if (!num) return num;
@@ -16,7 +20,6 @@ const formatNumber = (num) => {
     maximumFractionDigits: 1
   }).format(num);
 };
-
 
 const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData, selectedPeriodLabel }) => {
   const [currentTile, setCurrentTile] = useState(tileData || null);
@@ -56,76 +59,74 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
         </>
       ),
       children: (
-        <div style={{ width: "auto", height: "500px", marginRight: 15 }} className={"ag-theme-quartz"}>
-          <Row gutter={12}>
-            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-              <Card style={{ marginBottom: 16 }} title={(
-                <Flex direction="row" align="center" justify="start" gap={1}>
-                  <ChartBar />
-                  {item && item.title}
-                </Flex>
-              )}>
-                <AgCharts
-                  options={{
-                    data: [
-                      ...item.prev.slice().reverse().map((prev) => ({
-                        monthName: prev.monthName,
-                        actualValue: prev.actualValue || 0
-                      })),
-                      {
-                        monthName: item.monthName,
-                        actualValue: item.actual || 0
-                      }
-                    ],
-                    background: { fill: "transparent" },
-                    series: [
-                      {
-                        type: "bar",
-                        xKey: "monthName",
-                        yKey: "actualValue",
-                        // fill: "#2450a1",
-                        stroke: "transparent",
-                        label: {
-                          formatter: ({ value }) => formatNumber(value)
+        <div>
+          <div style={{ width: "auto", height: "500px", marginRight: 15 }} className={"ag-theme-quartz"}>
+            <Row gutter={12}>
+              <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+                <Card style={{ marginBottom: 16 }} title={(
+                  <Flex direction="row" align="center" justify="start" gap={"small"}>
+                    <FaRegChartBar />
+                    {item && item.title}
+                  </Flex>
+                )}>
+                  <AgCharts
+                    options={{
+                      theme: "ag-polychroma",
+                      data: [
+                        ...item.prev.slice().reverse().map((prev) => ({
+                          monthName: prev.monthName,
+                          actualValue: prev.actualValue || 0
+                        })),
+                        {
+                          monthName: item.monthName,
+                          actualValue: item.actual || 0
                         }
-                      }
-                    ],
-                    axes: [
-                      {
-                        type: "category",
-                        position: "bottom",
-                        line: { width: 0 },
-                        tick: { width: 0 },
-                        title: {
-                          text: "Period"
+                      ],
+                      background: { fill: "transparent" },
+                      series: [
+                        {
+                          type: "bar",
+                          xKey: "monthName",
+                          yKey: "actualValue",
+                          stroke: "transparent",
+                          label: {
+                            formatter: ({ value }) => formatNumber(value)
+                          }
                         }
-                      },
-                      {
-                        type: "number",
-                        position: "left",
-                        line: { width: 0 },
-                        tick: { width: 0 },
-                        label: {
-                          formatter: ({ value }) => formatNumber(value)
+                      ],
+                      axes: [
+                        {
+                          type: "category",
+                          position: "bottom",
+                          title: {
+                            text: "Period"
+                          }
+                        },
+                        {
+                          type: "number",
+                          position: "left",
+                          label: {
+                            formatter: ({ value }) => formatNumber(value)
+                          }
                         }
-                      }
-                    ]
-                  }}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-              <Card style={{ marginBottom: 16 }} title={(
-                <Flex direction="row" align="center" justify="start" gap={1}>
-                  <TrophyOutlined />
-                  Leader Board
-                </Flex>
-              )}>
-
-              </Card>
-            </Col>
-          </Row>
-          <AgGridReact theme={RECRUITLY_AGGRID_THEME} rowData={rowData} columnDefs={colDefs} />
+                      ]
+                    }}
+                  />
+                </Card>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+                <Card style={{ marginBottom: 16 }} title={(
+                  <Flex direction="row" align="center" justify="start" gap={"small"}>
+                    <TrophyOutlined />
+                    Leader Board
+                  </Flex>
+                )}>
+                  <LeaderBoard />
+                </Card>
+              </Col>
+            </Row>
+            <AgGridReact theme={RECRUITLY_AGGRID_THEME} rowData={rowData} columnDefs={colDefs} />
+          </div>
         </div>
       )
     }));
@@ -145,6 +146,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
     <div style={{ height: "100vh", width: "100%", paddingTop: "16px" }}>
       <Tabs
         tabPosition="left"
+        className="stats-tab"
         style={{ width: "100%", height: "100%", borderRight: 0 }}
         items={goalItems}
         onChange={handleTabChange}

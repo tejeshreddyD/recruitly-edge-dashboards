@@ -1,0 +1,9 @@
+.stats-tab .ant-tabs-content-holder {
+    margin-left: 10px;
+    background-image: url(https://recruitlycdn.com/edge/plannerbg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: none;
+    padding-top: 16px;
+    border-radius: 8px;
+}
