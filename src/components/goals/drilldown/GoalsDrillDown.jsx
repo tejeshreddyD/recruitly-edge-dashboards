@@ -5,7 +5,8 @@ import React, {
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { RECRUITLY_AGGRID_THEME } from "@constants";
-import { Tabs } from "antd";
+import { Tabs, Tooltip } from "antd";
+import { DollarCircleFilled } from "@ant-design/icons";
 
 const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tile, matchedData }) => {
 
@@ -28,7 +29,10 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tile, matchedData
     const goalItemLIst = matchedData.map((item) => (
       {
         key: item.id,
-        label: item.title,
+        label: (<>
+            {item.title} {item.type === "value" && <DollarCircleFilled style={{ marginLeft: 4, color: "green" }} />}
+          </>
+        ),
         children: (
           <div style={{ width: "100%", height: "500px" }} className={"ag-theme-quartz"}>
             <AgGridReact theme={RECRUITLY_AGGRID_THEME} rowData={rowData} columnDefs={colDefs} />
@@ -41,7 +45,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tile, matchedData
 
 
   return (
-    <div style={{ height: "100%", width: "100%" }}>
+    <div style={{ height: "100%", width: "100%",paddingTop: "16px" }}>
       <Tabs
         tabPosition="left"
         style={{ width: "100%", height: "100%", borderRight: 0 }}
