@@ -144,7 +144,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
         footer={null}
       >
         <GoalsDrillDown apiKey={apiKey} apiServer={apiServer} tenantId={tenantId} userId={userId}
-                        tile={drillDownTile} matchedData={matchedData} selectedPeriodLabel={selectedPeriodLabel} />
+                        tileData={drillDownTile} matchedData={matchedData} selectedPeriodLabel={selectedPeriodLabel} />
       </Modal>
 
       <GoalSelector
