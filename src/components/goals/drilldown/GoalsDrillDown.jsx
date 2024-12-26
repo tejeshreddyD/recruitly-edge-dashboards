@@ -6,11 +6,10 @@ import { Card, Col, Flex, Row, Tabs } from "antd";
 import { DollarCircleFilled, TrophyOutlined } from "@ant-design/icons";
 import { AgCharts } from "ag-charts-react";
 import { DiDatabase } from "react-icons/di";
-import { ChartBar } from "@phosphor-icons/react";
 import LeaderBoard from "@components/goals/drilldown/LeaderBoard.jsx";
 import "./tabstats.css";
-import { IoPulse } from "react-icons/io5";
 import { FaRegChartBar } from "react-icons/fa";
+import { TbSum } from "react-icons/tb";
 
 const formatNumber = (num) => {
   if (!num) return num;
@@ -37,6 +36,11 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
     { field: "price" },
     { field: "electric" }
   ]);
+  const [activeKey, setActiveKey] = useState(tileData.id);
+
+  useEffect(() => {
+    setActiveKey(tileData.id);
+  }, [tileData]);
 
   // Compute previous data when tileData changes
   useEffect(() => {
@@ -54,10 +58,11 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
     const goalItemList = matchedData.map((item) => ({
       key: item.id,
       label: (
-        <>
+        <Flex direction="row" align="center" justify="start" gap={"small"}>
+          {item.type === "value" && <DollarCircleFilled style={{ color: "green" }} />}
+          {item.type === "count" && <TbSum style={{color: "gray" }} />}
           {item.title}{" "}
-          {item.type === "value" && <DollarCircleFilled style={{ marginLeft: 4, color: "green" }} />}
-        </>
+        </Flex>
       ),
       children: (
         <div>
@@ -92,6 +97,10 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                           stroke: "transparent",
                           label: {
                             formatter: ({ value }) => formatNumber(value)
+                          },
+                          itemStyler: (dataItem) => {
+                            const color = dataItem.datum.monthName === item.monthName ? "orange" : "#436ff4";
+                            return { fill: color };
                           }
                         }
                       ],
@@ -122,7 +131,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                     Leader Board
                   </Flex>
                 )}>
-                  <LeaderBoard />
+                  <LeaderBoard currentTile={item} />
                 </Card>
               </Col>
             </Row>
@@ -147,10 +156,16 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
     <div style={{ height: "100vh", width: "100%", paddingTop: "16px" }}>
       <Tabs
         tabPosition="left"
+        size={"small"}
+        type={"line"}
         className="stats-tab"
         style={{ width: "100%", height: "100%", borderRight: 0 }}
+        activeKey={activeKey}
         items={goalItems}
-        onChange={handleTabChange}
+        onChange={(key) => {
+          setActiveKey(key);
+          handleTabChange(key);
+        }}
       />
     </div>
   );
