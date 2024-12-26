@@ -14,6 +14,7 @@ import { FaRegChartBar } from "react-icons/fa";
 
 const formatNumber = (num) => {
   if (!num) return num;
+  if (num <= 0) return num.toString();
   if (num < 1000) return num.toString();
   return new Intl.NumberFormat(undefined, {
     notation: "compact",
