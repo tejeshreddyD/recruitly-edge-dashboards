@@ -131,7 +131,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                     Leader Board
                   </Flex>
                 )}>
-                  <LeaderBoard currentTile={item} />
+                  <LeaderBoard apiKey={apiKey} apiServer={apiServer} currentTile={item} />
                 </Card>
               </Col>
             </Row>

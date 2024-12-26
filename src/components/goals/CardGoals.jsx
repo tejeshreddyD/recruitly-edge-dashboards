@@ -47,6 +47,8 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
       )
       .map((item) => ({
         id: item.activityId, // Use activityId as id
+        activityId:item.activityId,
+        activityType:item.activityType,
         drilldown: item.activityModule.toLowerCase(), // e.g., "placements" or "jobs"
         title: item.activityName,
         trackWithoutTarget: item.trackWithoutTarget,
