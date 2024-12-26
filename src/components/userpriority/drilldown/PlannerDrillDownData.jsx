@@ -1,80 +1,55 @@
-import { Layout, Menu } from "antd";
+import { Tabs } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { FaTasks } from "react-icons/fa";
-import { HashRouter as Router, Link, Route, Routes } from "react-router-dom";
 
 import { CalendarOutlined } from "@ant-design/icons";
+import PlannerJobApplicationsGrid from "@components/userpriority/drilldown/PlannerJobApplicationsGrid.jsx";
 import PlannerGridTasks from "@components/userpriority/drilldown/PlannerTasksGrid.jsx";
 import { Handshake, Microphone } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
-import PlannerJobApplicationsGrid from "@components/userpriority/drilldown/PlannerJobApplicationsGrid.jsx";
 
-
-const { Sider } = Layout;
 
 const PlannerDrillDownData = ({type="TODAY",filterType="ALL",date = ""}) => {
 
-  const [selectedKey, setSelectedKey] = useState("tasks");
-
-  const handleMenuClick = (e) => {
-    setSelectedKey(e.key); // Navigate to the route
-  };
-
-  useEffect(() => {
-    console.log(window.location.pathname);
-  }, []);
-
-  return (<Router>
-      <Layout>
-        <Sider width={200} style={{background :"#ffffff",height:"100%"}}>
-          <Menu
-            mode="inline"
-            selectedKey={selectedKey}
-            selectedKeys={[selectedKey]}
-            style={{ borderRight: 0 }}
-            onClick={handleMenuClick}
+  return (
+      <div className={"planner-drilldown"} style={{paddingTop: "10px"}}>
+          <Tabs
+            tabPosition="left"
+            defaultActiveKey="tasks"
+            style={{ width: "100%", height: "100%",borderRight: 0 }}
             items={[
               {
                 key: 'tasks',
                 icon: <FaTasks />,
-                label: <Link to={"/tasks"}>Tasks/Reminders</Link>,
+                label: 'Tasks/Reminders',
+                children:<PlannerGridTasks type={type} filterType={filterType} date={date}/>
               },
               {
                 key: 'job_applications',
                 icon: <CgWebsite />,
-                label: <Link to={"/job_applications"}>Job Applications</Link>,
+                label:'Job Applications',
+                children:<PlannerJobApplicationsGrid/>
               },
               {
                 key: 'events',
                 icon: <CalendarOutlined />,
-                label: <Link to={"/events"}>Calendar Events</Link>,
+                label: 'Calendar Events',
+                children:<div>Events</div>
               },
               {
                 key: 'interviews',
                 icon: <Microphone />,
-                label: <Link to={"/interviews"}>Interviews</Link>,
+                label: 'Interviews',
+                children:<div>Interviews</div>
               },
               {
                 key: 'placement_starters',
                 icon: <Handshake />,
-                label: <Link to={"/placement_starters"}>Placement Starters</Link>,
+                label: 'Placement Starters',
+                children:<div>Placements</div>
               },
             ]}
           />
-        </Sider>
-        <Layout style={{height: "80vh" }}>
-
-          <Routes>
-            <Route path={"/tasks"} element={<PlannerGridTasks type={type} filterType={filterType} date={date}/>}/>
-            <Route path={"/job_applications"} element={<PlannerJobApplicationsGrid/>}/>
-            <Route path={"/events"} element={<div>Events</div>}/>
-            <Route path={"/interviews"} element={<div>Interviews</div>}/>
-            <Route path={"/placement_starters"} element={<div>Placement starters</div>}/>
-          </Routes>
-
-        </Layout>
-      </Layout>
-  </Router>);
+      </div>);
 }
 
 export default PlannerDrillDownData;

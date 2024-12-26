@@ -129,7 +129,7 @@ const PlannerGridTasks = ({type = "TODAY",filterType = "ALL",date = ""}) => {
     setRowData(data);
 
   }, [data]);
-  return (<Card title={"Tasks"} bordered={false} styles={{header:{border:0},body:{height:"60vh"}}} style={{boxShadow:"none"}}>
+  return (<Card title={"Tasks"} bordered={false} styles={{header:{border:0,minHeight:0,paddingLeft:0},body:{height:"60vh",paddingLeft:0}}} style={{boxShadow:"none"}}>
       <div style={gridStyle}>
         <AgGridReact
           theme={RECRUITLY_AGGRID_THEME}
