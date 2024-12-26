@@ -8,7 +8,7 @@ import PlannerGridTasks from "@components/userpriority/drilldown/PlannerTasksGri
 import { Handshake, Microphone } from "@phosphor-icons/react";
 
 
-const PlannerDrillDownData = ({type="TODAY",filterType="ALL",date = ""}) => {
+const PlannerDrillDownData = ({type="TODAY",filterType="ALL",viewType="FULL_DAY",date = 0}) => {
 
   return (
       <div className={"planner-drilldown"} style={{paddingTop: "10px"}}>
@@ -21,7 +21,7 @@ const PlannerDrillDownData = ({type="TODAY",filterType="ALL",date = ""}) => {
                 key: 'tasks',
                 icon: <FaTasks />,
                 label: 'Tasks/Reminders',
-                children:<PlannerGridTasks type={type} filterType={filterType} date={date}/>
+                children:<PlannerGridTasks type={type} date={date} viewType={viewType} />
               },
               {
                 key: 'job_applications',

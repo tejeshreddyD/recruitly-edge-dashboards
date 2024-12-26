@@ -1,20 +1,19 @@
 import React, { useMemo,useState } from "react";
-import { Button, Card, Empty, Flex, Timeline, Typography } from "antd";
+import { Card, Empty, Flex, Timeline, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
 import { GrExpand } from "react-icons/gr";
+import { IoFlash } from "react-icons/io5";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 
-import { Alarm, PhoneCall } from "@phosphor-icons/react";
 import { SmileOutlined } from "@ant-design/icons";
-import Title from "antd/es/skeleton/Title.js";
-import { IoFlash } from "react-icons/io5";
+import { Alarm, PhoneCall } from "@phosphor-icons/react";
 
 const { Text, Link } = Typography;
 
-const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = [], showDetailView }) => {
+const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff", items = [], showDetailView }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const getTypeIcon = (type) => {
@@ -118,7 +117,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
   );
 
   const showPlannerDetail = () => {
-    showDetailView(title);
+    showDetailView({ title:title, date:date });
   };
 
   return (

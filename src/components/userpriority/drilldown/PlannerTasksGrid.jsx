@@ -18,9 +18,10 @@ import { RECRUITLY_AGGRID_LICENSE, RECRUITLY_AGGRID_THEME } from "@constants";
 import {
   calculateDaysBetween,
   getDateMoment,
-  getDateStringByUserTimeZone, getEndOfDayTimestamp,
+  getDateStringByUserTimeZone,
   getTodayTimestampByTimeZone
 } from "@utils/dateUtil.js";
+import { getDateRangeByCodeAndDate } from "@components/userpriority/util/plannerUtil.js";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   RowSelectionModule
@@ -28,7 +29,7 @@ ModuleRegistry.registerModules([
 
 LicenseManager.setLicenseKey(RECRUITLY_AGGRID_LICENSE)
 
-const PlannerGridTasks = ({type = "TODAY",filterType = "ALL",date = ""}) => {
+const PlannerGridTasks = ({type = "TODAY",date = 0, viewType="FULL_DAY"}) => {
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
   const [rowData, setRowData] = useState();
@@ -115,21 +116,18 @@ const PlannerGridTasks = ({type = "TODAY",filterType = "ALL",date = ""}) => {
 
   const onGridReady = useCallback((params) => {
 
-    const start_date = getTodayTimestampByTimeZone();
-
-    const end_date = getEndOfDayTimestamp(start_date);
+    const {start_date,end_date } = getDateRangeByCodeAndDate(type,date,viewType);
 
     fetchUserPlannerTasksData({start_date:start_date,end_date:end_date});
 
   }, []);
-
 
   useEffect(() => {
 
     setRowData(data);
 
   }, [data]);
-  return (<Card title={"Tasks"} bordered={false} styles={{header:{border:0,minHeight:0,paddingLeft:0},body:{height:"60vh",paddingLeft:0}}} style={{boxShadow:"none"}}>
+  return (<Card title={"Tasks"} bordered={false} styles={{header:{border:0,minHeight:0,paddingLeft:0},body:{height:"80vh",paddingLeft:0}}} style={{boxShadow:"none"}}>
       <div style={gridStyle}>
         <AgGridReact
           theme={RECRUITLY_AGGRID_THEME}
