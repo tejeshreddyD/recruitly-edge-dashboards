@@ -133,3 +133,21 @@ export const fetchUserPlannerCalendarEvents = async ({ start_date, end_date, typ
   }
 };
 
+export const fetchUserGoalsRecordData = async ({
+                                                 periodCode,
+                                                 activityId,
+                                                 activityType,
+                                                 pageNumber = 0,
+                                                 pageSize = 25
+                                               }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.get(`/kpi_record_data?periodCode=${periodCode}&activityId=${activityId}&activityType=${activityType}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+    console.log("fetchUserGoalsRecordData", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching goals record data", error.message);
+    throw new Error("Failed to fetch goals record data. Please try again.");
+  }
+};
+
