@@ -12,10 +12,9 @@ import { saveUserGoalsOrder } from "@api/dashboardDataApi.js";
 const { useBreakpoint } = Grid;
 
 const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) => {
-  const { configData, loading: configLoading, error: configError, fetchConfig } =
-    useUserDashboardGoalsConfigStore();
-  const { periodData, loading: dataLoading, error: dataError } =
-    useUserDashboardGoalsDataStore();
+
+  const { configData, loading: configLoading, error: configError, fetchConfig } = useUserDashboardGoalsConfigStore();
+  const { periodData, loading: dataLoading, error: dataError } = useUserDashboardGoalsDataStore();
 
   const [goalSelectorOpen, setGoalSelectorOpen] = useState(false);
   const [isDrillDownModalVisible, setDrillDownModalVisible] = useState(false);
@@ -152,7 +151,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
       </Card>
 
       <Modal
-        width="90vw"
+        width="95vw"
         style={{ top: 20 }}
         title={`Goals ${selectedPeriodLabel}`}
         open={isDrillDownModalVisible}

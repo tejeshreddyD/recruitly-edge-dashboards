@@ -1,58 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-theme-quartz.css";
-import { RECRUITLY_AGGRID_THEME } from "@constants";
 import { Card, Col, Flex, Row, Tabs } from "antd";
 import { DollarCircleFilled, TrophyOutlined } from "@ant-design/icons";
 import { AgCharts } from "ag-charts-react";
-import { DiDatabase } from "react-icons/di";
 import LeaderBoard from "@components/goals/drilldown/LeaderBoard.jsx";
 import "./tabstats.css";
 import { FaRegChartBar } from "react-icons/fa";
 import { TbSum } from "react-icons/tb";
+import { formatNumber } from "@utils/numberUtil.js";
+import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore.js";
+import RecordDataGrid from "@components/goals/drilldown/RecordDataGrid.jsx";
 
-const formatNumber = (num) => {
-  try {
-    if (num == null || isNaN(num)) {
-      // Return as is if num is null, undefined, or not a valid number
-      return "";
-    }
+const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData }) => {
 
-    const intNum = Number(num); // Ensure num is converted to a number
-    if (intNum <= 0) {
-      return intNum.toString(); // Return zero or negative values as strings
-    }
-    if (intNum < 1000) {
-      return intNum.toString(); // Return values less than 1000 as-is
-    }
-
-    // Format numbers >= 1000 with compact notation
-    return new Intl.NumberFormat(undefined, {
-      notation: "compact",
-      maximumFractionDigits: 1
-    }).format(intNum);
-  } catch (e) {
-    console.error("Error formatting number:", num, e);
-    return "";
-  }
-};
-
-
-const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData, selectedPeriodLabel }) => {
   const [currentTile, setCurrentTile] = useState(tileData || null);
   const [prevData, setPrevData] = useState([]);
   const [goalItems, setGoalItems] = useState([]);
-  const [rowData] = useState([
-    { make: "Tesla", model: "Model Y", price: 64950, electric: true },
-    { make: "Ford", model: "F-Series", price: 33850, electric: false },
-    { make: "Toyota", model: "Corolla", price: 29600, electric: false }
-  ]);
-  const [colDefs] = useState([
-    { field: "make" },
-    { field: "model" },
-    { field: "price" },
-    { field: "electric" }
-  ]);
   const [activeKey, setActiveKey] = useState(tileData.id);
 
   useEffect(() => {
@@ -150,14 +112,15 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                 </Card>
               </Col>
             </Row>
-            <AgGridReact theme={RECRUITLY_AGGRID_THEME} rowData={rowData} columnDefs={colDefs} />
+            <RecordDataGrid tileData={tileData} />
           </div>
         </div>
       )
     }));
 
     setGoalItems(goalItemList);
-  }, [matchedData, rowData, colDefs]);
+
+  }, [matchedData]);
 
   const handleTabChange = (key) => {
     const selectedItem = matchedData.find((item) => item.id === key);
