@@ -122,11 +122,11 @@ const PlannerDailyTimeline = React.memo(({ items = [] }) => {
     <Card
       styles={{ header: { borderBottom: 0 } }}
       style={{
-        width: "350px",
         overflowWrap: "break-word",
         marginBottom: 0,
         borderRadius: 0,
         border:'none',
+        height:'100%',
         borderRight:'0.5px solid lightgray',
       }}
     >
