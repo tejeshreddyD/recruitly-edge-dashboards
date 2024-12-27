@@ -4,7 +4,7 @@ import { Alert, Modal, Spin } from "antd";
 import PlannerDrillDownData from "@components/userpriority/drilldown/PlannerDrillDownData.jsx";
 
 
-const PlannerDrillDownModal = ({modalVisible = false, type="TODAY", date=0, filterType="ALL",viewType="FULL_DAY", onDetailViewClose}) => {
+const PlannerDrillDownModal = ({modalVisible = false, type="TODAY", date=0, filterType="ALL",viewType="FULL_DAY", data = [], onDetailViewClose}) => {
   
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ const PlannerDrillDownModal = ({modalVisible = false, type="TODAY", date=0, filt
       ) : dataLoadError ? (
         <Alert message={dataLoadError} type="error" showIcon />
       ) : (
-        <PlannerDrillDownData type={type} date={date} filterType={filterType} viewType={viewType} />
+        <PlannerDrillDownData type={type} date={date} data={data} filterType={filterType} viewType={viewType} />
       )}
     </Modal>
   )

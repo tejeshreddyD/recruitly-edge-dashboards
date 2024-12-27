@@ -1,25 +1,21 @@
-import React, { useMemo,useState } from "react";
-import { Card, Empty, Flex, Timeline, Typography } from "antd";
+import React, { useMemo } from "react";
+import { Card, Timeline, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
-import { GrExpand } from "react-icons/gr";
 import { IoFlash } from "react-icons/io5";
 import { MdAlarm } from "react-icons/md";
-import { RiCalendarView } from "react-icons/ri";
 
-import { SmileOutlined } from "@ant-design/icons";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
 
 const { Text, Link } = Typography;
 
-const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff", items = [], showDetailView }) => {
-  const [isHovered, setIsHovered] = useState(false);
+const PlannerDailyTimeline = React.memo(({ items = [] }) => {
 
   const getTypeIcon = (type) => {
     const iconMap = {
       TASK: <FaTasks style={{ fontSize: "16px", color: "#1890ff" }} />,
-      OVERDUE_TASK:<FaTasks style={{ fontSize: "16px", color: "#8bbdee" }} />,
+      OVERDUE_TASK: <FaTasks style={{ fontSize: "16px", color: "#8bbdee" }} />,
       CALL: <PhoneCall style={{ fontSize: "16px", color: "#52c41a" }} />,
       MEETING: <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />,
       INTERVIEW: <FaMicrophone style={{ fontSize: "16px", color: "#faad14" }} />,
@@ -27,7 +23,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
       OVERDUE_REMINDER: <Alarm style={{ fontSize: "16px", color: "#d8a977" }} />,
       APPLICATION: <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />,
       PLACEMENT_STARTER: <FaHandshake style={{ fontSize: "16px", color: "#faad14" }} />,
-      CUSTOM_ACTION:<IoFlash style={{ fontSize: "16px", color: "#faad14" }} />,
+      CUSTOM_ACTION: <IoFlash style={{ fontSize: "16px", color: "#faad14" }} />,
       DEFAULT: <MdAlarm style={{ fontSize: "16px", color: "#f5222d" }} />,
     };
 
@@ -36,37 +32,38 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
 
   const handleActualsClick = (itemData) => {
     console.log(itemData);
-    showDetailView({title:title,date:itemData.time,view_type:"ACTUAL"});
-  }
+    //showDetailView({ date: itemData.time, view_type: "ACTUAL" });
+  };
 
-  const getTimelineText = (itemData,item,index) => {
+  const getTimelineText = (itemData, item, index) => {
     switch (item.type) {
       case "TASK":
         return <Text onClick={() => handleActualsClick(itemData)}>{item.count} Task(s) is due</Text>;
       case "OVERDUE_TASK":
-        return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Text>;
+        return (
+          <Text>
+            {index > 0 ? "" : "Review"} {item.count} overdue Task(s)
+          </Text>
+        );
       case "REMINDER":
         return <Text>{item.count} Reminder(s) is due</Text>;
       case "CUSTOM_ACTION":
         return <Text>{item.count} custom next action(s) is due</Text>;
       case "OVERDUE_REMINDER":
-        return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)</Text>;
+        return (
+          <Text>
+            {index > 0 ? "" : "Review"} {item.count} overdue Reminder(s)
+          </Text>
+        );
       case "CALL":
       case "MEETING":
       case "INTERVIEW":
       case "CAL_EVENT": {
         let recordType = "colleagues";
-        const label =
-          item.type === "CALL"
-            ? "Call"
-            : item.type === "MEETING"
-              ? "Meeting"
-              : "Interview";
+        const label = item.type === "CALL" ? "Call" : item.type === "MEETING" ? "Meeting" : "Interview";
 
         if (item.attendees && item.attendees.length > 0) {
-          const match = item.attendees.find(
-            (attendee) => attendee.type !== "UNRECORDED" && attendee.type === "CONTACT"
-          );
+          const match = item.attendees.find((attendee) => attendee.type !== "UNRECORDED" && attendee.type === "CONTACT");
           recordType = match ? "Client" : "Candidate";
         }
 
@@ -105,7 +102,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
         {itemData.items.map((item, index) => (
           <React.Fragment key={index}>
             {index > 0 && " and "}
-            {getTimelineText(itemData,item,index)}
+            {getTimelineText(itemData, item, index)}
           </React.Fragment>
         ))}
       </div>
@@ -118,64 +115,24 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
         children: renderPlannerText(itemData),
         dot: getTypeIcon(itemData.items[0]?.type),
       })),
-    [items]
+    [items],
   );
-
-  const showPlannerDetail = () => {
-    showDetailView({ title:title, date:date,view_type:"FULL_DAY",data:items});
-  };
 
   return (
     <Card
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      extra={timelineItems.length > 0 ?
-        <GrExpand
-          onClick={showPlannerDetail}
-          style={{
-            color: "#000",
-            cursor: "pointer",
-            display: isHovered ? "inline-block" : "none",
-            transition: "opacity 0.3s",
-          }}
-        />:''}
       styles={{ header: { borderBottom: 0 } }}
-      title={
-        <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
-          <RiCalendarView />
-          <span>{title}</span>
-        </Flex>
-      }
       style={{
-        backgroundColor: color,
         width: "350px",
         overflowWrap: "break-word",
-        marginBottom: 10,
-        borderRadius: "8px",
+        marginBottom: 0,
+        borderRadius: 0,
+        border:'none',
+        borderRight:'0.5px solid lightgray',
       }}
     >
-      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0" }} /> : (<><Empty style={{
-        backgroundColor: color,
-        overflowWrap: "break-word",
-        marginBottom: 10,
-        borderRadius: "8px",
-      }}
-        image={<SmileOutlined style={{ fontSize: 50, color: "#d1c42e" }} />}
-        description={
-          <>
-            <Text type="secondary" style={{
-              backgroundColor: color,
-              overflowWrap: "break-word",
-              marginBottom: 10,
-              borderRadius: "8px",
-            }}>
-              It seems like you don’t have any activity scheduled.
-            </Text>
-          </>
-        }
-      /></>)}
+      <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0" }} />
     </Card>
   );
 });
 
-export default DailyTimeline;
+export default PlannerDailyTimeline;

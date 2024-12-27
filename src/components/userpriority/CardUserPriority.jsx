@@ -38,9 +38,9 @@ const CardUserPriority = () => {
     setShowPlannerDetail(false);
   };
 
-  const onShowPlannerDetail = ({ title, date, view_type }) => {
+  const onShowPlannerDetail = ({ title, date, view_type,data }) => {
     setShowPlannerDetail(true);
-    setDetailViewType({ title, date,view_type });
+    setDetailViewType({ title, date,view_type,data});
   };
 
   return (
@@ -113,7 +113,7 @@ const CardUserPriority = () => {
           ))}
         </div>
       </Card>
-      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType.title} date={detailViewType.date} filterType={selectedPlannerType} viewType={detailViewType.view_type} onDetailViewClose={onDetailViewClose} />
+      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType.title} date={detailViewType.date} filterType={selectedPlannerType} viewType={detailViewType.view_type} data={detailViewType.data} onDetailViewClose={onDetailViewClose} />
     </div>
   );
 };

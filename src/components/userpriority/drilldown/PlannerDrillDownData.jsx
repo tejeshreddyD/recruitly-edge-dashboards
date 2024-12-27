@@ -7,13 +7,16 @@ import PlannerJobApplicationsGrid from "@components/userpriority/drilldown/Plann
 import PlannerGridTasks from "@components/userpriority/drilldown/PlannerTasksGrid.jsx";
 import { Handshake, Microphone } from "@phosphor-icons/react";
 import PlannerCalendarEventsGrid from "@components/userpriority/drilldown/PlannerCalendarEventsGrid.jsx";
+import DayTimeline from "@components/userpriority/DayTimeline.jsx";
+import PlannerDailyTimeline from "@components/userpriority/drilldown/PlannerDrilldownTimeline.jsx";
 
 
-const PlannerDrillDownData = ({type="TODAY",filterType="ALL",viewType="FULL_DAY",date = 0}) => {
+const PlannerDrillDownData = ({type="TODAY",filterType="ALL",viewType="FULL_DAY",date = 0, data=[]}) => {
 
   return (
       <div className={"planner-stats-tab"} style={{height:"100vh", width:"100%",paddingTop: "10px"}}>
-          <Tabs
+        <PlannerDailyTimeline items={data} filterType={filterType} />
+          {/*<Tabs
             tabPosition="left"
             defaultActiveKey="tasks"
             style={{ width: "100%", height: "100%",borderRight: 0 }}
@@ -49,7 +52,7 @@ const PlannerDrillDownData = ({type="TODAY",filterType="ALL",viewType="FULL_DAY"
                 children:<div>Placements</div>
               },
             ]}
-          />
+          />*/}
       </div>);
 }
 
