@@ -38,6 +38,22 @@ export const saveUserGoalsConfig = async ({ dashboardId, selectedKpi }) => {
   }
 };
 
+export const saveUserGoalsOrder = async ({ dashboardId, activityId, newIndex }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.post("/user_dashboard/goals_config_order", {
+      dashboardId: dashboardId,
+      activityId: activityId,
+      newIndex: newIndex
+    });
+    console.log("saveUserGoalsOrder response:", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error saving user goals config:", error.message);
+    throw new Error("Failed to save goals configuration. Please try again.");
+  }
+};
+
 
 export const fetchUserGoalsData = async ({ month, year }) => {
   const apiManager = getApiManager();

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { fetchUserGoalsConfig, saveUserGoalsConfig } from "../api/dashboardDataApi.js";
+import { fetchUserGoalsConfig, saveUserGoalsConfig, saveUserGoalsOrder } from "../api/dashboardDataApi.js";
 
 const useUserDashboardGoalsConfigStore = create((set, getState) => ({
   configData: [],

@@ -7,6 +7,7 @@ import useUserDashboardGoalsConfigStore from "@api/userDashboardGoalsConfigStore
 import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore.js";
 import GoalPeriodHeader from "@components/goals/GoalPeriodHeader.jsx";
 import GoalsDrillDown from "@components/goals/drilldown/GoalsDrillDown.jsx";
+import { saveUserGoalsOrder } from "@api/dashboardDataApi.js";
 
 const { useBreakpoint } = Grid;
 
@@ -47,8 +48,8 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
       )
       .map((item) => ({
         id: item.activityId, // Use activityId as id
-        activityId:item.activityId,
-        activityType:item.activityType,
+        activityId: item.activityId,
+        activityType: item.activityType,
         drilldown: item.activityModule.toLowerCase(), // e.g., "placements" or "jobs"
         title: item.activityName,
         trackWithoutTarget: item.trackWithoutTarget,
@@ -68,20 +69,28 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   const containerRef = useRef(null);
   const screens = useBreakpoint();
 
-  // useEffect(() => {
-  //   const sortable = Sortable.create(containerRef.current, {
-  //     animation: 150,
-  //     onEnd: (evt) => {
-  //       const { oldIndex, newIndex } = evt;
-  //       if (oldIndex === newIndex) return;
-  //       const updatedData = Array.from(matchedData);
-  //       const [movedItem] = updatedData.splice(oldIndex, 1);
-  //       updatedData.splice(newIndex, 0, movedItem);
-  //     }
-  //   });
-  //
-  //   return () => sortable.destroy();
-  // }, [matchedData]);
+  useEffect(() => {
+    const sortable = Sortable.create(containerRef.current, {
+      animation: 150,
+      onEnd: (evt) => {
+        const { oldIndex, newIndex } = evt;
+        if (oldIndex === newIndex) return;
+        const updatedData = Array.from(matchedData);
+        const [movedItem] = updatedData.splice(oldIndex, 1);
+        updatedData.splice(newIndex, 0, movedItem);
+        console.log("movedItem", movedItem, " oldIndex", oldIndex, " newIndex", newIndex);
+        saveUserGoalsOrder({
+          dashboardId: dashboardId,
+          activityId: movedItem.activityId,
+          newIndex: newIndex
+        }).then(() => {
+          console.log("order saved");
+        });
+      }
+    });
+
+    return () => sortable.destroy();
+  }, [matchedData]);
   const handleExpand = async ({ tile }) => {
     setDrillDownTile(tile);
     setDrillDownModalVisible(true);
@@ -138,7 +147,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
       </Card>
 
       <Modal
-        width="80vw"
+        width="90vw"
         style={{ top: 20 }}
         title={`Goals ${selectedPeriodLabel}`}
         open={isDrillDownModalVisible}

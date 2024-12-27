@@ -72,7 +72,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                 <Card style={{ marginBottom: 16 }} title={(
                   <Flex direction="row" align="center" justify="start" gap={"small"}>
                     <FaRegChartBar />
-                    {item && item.title}
+                    Your Performance Trends: {item && item.title}
                   </Flex>
                 )}>
                   <AgCharts
@@ -108,9 +108,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                         {
                           type: "category",
                           position: "bottom",
-                          title: {
-                            text: "Period"
-                          }
+                          title: false,
                         },
                         {
                           type: "number",
@@ -128,7 +126,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                 <Card style={{ marginBottom: 16 }} title={(
                   <Flex direction="row" align="center" justify="start" gap={"small"}>
                     <TrophyOutlined />
-                    Leader Board
+                    Leader Board: {item && item.title}
                   </Flex>
                 )}>
                   <LeaderBoard apiKey={apiKey} apiServer={apiServer} currentTile={item} />
