@@ -38,12 +38,12 @@ const PlannerDailyTimeline = React.memo(({ items = [] }) => {
   const getTimelineText = (itemData, item, index) => {
     switch (item.type) {
       case "TASK":
-        return <Text onClick={() => handleActualsClick(itemData)}>{item.count} Task(s) is due</Text>;
+        return <Link onClick={() => handleActualsClick(itemData)}>{item.count} Task(s) is due</Link>;
       case "OVERDUE_TASK":
         return (
-          <Text>
+          <Link>
             {index > 0 ? "" : "Review"} {item.count} overdue Task(s)
-          </Text>
+          </Link>
         );
       case "REMINDER":
         return <Text>{item.count} Reminder(s) is due</Text>;
@@ -51,9 +51,9 @@ const PlannerDailyTimeline = React.memo(({ items = [] }) => {
         return <Text>{item.count} custom next action(s) is due</Text>;
       case "OVERDUE_REMINDER":
         return (
-          <Text>
+          <Link>
             {index > 0 ? "" : "Review"} {item.count} overdue Reminder(s)
-          </Text>
+          </Link>
         );
       case "CALL":
       case "MEETING":
@@ -68,23 +68,23 @@ const PlannerDailyTimeline = React.memo(({ items = [] }) => {
         }
 
         return (
-          <Text>
+          <Link>
             {label} with {recordType}{" "}
             {item.attendees.map((rec, index) => (
               <Link key={index} href="">
                 {rec.label}
               </Link>
             ))}
-          </Text>
+          </Link>
         );
       }
 
       case "PLACEMENT_STARTER":
-        return <Text>Follow-up {item.count} Placement(s) starting</Text>;
+        return <Link>Follow-up {item.count} Placement(s) starting</Link>;
       case "APPLICATION":
-        return <Text>Review your {item.count} pending job applications</Text>;
+        return <Link style={{color:"#000000"}} href={'javascript:void(0)'}>Review your {item.count} pending job applications</Link>;
       default:
-        return <Text>Event</Text>;
+        return <Link style={{color:"#000000"}} href={'javascript:void(0)'}>Event</Link>;
     }
   };
 
@@ -101,7 +101,7 @@ const PlannerDailyTimeline = React.memo(({ items = [] }) => {
         <Text style={{ fontWeight: 500 }}>{itemData.formatted_time}</Text> -{" "}
         {itemData.items.map((item, index) => (
           <React.Fragment key={index}>
-            {index > 0 && " and "}
+            {index > 0 && <Text style={{color:"lightgray"}}>{" and "}</Text>}
             {getTimelineText(itemData, item, index)}
           </React.Fragment>
         ))}
