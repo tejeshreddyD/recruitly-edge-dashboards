@@ -37,6 +37,8 @@ const PlannerCalendarEvents = ({type = "TODAY",date = 0, viewType="FULL_DAY",eve
 
   const {data,loading,error,fetchUserPlannerCalendarEvents} = userDashboardPlannerDataStore()
 
+  const [title, setTitle] = useState("Calendar Events");
+
   const [columnDefs, setColumnDefs] = useState([
     { field: "eventStartDate",
       headerName: "Event Date",
@@ -115,6 +117,14 @@ const PlannerCalendarEvents = ({type = "TODAY",date = 0, viewType="FULL_DAY",eve
     };
   }, []);
 
+  useEffect(() => {
+
+    if(eventType === "INTERVIEW") {
+      setTitle("Interviews")
+    }
+
+  },[eventType]);
+
   const onGridReady = useCallback((params) => {
 
     const {start_date,end_date } = getDateRangeByCodeAndDate(type,date,viewType);
@@ -128,7 +138,7 @@ const PlannerCalendarEvents = ({type = "TODAY",date = 0, viewType="FULL_DAY",eve
     setRowData(data);
 
   }, [data]);
-  return (<Card title={"Tasks"} bordered={false} styles={{header:{border:0,minHeight:0,paddingLeft:0},body:{height:"80vh",paddingLeft:0}}} style={{boxShadow:"none"}}>
+  return (<Card title={title} bordered={false} styles={{header:{border:0,minHeight:0,paddingLeft:0},body:{height:"80vh",paddingLeft:0}}} style={{boxShadow:"none"}}>
     <div style={gridStyle}>
       <AgGridReact
         theme={RECRUITLY_AGGRID_THEME}
