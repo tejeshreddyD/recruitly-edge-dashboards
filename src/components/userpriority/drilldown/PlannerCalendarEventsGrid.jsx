@@ -79,7 +79,7 @@ const PlannerCalendarEvents = ({type = "TODAY",date = 0, viewType="FULL_DAY",eve
 
         const linked_recs = params.data.attendees;
 
-        if (linked_recs.length > 0) {
+        if (linked_recs && linked_recs.length > 0) {
           return linked_recs.map((rec, index) => (<div key={index}><Tag color="blue" key={index}>
               <a href="javascript:void(0)" rel="noopener noreferrer">
                 {rec.name}
