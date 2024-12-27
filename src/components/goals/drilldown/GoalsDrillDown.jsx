@@ -12,14 +12,31 @@ import { FaRegChartBar } from "react-icons/fa";
 import { TbSum } from "react-icons/tb";
 
 const formatNumber = (num) => {
-  if (!num) return num;
-  if (num <= 0) return num.toString();
-  if (num < 1000) return num.toString();
-  return new Intl.NumberFormat(undefined, {
-    notation: "compact",
-    maximumFractionDigits: 1
-  }).format(num);
+  try {
+    if (num == null || isNaN(num)) {
+      // Return as is if num is null, undefined, or not a valid number
+      return "";
+    }
+
+    const intNum = Number(num); // Ensure num is converted to a number
+    if (intNum <= 0) {
+      return intNum.toString(); // Return zero or negative values as strings
+    }
+    if (intNum < 1000) {
+      return intNum.toString(); // Return values less than 1000 as-is
+    }
+
+    // Format numbers >= 1000 with compact notation
+    return new Intl.NumberFormat(undefined, {
+      notation: "compact",
+      maximumFractionDigits: 1
+    }).format(intNum);
+  } catch (e) {
+    console.error("Error formatting number:", num, e);
+    return "";
+  }
 };
+
 
 const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData, selectedPeriodLabel }) => {
   const [currentTile, setCurrentTile] = useState(tileData || null);
@@ -60,7 +77,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
       label: (
         <Flex direction="row" align="center" justify="start" gap={"small"}>
           {item.type === "value" && <DollarCircleFilled style={{ color: "green" }} />}
-          {item.type === "count" && <TbSum style={{color: "gray" }} />}
+          {item.type === "count" && <TbSum style={{ color: "gray" }} />}
           {item.title}{" "}
         </Flex>
       ),
@@ -108,7 +125,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                         {
                           type: "category",
                           position: "bottom",
-                          title: false,
+                          title: false
                         },
                         {
                           type: "number",
