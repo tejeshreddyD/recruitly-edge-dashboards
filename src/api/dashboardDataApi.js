@@ -121,3 +121,15 @@ export const fetchUserPlannerPendingJobApplications = async ({ page, page_size }
   }
 };
 
+export const fetchUserPlannerCalendarEvents = async ({ start_date, end_date, type }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.get(`/calendar_event/list?start_date=${start_date}&end_date=${end_date}&type=${type}`);
+    console.log("fetchUserPlannerCalendarEvents", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching planner calendar event data", error.message);
+    throw new Error("Failed to fetch planner calendar event data. Please try again.");
+  }
+};
+

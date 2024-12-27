@@ -7,3 +7,11 @@
     padding-top: 16px;
     border-radius: 8px;
 }
+
+.planner-stats-tab .ant-tabs-content-holder {
+    margin-left: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: none;
+    border-radius: 8px;
+}

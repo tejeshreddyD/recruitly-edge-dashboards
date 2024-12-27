@@ -6,12 +6,13 @@ import { CalendarOutlined } from "@ant-design/icons";
 import PlannerJobApplicationsGrid from "@components/userpriority/drilldown/PlannerJobApplicationsGrid.jsx";
 import PlannerGridTasks from "@components/userpriority/drilldown/PlannerTasksGrid.jsx";
 import { Handshake, Microphone } from "@phosphor-icons/react";
+import PlannerCalendarEventsGrid from "@components/userpriority/drilldown/PlannerCalendarEventsGrid.jsx";
 
 
 const PlannerDrillDownData = ({type="TODAY",filterType="ALL",viewType="FULL_DAY",date = 0}) => {
 
   return (
-      <div className={"planner-drilldown"} style={{paddingTop: "10px"}}>
+      <div className={"planner-stats-tab"} style={{height:"100vh", width:"100%",paddingTop: "10px"}}>
           <Tabs
             tabPosition="left"
             defaultActiveKey="tasks"
@@ -33,13 +34,13 @@ const PlannerDrillDownData = ({type="TODAY",filterType="ALL",viewType="FULL_DAY"
                 key: 'events',
                 icon: <CalendarOutlined />,
                 label: 'Calendar Events',
-                children:<div>Events</div>
+                children:<PlannerCalendarEventsGrid/>
               },
               {
                 key: 'interviews',
                 icon: <Microphone />,
                 label: 'Interviews',
-                children:<div>Interviews</div>
+                children:<PlannerCalendarEventsGrid eventType={"INTERVIEW"}/>
               },
               {
                 key: 'placement_starters',
