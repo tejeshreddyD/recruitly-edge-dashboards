@@ -54,7 +54,6 @@ const GoalSelector = ({ open, onClose, dashboardId }) => {
         type
       }));
       await saveConfig({ dashboardId, selectedKpi: serializableSelectedKpi });
-      message.success("Your goals have been saved successfully!");
       onClose();
     } catch (error) {
       console.error("Error saving user goals config:", error.message);
