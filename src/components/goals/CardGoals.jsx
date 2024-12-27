@@ -33,11 +33,16 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
   const onGoalSelectorClose = () => setGoalSelectorOpen(false);
 
   useMemo(() => {
-
     if (!periodData || !periodData.length || periodData.length <= 0 || !configData?.selectedKpi) {
       setMatchedData([]);
+      return;
     }
 
+    // Create a map for selectedKpiOrder to maintain the order
+    const selectedKpiOrder = configData.selectedKpiOrder || [];
+    const orderMap = new Map(selectedKpiOrder.map((id, index) => [id, index]));
+
+    // Filter and map matched items
     const matchedDataItems = periodData
       .filter((item) =>
         configData.selectedKpi.some(
@@ -58,11 +63,11 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
         monthName: item.monthName || "N/A", // Default for quarters/years
         difference: item.difference,
         prev: item.prev || [], // Ensure prev data is passed
-        type: item.targetType.toLowerCase() // e.g., "currency" or "counter"
-      }));
+        type: item.targetType.toLowerCase(), // e.g., "currency" or "counter"
+      }))
+      .sort((a, b) => (orderMap.get(a.activityId) ?? Infinity) - (orderMap.get(b.activityId) ?? Infinity)); // Sort by selectedKpiOrder
 
     setMatchedData(matchedDataItems);
-
   }, [periodData, configData]);
 
 
