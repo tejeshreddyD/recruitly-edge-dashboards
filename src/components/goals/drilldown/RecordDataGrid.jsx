@@ -4,11 +4,14 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { fetchUserGoalsRecordData } from "@api/dashboardDataApi.js";
 import { RECRUITLY_AGGRID_THEME } from "@constants";
 import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore";
-import { ModuleRegistry } from "ag-grid-community";
-import { ServerSideRowModelModule } from "ag-grid-enterprise";
+import { CsvExportModule, ModuleRegistry } from "ag-grid-community";
+import { ExcelExportModule, ServerSideRowModelModule } from "ag-grid-enterprise";
+import { Button, Flex } from "antd";
+import { DatabaseFilled } from "@ant-design/icons";
+import { DiDatabase } from "react-icons/di";
 
 // Register the required modules
-ModuleRegistry.registerModules([ServerSideRowModelModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, CsvExportModule, ExcelExportModule]);
 
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
@@ -75,7 +78,7 @@ const activityColumnMap = {
   ]
 };
 
-const RecordDataGrid = ({ tileData }) => {
+const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
   const { selectedPeriod } = useUserDashboardGoalsDataStore((state) => state);
   const gridRef = useRef(null);
 
@@ -133,20 +136,29 @@ const RecordDataGrid = ({ tileData }) => {
     params.api.setGridOption("serverSideDatasource", datasource);
   }, [getServerSideDatasource]);
 
+  const onBtExport = useCallback(() => {
+    gridRef.current.api.exportDataAsExcel();
+  }, []);
+
   return (
-    <div style={{ height: "500px", width: "100%" }} className="ag-theme-quartz">
-      <AgGridReact
-        ref={gridRef}
-        columnDefs={colDefs}
-        defaultColDef={defaultColDef}
-        rowModelType="serverSide"
-        pagination={true}
-        paginationPageSize={25}
-        cacheBlockSize={25}
-        onGridReady={onGridReady}
-        theme={RECRUITLY_AGGRID_THEME}
-      />
-    </div>
+    <Flex vertical={true} gap={"middle"}>
+      <Flex direction="row" align="center" justify="start" gap="small">
+        <DiDatabase /><span>Records Added {selectedPeriodLabel}</span>
+      </Flex>
+      <div style={{ height: "500px", width: "100%" }} className="ag-theme-quartz">
+        <AgGridReact
+          ref={gridRef}
+          columnDefs={colDefs}
+          defaultColDef={defaultColDef}
+          rowModelType="serverSide"
+          pagination={true}
+          paginationPageSize={25}
+          cacheBlockSize={25}
+          onGridReady={onGridReady}
+          theme={RECRUITLY_AGGRID_THEME}
+        />
+      </div>
+    </Flex>
   );
 };
 

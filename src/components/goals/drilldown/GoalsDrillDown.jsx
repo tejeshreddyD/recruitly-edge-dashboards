@@ -10,7 +10,7 @@ import { formatNumber } from "@utils/numberUtil.js";
 import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore.js";
 import RecordDataGrid from "@components/goals/drilldown/RecordDataGrid.jsx";
 
-const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData }) => {
+const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData, selectedPeriodLabel }) => {
 
   const [currentTile, setCurrentTile] = useState(tileData || null);
   const [prevData, setPrevData] = useState([]);
@@ -44,77 +44,75 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
         </Flex>
       ),
       children: (
-        <div>
-          <div style={{ width: "auto", height: "500px", marginRight: 15 }} className={"ag-theme-quartz"}>
-            <Row gutter={12}>
-              <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-                <Card style={{ marginBottom: 16 }} title={(
-                  <Flex direction="row" align="center" justify="start" gap={"small"}>
-                    <FaRegChartBar />
-                    Your Performance Trends: {item && item.title}
-                  </Flex>
-                )}>
-                  <AgCharts
-                    options={{
-                      theme: "ag-polychroma",
-                      data: [
-                        ...item.prev.slice().reverse().map((prev) => ({
-                          monthName: prev.monthName,
-                          actualValue: prev.actualValue || 0
-                        })),
-                        {
-                          monthName: item.monthName,
-                          actualValue: item.actual || 0
-                        }
-                      ],
-                      background: { fill: "transparent" },
-                      series: [
-                        {
-                          type: "bar",
-                          xKey: "monthName",
-                          yKey: "actualValue",
-                          stroke: "transparent",
-                          label: {
-                            formatter: ({ value }) => formatNumber(value)
-                          },
-                          itemStyler: (dataItem) => {
-                            const color = dataItem.datum.monthName === item.monthName ? "orange" : "#436ff4";
-                            return { fill: color };
-                          }
-                        }
-                      ],
-                      axes: [
-                        {
-                          type: "category",
-                          position: "bottom",
-                          title: false
+        <Flex vertical={true} gap={"middle"} style={{paddingRight:20,paddingTop:10,paddingBottom:20}}>
+          <Row gutter={12}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Card style={{ marginBottom: 16 }} title={(
+                <Flex direction="row" align="center" justify="start" gap={"small"}>
+                  <FaRegChartBar />
+                  Your Performance Trends: {item && item.title}
+                </Flex>
+              )}>
+                <AgCharts
+                  options={{
+                    theme: "ag-polychroma",
+                    data: [
+                      ...item.prev.slice().reverse().map((prev) => ({
+                        monthName: prev.monthName,
+                        actualValue: prev.actualValue || 0
+                      })),
+                      {
+                        monthName: item.monthName,
+                        actualValue: item.actual || 0
+                      }
+                    ],
+                    background: { fill: "transparent" },
+                    series: [
+                      {
+                        type: "bar",
+                        xKey: "monthName",
+                        yKey: "actualValue",
+                        stroke: "transparent",
+                        label: {
+                          formatter: ({ value }) => formatNumber(value)
                         },
-                        {
-                          type: "number",
-                          position: "left",
-                          label: {
-                            formatter: ({ value }) => formatNumber(value)
-                          }
+                        itemStyler: (dataItem) => {
+                          const color = dataItem.datum.monthName === item.monthName ? "orange" : "#436ff4";
+                          return { fill: color };
                         }
-                      ]
-                    }}
-                  />
-                </Card>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-                <Card style={{ marginBottom: 16 }} title={(
-                  <Flex direction="row" align="center" justify="start" gap={"small"}>
-                    <TrophyOutlined />
-                    Leader Board: {item && item.title}
-                  </Flex>
-                )}>
-                  <LeaderBoard apiKey={apiKey} apiServer={apiServer} currentTile={item} />
-                </Card>
-              </Col>
-            </Row>
-            <RecordDataGrid tileData={item} />
-          </div>
-        </div>
+                      }
+                    ],
+                    axes: [
+                      {
+                        type: "category",
+                        position: "bottom",
+                        title: false
+                      },
+                      {
+                        type: "number",
+                        position: "left",
+                        label: {
+                          formatter: ({ value }) => formatNumber(value)
+                        }
+                      }
+                    ]
+                  }}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+              <Card style={{ marginBottom: 16 }} title={(
+                <Flex direction="row" align="center" justify="start" gap={"small"}>
+                  <TrophyOutlined />
+                  Leader Board: {item && item.title}
+                </Flex>
+              )}>
+                <LeaderBoard apiKey={apiKey} apiServer={apiServer} currentTile={item} />
+              </Card>
+            </Col>
+          </Row>
+          <RecordDataGrid selectedPeriodLabel={selectedPeriodLabel} tileData={item} />
+        </Flex>
       )
     }));
 
