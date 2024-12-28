@@ -19,6 +19,25 @@ const sysrecordContactGetter = function(params) {
   }
   return `${params.data.contact.label || ""}`.trim();
 };
+const fetchOpportunitiesColumns = () => [
+  { field: "reference", headerName: "#REF" },
+  { field: "name", headerName: "Name" },
+  { field: "bid.value", headerName: "Value" },
+  { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+  { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+  { field: "owner.label", headerName: "Owner" },
+  {
+    field: "createdOn",
+    headerName: "Created At",
+    type: "date",
+    sort: "desc",
+    sortedAt: 0,
+    valueGetter: function (params) {
+      return formatGlobalDate(params.data.createdOn);
+    },
+  },
+];
+
 
 export const sysrecordCompanyGetter = function(params) {
   if (!params.data.company) {
@@ -72,60 +91,12 @@ export const activityColumnMap = {
       }
     }
   ],
-  OPPORTUNITIES_CREATED:[
-    { field: "reference", headerName: "#REF" },
-    { field: "name", headerName: "Name" },
-    { field: "bid.value", headerName: "Value"},
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn",
-      headerName: "Created At",
-      type: "date",
-      sort: "desc",
-      sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    },
-  ],
-  OPPORTUNITIES_VALUE:[
-    { field: "reference", headerName: "#REF" },
-    { field: "name", headerName: "Name" },
-    { field: "bid.value", headerName: "Value"},
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn",
-      headerName: "Created At",
-      type: "date",
-      sort: "desc",
-      sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    },
-  ],
-  OPPORTUNITIES_PIPELINE_VALUE:[
-    { field: "reference", headerName: "#REF" },
-    { field: "name", headerName: "Name" },
-    { field: "bid.value", headerName: "Value"},
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn",
-      headerName: "Created At",
-      type: "date",
-      sort: "desc",
-      sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    },
-  ],
+  OPPORTUNITIES_CREATED: fetchOpportunitiesColumns(),
+
+  OPPORTUNITIES_VALUE: fetchOpportunitiesColumns(),
+
+  OPPORTUNITIES_PIPELINE_VALUE: fetchOpportunitiesColumns(),
+
   PLACEMENTS_CREATED: [
     { field: "reference", headerName: "#REF" },
     { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
