@@ -62,19 +62,19 @@ const activityColumnMap = {
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Recruiter" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
   ],
   CONTACTS_CREATED: [
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Contact Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
   ],
   DEFAULT: [
     { field: "reference", headerName: "#REF" },
     { field: "name", headerName: "Record" },
     { field: "owner.label", headerName: "Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
   ]
 };
 
