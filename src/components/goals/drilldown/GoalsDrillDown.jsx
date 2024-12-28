@@ -149,13 +149,13 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
   };
 
   return (
-    <div style={{ width: "100%", height: "105vh", paddingTop: "16px" }}>
+    <div style={{ width: "100%", paddingTop: "16px" }}>
       <Tabs
         tabPosition="left"
         size={"small"}
         type={"line"}
         className="stats-tab"
-        style={{ width: "100%", height: "100vh", borderRight: 0 }}
+        style={{ width: "100%", borderRight: 0 }}
         activeKey={activeKey}
         items={goalItems}
         onChange={(key) => {
