@@ -36,14 +36,14 @@ export const activityColumnMap = {
           return null; // Handle case where data is missing
         }
         return (
-          <a
+          <div
             onClick={() => {
               window.COOLUTIL.viewRecordPopupByType("LEAD", params.data.id);
             }}
             style={{ cursor: "pointer", textDecoration: "underline", color: "blue" }}
           >
             {params.data.firstName} {params.data.surname}
-          </a>
+          </div>
         );
       }
     },
