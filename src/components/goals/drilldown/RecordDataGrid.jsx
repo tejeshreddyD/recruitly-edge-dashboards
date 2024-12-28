@@ -10,21 +10,46 @@ import { ServerSideRowModelModule } from "ag-grid-enterprise";
 // Register the required modules
 ModuleRegistry.registerModules([ServerSideRowModelModule]);
 
+const nameGetter=function(params) {
+  return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
+}
+
+const activityColumnMap = {
+  LEADS_CREATED: [
+    { field: "reference", headerName: "#REF" },
+    { field: "firstName", headerName: "Name",   valueGetter: nameGetter},
+    { field: "owner.label", headerName: "Owner" },
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
+  ],
+  CANDIDATES_CREATED: [
+    { field: "reference", headerName: "#REF" },
+    { field: "firstName", headerName: "Name",   valueGetter: nameGetter},
+    { field: "owner.label", headerName: "Recruiter" },
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
+  ],
+  CONTACTS_CREATED: [
+    { field: "reference", headerName: "#REF" },
+    { field: "firstName", headerName: "Name",   valueGetter: nameGetter},
+    { field: "owner.label", headerName: "Contact Owner" },
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
+  ],
+  DEFAULT: [
+    { field: "reference", headerName: "#REF" },
+    { field: "name", headerName: "Record" },
+    { field: "owner.label", headerName: "Owner" },
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
+  ]
+};
+
 const RecordDataGrid = ({ tileData }) => {
   const { selectedPeriod } = useUserDashboardGoalsDataStore((state) => state);
   const gridRef = useRef(null);
 
-  const [colDefs] = useState([
-    { field: "reference", headerName: "#REF" },
-    { field: "label", headerName: "Record" },
-    { field: "owner.label", headerName: "Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" },
-    { field: "owner.", headerName: "Owner" }
-  ]);
+  const [colDefs, setColDefs] = useState(activityColumnMap.DEFAULT);
 
   const defaultColDef = useMemo(() => ({
     flex: 1,
-    minWidth: 90,
+    minWidth: 90
   }), []);
 
   const getServerSideDatasource = useCallback(() => {
@@ -46,15 +71,20 @@ const RecordDataGrid = ({ tileData }) => {
             pageSize
           });
 
+          // Update columns dynamically based on activity code
+          const activityCode = result.data.activity?.code;
+          const updatedColDefs = activityColumnMap[activityCode] || activityColumnMap.DEFAULT;
+          setColDefs(updatedColDefs);
+
           params.success({
-            rowData: result.data || [],
-            rowCount: result.total || -1,
+            rowData: result.data.records || [],
+            rowCount: result.data.totalCount || -1
           });
         } catch (error) {
           console.error("Error fetching data:", error);
           params.fail();
         }
-      },
+      }
     };
   }, [selectedPeriod, tileData]);
 
