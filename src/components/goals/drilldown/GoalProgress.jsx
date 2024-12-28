@@ -13,7 +13,7 @@ const GoalProgress = ({ target = 0, actual = 0 }) => {
     background: {
       visible: false
     },
-    width: 300,
+    width: 200,
     height: 24,
     cornerRadius: 99,
     cornerMode: "container",
@@ -22,7 +22,7 @@ const GoalProgress = ({ target = 0, actual = 0 }) => {
       enabled: true,
       fontSize: "normal",
       placement: "inside-center",
-      avoidCollisions: true
+      avoidCollisions: false
     },
     padding: { top: 0, right: 0, bottom: 0, left: 0 },
     seriesArea: {
@@ -31,10 +31,11 @@ const GoalProgress = ({ target = 0, actual = 0 }) => {
         right: 0
       }
     },
+    thickness:20,
     bar: {
       fills: [
-        { color: "red", stop: 20 },
-        { color: "#4CD137", stop: 100 }
+        { color: "#4CD137", stop: 20 },
+        { color: "#279e14", stop: 100 }
       ],
       fillMode: "continuous"
     },
