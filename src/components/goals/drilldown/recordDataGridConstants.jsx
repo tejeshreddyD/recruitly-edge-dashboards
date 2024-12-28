@@ -12,6 +12,7 @@ const sysrecordCandidateGetter = function(params) {
   }
   return `${params.data.candidate.label || ""}`.trim();
 };
+
 const sysrecordContactGetter = function(params) {
   if (!params.data.contact) {
     return "";
@@ -72,6 +73,42 @@ export const activityColumnMap = {
     }
   ],
   OPPORTUNITIES_CREATED:[
+    { field: "reference", headerName: "#REF" },
+    { field: "name", headerName: "Name" },
+    { field: "bid.value", headerName: "Value"},
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn",
+      headerName: "Created At",
+      type: "date",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    },
+  ],
+  OPPORTUNITIES_VALUE:[
+    { field: "reference", headerName: "#REF" },
+    { field: "name", headerName: "Name" },
+    { field: "bid.value", headerName: "Value"},
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn",
+      headerName: "Created At",
+      type: "date",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    },
+  ],
+  OPPORTUNITIES_PIPELINE_VALUE:[
     { field: "reference", headerName: "#REF" },
     { field: "name", headerName: "Name" },
     { field: "bid.value", headerName: "Value"},
