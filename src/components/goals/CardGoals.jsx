@@ -107,7 +107,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
       <Card
         bordered
         style={{ backgroundColor: "#1e3a8a", border: "none" }}
-        styles={{ header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
+        styles={{ body:{overflowX:'scroll',scrollbarWidth:'thin', overscrollBehavior:'contain'}, header: { color: "#fff", borderBottom: "none", fontSize: 18 } }}
         extra={
           <span
             onClick={showGoalSel}
@@ -121,9 +121,10 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
         <div
           ref={containerRef}
           style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "16px"
+            display: "inline-flex",
+            flexWrap: "nowrap",
+            gap: "16px",
+            paddingRight: "20px",
           }}
         >
           {dataLoading || configLoading ? (
