@@ -14,7 +14,7 @@ const CardUserPriority = () => {
 
   const [selectedPlannerType, setSelectedPlannerType] = useState("ALL");
   const [showPlannerDetail, setShowPlannerDetail] = useState(false);
-  const [detailViewType, setDetailViewType] = useState({title:'',date:0});
+  const [detailViewType, setDetailViewType] = useState({ title: "", date: 0 });
   const [filteredPlanner, setFilteredPlanner] = useState([]);
 
   useEffect(() => {
@@ -38,9 +38,9 @@ const CardUserPriority = () => {
     setShowPlannerDetail(false);
   };
 
-  const onShowPlannerDetail = ({ title, date, view_type,data }) => {
+  const onShowPlannerDetail = ({ title, date, view_type, data }) => {
     setShowPlannerDetail(true);
-    setDetailViewType({ title, date,view_type,data});
+    setDetailViewType({ title, date, view_type, data });
   };
 
   return (
@@ -55,7 +55,7 @@ const CardUserPriority = () => {
                 { label: "Interviews", value: "INTERVIEWS" },
                 { label: "Tasks/Reminders", value: "REMINDER" },
                 { label: "Events", value: "EVENTS" },
-                { label: "Invoice Due", value: "INVOICE_DUE" },
+                { label: "Invoice Due", value: "INVOICE_DUE" }
               ]}
               value={selectedPlannerType}
               onChange={(value) => setSelectedPlannerType(value)}
@@ -68,13 +68,13 @@ const CardUserPriority = () => {
           backgroundImage: "url('https://recruitlycdn.com/edge/plannerbg.png')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          border: "none",
+          border: "none"
         }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
         title={
-          <Flex gap={1} align={"center"} justify={"flex-start"}>
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <RiFocus2Line />
             <span>
-              <RiFocus2Line style={{ marginRight: 8 }} />
               Week Planner
             </span>
           </Flex>
@@ -84,8 +84,7 @@ const CardUserPriority = () => {
             display: "flex",
             overflowX: "auto",
             gap: "16px",
-            padding: "16px",
-            whiteSpace: "nowrap",
+            whiteSpace: "nowrap"
           }}
         >{loading ? <Flex
             gap={8}
@@ -99,7 +98,7 @@ const CardUserPriority = () => {
               size={40}
               style={{
                 color: "#1890ff",
-                animation: "spin 1s linear infinite",
+                animation: "spin 1s linear infinite"
               }}
             />
             <div>
@@ -109,11 +108,14 @@ const CardUserPriority = () => {
             </div>
           </Flex>
           : error ? <Alert message="Error loading data" type="error" /> : filteredPlanner.map((data) => (
-            <DayTimeline title={data.date} date={data.dayTimestamp} key={data.date} color="" items={data.items} showDetailView={onShowPlannerDetail} />
+            <DayTimeline title={data.date} date={data.dayTimestamp} key={data.date} color="" items={data.items}
+                         showDetailView={onShowPlannerDetail} />
           ))}
         </div>
       </Card>
-      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType.title} date={detailViewType.date} filterType={selectedPlannerType} viewType={detailViewType.view_type} data={detailViewType.data} onDetailViewClose={onDetailViewClose} />
+      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType.title} date={detailViewType.date}
+                             filterType={selectedPlannerType} viewType={detailViewType.view_type}
+                             data={detailViewType.data} onDetailViewClose={onDetailViewClose} />
     </div>
   );
 };
