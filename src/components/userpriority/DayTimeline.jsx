@@ -42,17 +42,20 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
   },[]);
 
   const getTimelineText = (itemData,item,index) => {
+
+    console.log(item.type,item);
+
     switch (item.type) {
       case "TASK":
-        return <Link href={`${VISTA_URL}/reminders?type=TASK`} style={timelineTextStyle}>{item.count} Task(s) is due</Link>;
+        return <Link href={`${VISTA_URL}/reminders?type=TASK&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Task(s) is due</Link>;
       case "OVERDUE_TASK":
-        return <Link href={`${VISTA_URL}/reminders?type=TASK`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Link>;
+        return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_TASK&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Link>;
       case "REMINDER":
-        return <Link style={timelineTextStyle}>{item.count} Reminder(s) is due</Link>;
+        return <Link href={`${VISTA_URL}/reminders?type=REMINDER&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Reminder(s) is due</Link>;
       case "CUSTOM_ACTION":
-        return <Link href={`${VISTA_URL}/reminders?type=NEXT_ACTION`} style={timelineTextStyle}>{item.count} custom next action(s) is due</Link>;
+        return <Link href={`${VISTA_URL}/reminders?type=NEXT_ACTION&date=${item.time}`} style={timelineTextStyle}>{item.count} custom next action(s) is due</Link>;
       case "OVERDUE_REMINDER":
-        return <Link href={`${VISTA_URL}/reminders?type=REMINDER`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)</Link>;
+        return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_REMINDER&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)</Link>;
       case "CALL":
       case "MEETING":
       case "INTERVIEW":
