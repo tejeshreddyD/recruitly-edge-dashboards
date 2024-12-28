@@ -33,19 +33,15 @@ export const activityColumnMap = {
       headerName: "Name",
       cellRenderer: (params) => {
         if (!params.data) {
-          return null; // Handle case where data is missing
+          return ""; // Return an empty string if data is missing
         }
-        return (
-          <div
-            onClick={() => {
-              window.COOLUTIL.viewRecordPopupByType("LEAD", params.data.id);
-            }}
-            style={{ cursor: "pointer", textDecoration: "underline", color: "blue" }}
-          >
-            {params.data.firstName} {params.data.surname}
-          </div>
-        );
-      }
+        return `${params.data.firstName} ${params.data.surname}`;
+      },
+      onCellClicked: (params) => {
+        if (params.data && params.data.id) {
+            window.COOLUTIL.viewRecordPopupByType("LEAD", params.data.id);
+        }
+      },
     },
     { field: "owner.label", headerName: "Owner" },
     {
