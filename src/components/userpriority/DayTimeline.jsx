@@ -43,8 +43,6 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
 
   const getTimelineText = (itemData,item,index) => {
 
-    console.log(item.type,item);
-
     switch (item.type) {
       case "TASK":
         return <Link href={`${VISTA_URL}/reminders?type=TASK&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Task(s) is due</Link>;
