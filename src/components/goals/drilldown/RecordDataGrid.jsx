@@ -5,115 +5,18 @@ import { fetchUserGoalsRecordData } from "@api/dashboardDataApi.js";
 import { RECRUITLY_AGGRID_THEME } from "@constants";
 import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore";
 import { CsvExportModule, ModuleRegistry } from "ag-grid-community";
-import { ExcelExportModule, ServerSideRowModelModule } from "ag-grid-enterprise";
+import { ExcelExportModule, ServerSideRowModelModule, SparklinesModule } from "ag-grid-enterprise";
 import { Button, Flex } from "antd";
 import { DiDatabase } from "react-icons/di";
-import { formatGlobalDate } from "@utils/dateUtil.js";
+import { activityColumnMap } from "@components/goals/drilldown/recordDataGridConstants.jsx";
+import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 
-// Register the required modules
-ModuleRegistry.registerModules([ServerSideRowModelModule, CsvExportModule, ExcelExportModule]);
-
-const nameGetter = function(params) {
-  return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
-};
-const sysrecordCandidateGetter = function(params) {
-  if (!params.data.candidate) {
-    return "";
-  }
-  return `${params.data.candidate.label || ""}`.trim();
-};
-const sysrecordContactGetter = function(params) {
-  if (!params.data.contact) {
-    return "";
-  }
-  return `${params.data.contact.label || ""}`.trim();
-};
-const sysrecordCompanyGetter = function(params) {
-  if (!params.data.company) {
-    return "";
-  }
-  return `${params.data.company.label || ""}`.trim();
-};
-
-const activityColumnMap = {
-  LEADS_CREATED: [
-    { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn",
-      headerName: "Created At",
-      type: "date",
-      sort: "desc",
-      sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    }
-  ],
-  PLACEMENTS_CREATED: [
-    { field: "reference", headerName: "#REF" },
-    { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    }
-  ],
-  PLACEMENTS_VALUE: [
-    { field: "reference", headerName: "#REF" },
-    { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    }
-  ],
-  CANDIDATES_CREATED: [
-    { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
-    { field: "owner.label", headerName: "Recruiter" },
-    {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    }
-  ],
-  CONTACTS_CREATED: [
-    { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
-    { field: "owner.label", headerName: "Contact Owner" },
-    {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    }
-  ],
-  DEFAULT: [
-    { field: "reference", headerName: "#REF" },
-    { field: "name", headerName: "Record" },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    }
-  ]
-};
+ModuleRegistry.registerModules([ServerSideRowModelModule, CsvExportModule, ExcelExportModule, SparklinesModule.with(AgChartsEnterpriseModule)]);
 
 const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
+
   const { selectedPeriod } = useUserDashboardGoalsDataStore((state) => state);
+
   const gridRef = useRef(null);
 
   const [colDefs, setColDefs] = useState(activityColumnMap.DEFAULT);
@@ -126,15 +29,11 @@ const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
   const getServerSideDatasource = useCallback(() => {
     return {
       getRows: async (params) => {
-        console.log("[Datasource] - rows requested by grid: ", params.request);
-
-        const { startRow, endRow, sortModel } = params.request; // Extract sorting info
+        const { startRow, endRow, sortModel } = params.request;
         const pageNumber = Math.floor(startRow / 25);
         const pageSize = endRow - startRow;
-
-        // Determine sortField and sortOrder dynamically
-        const sortField = sortModel?.[0]?.colId || "createdOn"; // Default to createdOn
-        const sortOrder = sortModel?.[0]?.sort === "asc" ? "asc" : "desc"; // Default to descending
+        const sortField = sortModel?.[0]?.colId || "createdOn";
+        const sortOrder = sortModel?.[0]?.sort === "asc" ? "asc" : "desc";
 
         try {
           const { activityId, activityType } = tileData;
@@ -147,12 +46,9 @@ const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
             sortField,
             sortOrder
           });
-
-          // Update columns dynamically based on activity code
           const activityCode = result.data.activity?.code;
           const updatedColDefs = activityColumnMap[activityCode] || activityColumnMap.DEFAULT;
           setColDefs(updatedColDefs);
-
           params.success({
             rowData: result.data.records || [],
             rowCount: result.data.totalCount || -1
@@ -170,15 +66,11 @@ const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
     params.api.setGridOption("serverSideDatasource", datasource);
   }, [getServerSideDatasource]);
 
-  const onBtExport = useCallback(() => {
-    gridRef.current.api.exportDataAsExcel();
-  }, []);
-
   return (
     <div>
       <Flex vertical={true} gap={"small"}>
         <Flex direction="row" align="center" justify="start" gap="small">
-          <DiDatabase /><span>Records Added {selectedPeriodLabel}</span>
+          <DiDatabase /><span>{selectedPeriodLabel}</span>
         </Flex>
         <div style={{ height: "500px", width: "100%" }} className="ag-theme-quartz">
           <AgGridReact
