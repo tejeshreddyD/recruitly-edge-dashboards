@@ -31,11 +31,10 @@ export const activityColumnMap = {
     {
       field: "firstName",
       headerName: "Name",
-      cellRendererFramework: (params) => {
+      cellRenderer: (params) => {
         if (!params.data) {
           return null; // Handle case where data is missing
         }
-
         return (
           <a
             onClick={() => {
