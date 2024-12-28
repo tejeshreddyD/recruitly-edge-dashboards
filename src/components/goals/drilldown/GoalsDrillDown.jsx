@@ -112,7 +112,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                 </Card>
               </Col>
             </Row>
-            <RecordDataGrid tileData={tileData} />
+            <RecordDataGrid tileData={item} />
           </div>
         </div>
       )

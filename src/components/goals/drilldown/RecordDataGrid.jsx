@@ -57,9 +57,13 @@ const RecordDataGrid = ({ tileData }) => {
       getRows: async (params) => {
         console.log("[Datasource] - rows requested by grid: ", params.request);
 
-        const { startRow, endRow } = params.request;
+        const { startRow, endRow, sortModel } = params.request; // Extract sorting info
         const pageNumber = Math.floor(startRow / 25);
         const pageSize = endRow - startRow;
+
+        // Determine sortField and sortOrder dynamically
+        const sortField = sortModel?.[0]?.colId || "createdOn"; // Default to createdOn
+        const sortOrder = sortModel?.[0]?.sort === "asc" ? "asc" : "desc"; // Default to descending
 
         try {
           const { activityId, activityType } = tileData;
@@ -68,7 +72,9 @@ const RecordDataGrid = ({ tileData }) => {
             activityId,
             activityType,
             pageNumber,
-            pageSize
+            pageSize,
+            sortField,
+            sortOrder
           });
 
           // Update columns dynamically based on activity code
