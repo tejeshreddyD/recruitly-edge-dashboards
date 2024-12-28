@@ -41,6 +41,18 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
     }
   },[]);
 
+  const handleLinkClick = (e,record) => {
+
+    e.preventDefault();
+
+    if(!record || record.type === "USER" || record.type === "UNRECORDED") {
+      return false
+    }
+
+    window.COOLUTIL.viewRecordPopupByType(record.type, record._id);
+
+  }
+
   const getTimelineText = (itemData,item,index) => {
 
     switch (item.type) {
@@ -77,7 +89,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
           <Link href={"#"} style={timelineTextStyle}>
             {label} with {recordType}{" "}
             {item.attendees.map((rec, index) => (
-              <Link key={index} href="">
+              <Link key={index} oonClick={(e) => handleLinkClick(e, rec)} href={"#"}>
                 {rec.label}
               </Link>
             ))}
