@@ -10,26 +10,60 @@ import { ServerSideRowModelModule } from "ag-grid-enterprise";
 // Register the required modules
 ModuleRegistry.registerModules([ServerSideRowModelModule]);
 
-const nameGetter=function(params) {
+const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
-}
+};
+const sysrecordCandidateGetter = function(params) {
+  if (!params.data.candidate) {
+    return "";
+  }
+  return `${params.data.candidate.label || ""}`.trim();
+};
+const sysrecordContactGetter = function(params) {
+  if (!params.data.contact) {
+    return "";
+  }
+  return `${params.data.contact.label || ""}`.trim();
+};
+const sysrecordCompanyGetter = function(params) {
+  if (!params.data.company) {
+    return "";
+  }
+  return `${params.data.company.label || ""}`.trim();
+};
 
 const activityColumnMap = {
   LEADS_CREATED: [
     { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name",   valueGetter: nameGetter},
+    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
+  ],
+  PLACEMENTS_CREATED: [
+    { field: "reference", headerName: "#REF" },
+    { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "owner.label", headerName: "Owner" },
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
+  ],
+  PLACEMENTS_VALUE: [
+    { field: "reference", headerName: "#REF" },
+    { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "owner.label", headerName: "Owner" },
+    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
   ],
   CANDIDATES_CREATED: [
     { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name",   valueGetter: nameGetter},
+    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Recruiter" },
     { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
   ],
   CONTACTS_CREATED: [
     { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name",   valueGetter: nameGetter},
+    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Contact Owner" },
     { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy" }
   ],
