@@ -38,8 +38,8 @@ export const activityColumnMap = {
         return `${params.data.firstName} ${params.data.surname}`;
       },
       onCellClicked: (params) => {
-        if (params.data && params.data.id) {
-            window.COOLUTIL.viewRecordPopupByType("LEAD", params.data.id);
+        if (params.data && params.data._id) {
+            window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
         }
       },
     },
