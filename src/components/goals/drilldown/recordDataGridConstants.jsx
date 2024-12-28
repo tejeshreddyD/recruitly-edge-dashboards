@@ -1,6 +1,5 @@
 import { formatGlobalDate } from "@utils/dateUtil.js";
 import { Flex, Tag } from "antd";
-import { FaTimeline } from "react-icons/fa6";
 import { LuSquareKanban } from "react-icons/lu";
 
 const nameGetter = function(params) {
@@ -19,6 +18,14 @@ const sysrecordContactGetter = function(params) {
   }
   return `${params.data.contact.label || ""}`.trim();
 };
+
+const sysrecordCompanyGetter = function(params) {
+  if (!params.data.company) {
+    return "";
+  }
+  return `${params.data.company.label || ""}`.trim();
+};
+
 const fetchOpportunitiesColumns = () => [
   { field: "reference", headerName: "#REF" },
   { field: "name", headerName: "Name" },
@@ -32,19 +39,11 @@ const fetchOpportunitiesColumns = () => [
     type: "date",
     sort: "desc",
     sortedAt: 0,
-    valueGetter: function (params) {
+    valueGetter: function(params) {
       return formatGlobalDate(params.data.createdOn);
-    },
-  },
-];
-
-
-export const sysrecordCompanyGetter = function(params) {
-  if (!params.data.company) {
-    return "";
+    }
   }
-  return `${params.data.company.label || ""}`.trim();
-};
+];
 
 export const activityColumnMap = {
   LEADS_CREATED: [
@@ -60,9 +59,9 @@ export const activityColumnMap = {
       },
       onCellClicked: (params) => {
         if (params.data && params.data._id) {
-            window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
+          window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
         }
-      },
+      }
     },
     { field: "owner.label", headerName: "Owner" },
     {
