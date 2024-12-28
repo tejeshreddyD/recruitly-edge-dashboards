@@ -4,7 +4,7 @@ import "ag-charts-enterprise";
 
 const GoalProgress = ({ target = 0, actual = 0 }) => {
 
-  const progressValue = Math.min(Math.max((actual / target) * 100, 1), 100);
+  const progressValue = Math.min(Math.max(Math.round((actual / target) * 100), 1), 100);
 
   const [options, setOptions] = useState({
     type: "linear-gauge",
@@ -18,6 +18,7 @@ const GoalProgress = ({ target = 0, actual = 0 }) => {
     cornerRadius: 99,
     cornerMode: "container",
     label: {
+      text: progressValue+'%',
       enabled: true,
       fontSize: "normal",
       placement: "inside-center",
