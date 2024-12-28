@@ -144,6 +144,43 @@ export const activityColumnMap = {
       }
     }
   ],
+
+  OPEN_JOBS_VALUE:[
+    { field: "reference", headerName: "#REF" },
+    { field: "title", headerName: "Title" },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "commissionDetails", headerName: "Value",
+      valueGetter: (params) => {
+        const commissionAmount = params.data.commissionAmount;
+        const commissionValue = params.data.commissionValue?.currency?.name;
+        return `${commissionAmount} ${commissionValue}`;
+      },
+    },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
+  ],
+
+  JOBS_CREATED :[
+    { field: "reference", headerName: "#REF" },
+    { field: "title", headerName: "Title" },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "status.name", headerName: "Status" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
+  ],
+
   DEFAULT: [
     { field: "reference", headerName: "#REF" },
     { field: "name", headerName: "Record" },
