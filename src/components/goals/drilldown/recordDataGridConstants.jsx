@@ -153,7 +153,7 @@ export const activityColumnMap = {
     { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
     { field: "commissionDetails", headerName: "Value",
       valueGetter: (params) => {
-        const commissionAmount = params.data.commissionAmount; // Use value directly from API
+        const commissionAmount = params.data.commissionAmount;
         const commissionValue = params.data.commissionValue?.currency?.name;
         return `${commissionAmount} ${commissionValue}`;
       },
