@@ -151,7 +151,13 @@ export const activityColumnMap = {
     { field: "title", headerName: "Title" },
     { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
     { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "commissionAmount", headerName: "Value" },
+    { field: "commissionDetails", headerName: "Value",
+      valueGetter: (params) => {
+        const commissionAmount = params.data.commissionAmount; // Use value directly from API
+        const commissionValue = params.data.commissionValue?.currency?.name;
+        return `${commissionAmount} ${commissionValue}`;
+      },
+    },
     { field: "owner.label", headerName: "Owner" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
