@@ -51,13 +51,13 @@ const GoalPeriodHeader = ({ selectedPeriodLabel }) => {
         label: `Last Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() - 3, 1))})`
       },
       { key: "LAST_MONTH", label: `Last Month (${getMonthName(now, -1)})` },
-      { type: "divider" },
-      { key: "NEXT_YEAR", label: `Next Year (${currentYear + 1})` },
-      {
-        key: "NEXT_QUARTER",
-        label: `Next Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() + 3, 1))})`
-      },
-      { key: "NEXT_MONTH", label: `Next Month (${getMonthName(now, 1)})` }
+      // { type: "divider" },
+      // { key: "NEXT_YEAR", label: `Next Year (${currentYear + 1})` },
+      // {
+      //   key: "NEXT_QUARTER",
+      //   label: `Next Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() + 3, 1))})`
+      // },
+      // { key: "NEXT_MONTH", label: `Next Month (${getMonthName(now, 1)})` }
     ];
   }, []);
 
