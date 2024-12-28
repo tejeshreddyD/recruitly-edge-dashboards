@@ -112,7 +112,7 @@ export const fetchUserPlannerTasksByDate = async ({ start_date, end_date }) => {
 export const fetchUserPlannerPendingJobApplications = async ({ page, page_size }) => {
   const apiManager = getApiManager();
   try {
-    const response = await apiManager.get(`/job_application/pending`);
+    const response = await apiManager.get(`/job_application/pending?page=${page}&page_size=${page_size}`);
     console.log("fetchUserPlannerJobApplications", response);
     return response.data;
   } catch (error) {
