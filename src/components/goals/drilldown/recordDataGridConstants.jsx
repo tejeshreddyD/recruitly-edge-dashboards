@@ -29,11 +29,20 @@ export const activityColumnMap = {
   LEADS_CREATED: [
     { field: "reference", headerName: "#REF" },
     {
-      field: "firstName", headerName: "Name", cellRenderer: function(params) {
+      field: "firstName",
+      headerName: "Name",
+      cellRendererFramework: (params) => {
+        if (!params.data) {
+          return null; // Handle case where data is missing
+        }
+
         return (
-          <a onClick={event => {
-            window.COOLUTIL.viewRecordPopupByType("LEAD", params.id);
-          }}>
+          <a
+            onClick={() => {
+              window.COOLUTIL.viewRecordPopupByType("LEAD", params.data.id);
+            }}
+            style={{ cursor: "pointer", textDecoration: "underline", color: "blue" }}
+          >
             {params.data.firstName} {params.data.surname}
           </a>
         );
