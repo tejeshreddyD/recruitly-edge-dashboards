@@ -1,17 +1,17 @@
 import { ConfigProvider } from "antd";
 
-import DashboardsUI from "./DashboardsUI.jsx";
+import MyDashboardUI from "./MyDashboardUI.jsx";
 import styleToken from "./styleToken.js";
 /*
-NOTE: DO NOT ALTER THIS FILE. Please start from DashboardsUI.jsx
+NOTE: DO NOT ALTER THIS FILE. Please start from MyDashboardUI.jsx
  */
 const DashboardsUIWithProvider = (props) => (
   <ConfigProvider theme={styleToken}>
-    <DashboardsUI {...props} />
+    <MyDashboardUI {...props} />
   </ConfigProvider>
 );
 
-const DashboardsUIWrapper = ({ apiServer, apiKey, userId, tenantId , dashboardId}) => {
+const DashboardsUIWrapper = ({ apiServer, apiKey, userId, tenantId, dashboardId }) => {
 
   console.log("Initializing DashboardsUIWrapper");
 
@@ -28,6 +28,6 @@ const DashboardsUIWrapper = ({ apiServer, apiKey, userId, tenantId , dashboardId
   );
 };
 
-window.DashboardsUI = DashboardsUIWithProvider;
+window.MyDashboardUI = DashboardsUIWithProvider;
 
 export default DashboardsUIWrapper;
