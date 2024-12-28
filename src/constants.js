@@ -1,5 +1,7 @@
 import { iconSetQuartzBold, themeQuartz } from "ag-grid-community";
 
+export const VISTA_URL = "https://secure.recruitly.io"
+
 export const RECRUITLY_AGGRID_THEME = themeQuartz.withPart(iconSetQuartzBold).withParams({
   borderColor: "#DADFE5",
   borderRadius: "3px",

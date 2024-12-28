@@ -10,6 +10,7 @@ import { RiCalendarView } from "react-icons/ri";
 
 import { SmileOutlined } from "@ant-design/icons";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
+import { VISTA_URL } from "@constants";
 
 const { Text, Link } = Typography;
 
@@ -39,18 +40,24 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
     showDetailView({title:title,date:itemData.time,view_type:"ACTUAL"});
   }
 
+  const timelineTextStyle = useMemo(() => {
+    return {
+      color: "#000",
+    }
+  },[]);
+
   const getTimelineText = (itemData,item,index) => {
     switch (item.type) {
       case "TASK":
-        return <Text onClick={() => handleActualsClick(itemData)}>{item.count} Task(s) is due</Text>;
+        return <Link style={timelineTextStyle} href={"#"}>{item.count} Task(s) is due</Link>;
       case "OVERDUE_TASK":
-        return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Text>;
+        return <Link href={`${VISTA_URL}/reminders?type=TASK`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Link>;
       case "REMINDER":
-        return <Text>{item.count} Reminder(s) is due</Text>;
+        return <Link style={timelineTextStyle}>{item.count} Reminder(s) is due</Link>;
       case "CUSTOM_ACTION":
-        return <Text>{item.count} custom next action(s) is due</Text>;
+        return <Link href={`${VISTA_URL}/reminders?type=NEXT_ACTION`} style={timelineTextStyle}>{item.count} custom next action(s) is due</Link>;
       case "OVERDUE_REMINDER":
-        return <Text>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)</Text>;
+        return <Link href={`${VISTA_URL}/reminders?type=REMINDER`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)</Link>;
       case "CALL":
       case "MEETING":
       case "INTERVIEW":
@@ -71,23 +78,23 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
         }
 
         return (
-          <Text>
+          <Link style={timelineTextStyle}>
             {label} with {recordType}{" "}
             {item.attendees.map((rec, index) => (
               <Link key={index} href="">
                 {rec.label}
               </Link>
             ))}
-          </Text>
+          </Link>
         );
       }
 
       case "PLACEMENT_STARTER":
-        return <Text>Follow-up {item.count} Placement(s) starting</Text>;
+        return <Link style={timelineTextStyle}>Follow-up {item.count} Placement(s) starting</Link>;
       case "APPLICATION":
-        return <Text>Review your {item.count} pending job applications</Text>;
+        return <Link style={timelineTextStyle} href={`${VISTA_URL}/applications/pending`}>Review your {item.count} pending job applications</Link>;
       default:
-        return <Text>Event</Text>;
+        return <Link>Event</Link>;
     }
   };
 
@@ -104,7 +111,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
         <Text style={{ fontWeight: 500 }}>{itemData.formatted_time}</Text> -{" "}
         {itemData.items.map((item, index) => (
           <React.Fragment key={index}>
-            {index > 0 && " and "}
+            {index > 0 && <Text style={{color: "lightgray"}}>{" and "}</Text>}
             {getTimelineText(itemData,item,index)}
           </React.Fragment>
         ))}
@@ -121,24 +128,8 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
     [items]
   );
 
-  const showPlannerDetail = () => {
-    showDetailView({ title:title, date:date,view_type:"FULL_DAY",data:items});
-  };
-
   return (
     <Card
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      extra={timelineItems.length > 0 ?
-        <GrExpand
-          onClick={showPlannerDetail}
-          style={{
-            color: "#000",
-            cursor: "pointer",
-            display: isHovered ? "inline-block" : "none",
-            transition: "opacity 0.3s",
-          }}
-        />:''}
       styles={{ header: { borderBottom: 0 } }}
       title={
         <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
