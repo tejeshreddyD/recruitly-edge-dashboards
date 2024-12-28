@@ -44,75 +44,80 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
         </Flex>
       ),
       children: (
-        <Flex vertical={true} gap={"middle"} style={{paddingRight:20,paddingTop:10,paddingBottom:20}}>
-          <Row gutter={12}>
-            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-              <Card style={{ marginBottom: 16 }} title={(
-                <Flex direction="row" align="center" justify="start" gap={"small"}>
-                  <FaRegChartBar />
-                  Your Performance Trends: {item && item.title}
-                </Flex>
-              )}>
-                <AgCharts
-                  options={{
-                    theme: "ag-polychroma",
-                    data: [
-                      ...item.prev.slice().reverse().map((prev) => ({
-                        monthName: prev.monthName,
-                        actualValue: prev.actualValue || 0
-                      })),
-                      {
-                        monthName: item.monthName,
-                        actualValue: item.actual || 0
-                      }
-                    ],
-                    background: { fill: "transparent" },
-                    series: [
-                      {
-                        type: "bar",
-                        xKey: "monthName",
-                        yKey: "actualValue",
-                        stroke: "transparent",
-                        label: {
-                          formatter: ({ value }) => formatNumber(value)
-                        },
-                        itemStyler: (dataItem) => {
-                          const color = dataItem.datum.monthName === item.monthName ? "orange" : "#436ff4";
-                          return { fill: color };
-                        }
-                      }
-                    ],
-                    axes: [
-                      {
-                        type: "category",
-                        position: "bottom",
-                        title: false
-                      },
-                      {
-                        type: "number",
-                        position: "left",
-                        label: {
-                          formatter: ({ value }) => formatNumber(value)
-                        }
-                      }
-                    ]
-                  }}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-              <Card style={{ marginBottom: 16 }} title={(
-                <Flex direction="row" align="center" justify="start" gap={"small"}>
-                  <TrophyOutlined />
-                  Leader Board: {item && item.title}
-                </Flex>
-              )}>
-                <LeaderBoard apiKey={apiKey} apiServer={apiServer} currentTile={item} />
-              </Card>
-            </Col>
-          </Row>
-          <RecordDataGrid selectedPeriodLabel={selectedPeriodLabel} tileData={item} />
-        </Flex>
+        <div>
+          <div style={{ fontSize: "medium", marginBottom: 16 }}>{item.title}</div>
+          <div>
+            <Flex vertical={true} gap={"large"} style={{ paddingRight: 20, paddingBottom: 20 }}>
+              <Row gutter={12}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+                  <Card style={{ marginBottom: 16 }} title={(
+                    <Flex direction="row" align="center" justify="start" gap={"small"}>
+                      <FaRegChartBar />
+                      Your Performance Trends
+                    </Flex>
+                  )}>
+                    <AgCharts
+                      options={{
+                        theme: "ag-polychroma",
+                        data: [
+                          ...item.prev.slice().reverse().map((prev) => ({
+                            monthName: prev.monthName,
+                            actualValue: prev.actualValue || 0
+                          })),
+                          {
+                            monthName: item.monthName,
+                            actualValue: item.actual || 0
+                          }
+                        ],
+                        background: { fill: "transparent" },
+                        series: [
+                          {
+                            type: "bar",
+                            xKey: "monthName",
+                            yKey: "actualValue",
+                            stroke: "transparent",
+                            label: {
+                              formatter: ({ value }) => formatNumber(value)
+                            },
+                            itemStyler: (dataItem) => {
+                              const color = dataItem.datum.monthName === item.monthName ? "orange" : "#436ff4";
+                              return { fill: color };
+                            }
+                          }
+                        ],
+                        axes: [
+                          {
+                            type: "category",
+                            position: "bottom",
+                            title: false
+                          },
+                          {
+                            type: "number",
+                            position: "left",
+                            label: {
+                              formatter: ({ value }) => formatNumber(value)
+                            }
+                          }
+                        ]
+                      }}
+                    />
+                  </Card>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+                  <Card style={{ marginBottom: 16 }} title={(
+                    <Flex direction="row" align="center" justify="start" gap={"small"}>
+                      <TrophyOutlined />
+                      Leader Board
+                    </Flex>
+                  )}>
+                    <LeaderBoard apiKey={apiKey} apiServer={apiServer} currentTile={item} />
+                  </Card>
+                </Col>
+              </Row>
+              <RecordDataGrid selectedPeriodLabel={selectedPeriodLabel} tileData={item} />
+            </Flex>
+          </div>
+        </div>
       )
     }));
 
@@ -123,19 +128,18 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
   const handleTabChange = (key) => {
     const selectedItem = matchedData.find((item) => item.id === key);
     if (selectedItem) {
-      console.log("Selected Tab Data:", selectedItem);
       setCurrentTile(selectedItem);
     }
   };
 
   return (
-    <div style={{ height: "100vh", width: "100%", paddingTop: "16px" }}>
+    <div style={{ width: "100%", height:'105vh', paddingTop: "16px" }}>
       <Tabs
         tabPosition="left"
         size={"small"}
         type={"line"}
         className="stats-tab"
-        style={{ width: "100%", height: "100%", borderRight: 0 }}
+        style={{ width: "100%", height: "100vh", borderRight: 0 }}
         activeKey={activeKey}
         items={goalItems}
         onChange={(key) => {

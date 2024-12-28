@@ -7,8 +7,8 @@ import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore";
 import { CsvExportModule, ModuleRegistry } from "ag-grid-community";
 import { ExcelExportModule, ServerSideRowModelModule } from "ag-grid-enterprise";
 import { Button, Flex } from "antd";
-import { DatabaseFilled } from "@ant-design/icons";
 import { DiDatabase } from "react-icons/di";
+import { formatGlobalDate } from "@utils/dateUtil.js";
 
 // Register the required modules
 ModuleRegistry.registerModules([ServerSideRowModelModule, CsvExportModule, ExcelExportModule]);
@@ -40,7 +40,16 @@ const activityColumnMap = {
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
+    {
+      field: "createdOn",
+      headerName: "Created At",
+      type: "date",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
   ],
   PLACEMENTS_CREATED: [
     { field: "reference", headerName: "#REF" },
@@ -48,7 +57,12 @@ const activityColumnMap = {
     { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
     { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
     { field: "owner.label", headerName: "Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
   ],
   PLACEMENTS_VALUE: [
     { field: "reference", headerName: "#REF" },
@@ -56,25 +70,45 @@ const activityColumnMap = {
     { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
     { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
     { field: "owner.label", headerName: "Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
   ],
   CANDIDATES_CREATED: [
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Recruiter" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
   ],
   CONTACTS_CREATED: [
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Contact Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
   ],
   DEFAULT: [
     { field: "reference", headerName: "#REF" },
     { field: "name", headerName: "Record" },
     { field: "owner.label", headerName: "Owner" },
-    { field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0 }
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
   ]
 };
 
@@ -141,24 +175,26 @@ const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
   }, []);
 
   return (
-    <Flex vertical={true} gap={"middle"}>
-      <Flex direction="row" align="center" justify="start" gap="small">
-        <DiDatabase /><span>Records Added {selectedPeriodLabel}</span>
+    <div>
+      <Flex vertical={true} gap={"small"}>
+        <Flex direction="row" align="center" justify="start" gap="small">
+          <DiDatabase /><span>Records Added {selectedPeriodLabel}</span>
+        </Flex>
+        <div style={{ height: "500px", width: "100%" }} className="ag-theme-quartz">
+          <AgGridReact
+            ref={gridRef}
+            columnDefs={colDefs}
+            defaultColDef={defaultColDef}
+            rowModelType="serverSide"
+            pagination={true}
+            paginationPageSize={25}
+            cacheBlockSize={25}
+            onGridReady={onGridReady}
+            theme={RECRUITLY_AGGRID_THEME}
+          />
+        </div>
       </Flex>
-      <div style={{ height: "500px", width: "100%" }} className="ag-theme-quartz">
-        <AgGridReact
-          ref={gridRef}
-          columnDefs={colDefs}
-          defaultColDef={defaultColDef}
-          rowModelType="serverSide"
-          pagination={true}
-          paginationPageSize={25}
-          cacheBlockSize={25}
-          onGridReady={onGridReady}
-          theme={RECRUITLY_AGGRID_THEME}
-        />
-      </div>
-    </Flex>
+    </div>
   );
 };
 
