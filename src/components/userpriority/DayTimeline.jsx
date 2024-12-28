@@ -35,11 +35,6 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
     return iconMap[type] || iconMap.DEFAULT;
   };
 
-  const handleActualsClick = (itemData) => {
-    console.log(itemData);
-    showDetailView({title:title,date:itemData.time,view_type:"ACTUAL"});
-  }
-
   const timelineTextStyle = useMemo(() => {
     return {
       color: "#000",
@@ -49,7 +44,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
   const getTimelineText = (itemData,item,index) => {
     switch (item.type) {
       case "TASK":
-        return <Link style={timelineTextStyle} href={"#"}>{item.count} Task(s) is due</Link>;
+        return <Link href={`${VISTA_URL}/reminders?type=TASK`} style={timelineTextStyle}>{item.count} Task(s) is due</Link>;
       case "OVERDUE_TASK":
         return <Link href={`${VISTA_URL}/reminders?type=TASK`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Link>;
       case "REMINDER":
@@ -78,7 +73,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
         }
 
         return (
-          <Link style={timelineTextStyle}>
+          <Link href={"#"} style={timelineTextStyle}>
             {label} with {recordType}{" "}
             {item.attendees.map((rec, index) => (
               <Link key={index} href="">
