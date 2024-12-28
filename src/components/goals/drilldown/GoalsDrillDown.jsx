@@ -9,6 +9,8 @@ import { TbSum } from "react-icons/tb";
 import { formatNumber } from "@utils/numberUtil.js";
 import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore.js";
 import RecordDataGrid from "@components/goals/drilldown/RecordDataGrid.jsx";
+import GoalProgress from "@components/goals/drilldown/GoalProgress.jsx";
+import { FiTarget } from "react-icons/fi";
 
 const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData, selectedPeriodLabel }) => {
 
@@ -44,8 +46,22 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
         </Flex>
       ),
       children: (
-        <div>
-          <div style={{ fontSize: "medium", marginBottom: 16 }}>{item.title}</div>
+        <Flex vertical={true} gap={"large"}>
+          <Flex direction="row" align="flex-start" justify="space-between" gap={"small"} style={{ marginRight: 20 }}>
+            <span style={{ fontSize: "medium", fontWeight: "500" }}>{item.title}</span>
+            {item.target > 0 && (
+              <Flex direction="row" align="center" justify="start" gap={"small"}>
+                <span style={{ fontSize: "small" }}>Your Progress</span>
+                <GoalProgress target={item.target} actual={item.actual} />
+              </Flex>
+            )}
+            {item.target <= 0 && (
+              <Flex direction="row" align="center" justify="start" gap={"small"}>
+                <FiTarget />
+                <span>Target not assigned</span>
+              </Flex>
+            )}
+          </Flex>
           <div>
             <Flex vertical={true} gap={"large"} style={{ paddingRight: 20, paddingBottom: 20 }}>
               <Row gutter={12}>
@@ -104,7 +120,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                   </Card>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-                  <Card style={{ marginBottom: 16 }} title={(
+                  <Card title={(
                     <Flex direction="row" align="center" justify="start" gap={"small"}>
                       <TrophyOutlined />
                       Leader Board
@@ -117,7 +133,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
               <RecordDataGrid selectedPeriodLabel={selectedPeriodLabel} tileData={item} />
             </Flex>
           </div>
-        </div>
+        </Flex>
       )
     }));
 
@@ -133,7 +149,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
   };
 
   return (
-    <div style={{ width: "100%", height:'105vh', paddingTop: "16px" }}>
+    <div style={{ width: "100%", height: "105vh", paddingTop: "16px" }}>
       <Tabs
         tabPosition="left"
         size={"small"}
