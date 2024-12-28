@@ -1,5 +1,5 @@
-
 import moment from "moment-timezone";
+import { format, isThisYear } from "date-fns";
 
 export const getLocalizedDateString = (timestamp, format = "YYYY-MM-DD HH:mm:ss z") => {
   return moment(timestamp).local().format(format);
@@ -17,10 +17,10 @@ export const getDateObjectInTimeZone = (timestamp, timeZone) => {
   return moment.tz(timestamp, timeZone).toDate();
 };
 
-export const getTimestampByDay = (inputTimestamp,increaseminute) => {
+export const getTimestampByDay = (inputTimestamp, increaseminute) => {
   const tz = getUserTimeZone();
 
-  if(!inputTimestamp){
+  if (!inputTimestamp) {
     increaseminute = 0;
   }
 
@@ -32,7 +32,7 @@ export const getTimestampByDay = (inputTimestamp,increaseminute) => {
 };
 
 export const getEndOfDayTimestamp = (timestamp) => {
-  return moment(timestamp).endOf('day').valueOf();
+  return moment(timestamp).endOf("day").valueOf();
 };
 
 export const getTodayTimestampByTimeZone = () => {
@@ -82,10 +82,10 @@ export const calculateDaysBetween = (date1, date2) => {
   return moment(date1).diff(moment(date2), "days");
 };
 
-export const extractTimeFromTimestamp = (timestamp)  => {
+export const extractTimeFromTimestamp = (timestamp) => {
 
   if (!timestamp) {
-    return timestamp
+    return timestamp;
   }
 
   try {
@@ -98,12 +98,12 @@ export const extractTimeFromTimestamp = (timestamp)  => {
     return null;
   }
 
-}
+};
 
-function getUserTimeZone(){
+function getUserTimeZone() {
 
   if (window.COOL_GLOBALS && !!window.COOL_GLOBALS?.USER && window.COOL_GLOBALS?.USER?.timeZone) {
-    return  window.COOL_GLOBALS?.USER?.timeZone;
+    return window.COOL_GLOBALS?.USER?.timeZone;
   }
 
   return "Europe/London";
@@ -142,93 +142,99 @@ export const getDateStringByUserTimeZone = (timestamp, format) => {
   return moment(timestamp).tz(timeZone).format(defaultFormat);
 };
 
+export function formatGlobalDate(dateString) {
+  const date = new Date(dateString);
+  const formatString = isThisYear(date) ? "do MMM" : "do MMM yyyy";
+  return format(date, formatString);
+}
+
 export const dateRanges = {
   TODAY: {
     start: moment().utc().startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   YESTERDAY: {
     start: moment().utc().subtract(1, "day").startOf("day").valueOf(),
-    end: moment().utc().subtract(1, "day").endOf("day").valueOf(),
+    end: moment().utc().subtract(1, "day").endOf("day").valueOf()
   },
   THIS_WEEK: {
     start: moment().utc().startOf("week").valueOf(),
-    end: moment().utc().endOf("week").valueOf(),
+    end: moment().utc().endOf("week").valueOf()
   },
   THIS_WEEK_SO_FAR: {
     start: moment().utc().startOf("week").valueOf(),
-    end: moment().utc().valueOf(),
+    end: moment().utc().valueOf()
   },
   LAST_WEEK: {
     start: moment().utc().subtract(1, "week").startOf("week").valueOf(),
-    end: moment().utc().subtract(1, "week").endOf("week").valueOf(),
+    end: moment().utc().subtract(1, "week").endOf("week").valueOf()
   },
   THIS_MONTH: {
     start: moment().utc().startOf("month").valueOf(),
-    end: moment().utc().endOf("month").valueOf(),
+    end: moment().utc().endOf("month").valueOf()
   },
   LAST_MONTH: {
     start: moment().utc().subtract(1, "month").startOf("month").valueOf(),
-    end: moment().utc().subtract(1, "month").endOf("month").valueOf(),
+    end: moment().utc().subtract(1, "month").endOf("month").valueOf()
   },
   THIS_QUARTER: {
     start: moment().utc().startOf("quarter").valueOf(),
-    end: moment().utc().endOf("quarter").valueOf(),
+    end: moment().utc().endOf("quarter").valueOf()
   },
   LAST_QUARTER: {
     start: moment().utc().subtract(1, "quarter").startOf("quarter").valueOf(),
-    end: moment().utc().subtract(1, "quarter").endOf("quarter").valueOf(),
+    end: moment().utc().subtract(1, "quarter").endOf("quarter").valueOf()
   },
   THIS_YEAR: {
     start: moment().utc().startOf("year").valueOf(),
-    end: moment().utc().endOf("year").valueOf(),
+    end: moment().utc().endOf("year").valueOf()
   },
   THIS_YEAR_SO_FAR: {
     start: moment().utc().startOf("year").valueOf(),
-    end: moment().utc().valueOf(),
+    end: moment().utc().valueOf()
   },
   LAST_YEAR: {
     start: moment().utc().subtract(1, "year").startOf("year").valueOf(),
-    end: moment().utc().subtract(1, "year").endOf("year").valueOf(),
+    end: moment().utc().subtract(1, "year").endOf("year").valueOf()
   },
   LAST_7_DAYS: {
     start: moment().utc().subtract(7, "days").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_14_DAYS: {
     start: moment().utc().subtract(14, "days").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_30_DAYS: {
     start: moment().utc().subtract(30, "days").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_60_DAYS: {
     start: moment().utc().subtract(60, "days").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_90_DAYS: {
     start: moment().utc().subtract(90, "days").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_180_DAYS: {
     start: moment().utc().subtract(180, "days").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_365_DAYS: {
     start: moment().utc().subtract(365, "days").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_1_YEAR: {
     start: moment().utc().subtract(1, "year").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_2_YEAR: {
     start: moment().utc().subtract(2, "years").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
+    end: moment().utc().endOf("day").valueOf()
   },
   LAST_3_YEAR: {
     start: moment().utc().subtract(3, "years").startOf("day").valueOf(),
-    end: moment().utc().endOf("day").valueOf(),
-  },
+    end: moment().utc().endOf("day").valueOf()
+  }
 };

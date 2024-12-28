@@ -9,7 +9,7 @@ import { RECRUITLY_AGGRID_LICENSE } from "@constants";
 LicenseManagerGrid.setLicenseKey(RECRUITLY_AGGRID_LICENSE);
 LicenseManagerCharts.setLicenseKey(RECRUITLY_AGGRID_LICENSE);
 
-const DashboardsUI = ({ apiServer="", apiKey = "", tenantId = "", userId = "" , dashboardId=""}) => {
+const MyDashboardUI = ({ apiServer="", apiKey = "", tenantId = "", userId = "" , dashboardId=""}) => {
 
   try {
     console.log("Initializing DashboardsUI");
@@ -33,4 +33,4 @@ const DashboardsUI = ({ apiServer="", apiKey = "", tenantId = "", userId = "" , 
   );
 };
 
-export default DashboardsUI;
+export default MyDashboardUI;

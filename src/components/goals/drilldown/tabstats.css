@@ -8,6 +8,14 @@
     border-radius: 8px;
 }
 
+.stats-tab .ant-tabs-tabpane {
+    background-image: url(https://recruitlycdn.com/edge/plannerbg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    overflow:visible;
+}
+
 .planner-stats-tab .ant-tabs-content-holder {
     margin-left: 10px;
     background-size: cover;

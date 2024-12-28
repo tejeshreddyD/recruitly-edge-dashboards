@@ -138,11 +138,13 @@ export const fetchUserGoalsRecordData = async ({
                                                  activityId,
                                                  activityType,
                                                  pageNumber = 0,
-                                                 pageSize = 25
+                                                 pageSize = 25,
+                                                 sortField = "createdOn",
+                                                 sortOrder = "desc"
                                                }) => {
   const apiManager = getApiManager();
   try {
-    const response = await apiManager.get(`/kpi_record_data?periodCode=${periodCode}&activityId=${activityId}&activityType=${activityType}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+    const response = await apiManager.get(`/kpi_record_data?periodCode=${periodCode}&activityId=${activityId}&activityType=${activityType}&pageNumber=${pageNumber}&pageSize=${pageSize}&sortField=${sortField}&sortOrder=${sortOrder}`);
     console.log("fetchUserGoalsRecordData", response);
     return response.data;
   } catch (error) {
