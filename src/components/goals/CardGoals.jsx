@@ -154,7 +154,7 @@ const CardGoals = ({ apiKey, apiServer, userId, tenantId, dashboardId = "" }) =>
       <Modal
         width="95vw"
         style={{ top: 20 }}
-        title={`Goals ${selectedPeriodLabel}`}
+        title={<GoalPeriodHeader theme={"light"} selectedPeriodLabel={setSelectedPeriodLabel} />}
         open={isDrillDownModalVisible}
         onCancel={handleModalClose}
         footer={null}

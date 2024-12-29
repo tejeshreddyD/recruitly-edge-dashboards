@@ -6,7 +6,7 @@ import useGoalsPeriodStore from "@api/userDashboardGoalsDataStore.js";
 
 const { Text } = Typography;
 
-const GoalPeriodHeader = ({ selectedPeriodLabel }) => {
+const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
   const {
     selectedPeriod,
     setPeriod,
@@ -137,8 +137,9 @@ const GoalPeriodHeader = ({ selectedPeriodLabel }) => {
         <Button
           size="small"
           style={{
-            color: "white",
+            color: `${theme==="dark" ? "white" : "black"}`,
             background: "transparent",
+            boxShadow: "none",
             border: "none",
             display: "flex",
             alignItems: "center",
