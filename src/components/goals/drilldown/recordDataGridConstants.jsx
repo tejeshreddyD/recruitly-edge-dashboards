@@ -63,9 +63,9 @@ export const activityColumnMap = {
         }
       }
     },
-    { field: "owner.label", headerName: "Owner" },
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
+    { field: "owner.label", headerName: "Owner" },
     {
       field: "status", headerName: "Pipeline", sortable: false, cellRenderer: function(params) {
         const status = params.data.status;
@@ -128,9 +128,9 @@ export const activityColumnMap = {
   CANDIDATES_CREATED: [
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
-    { field: "owner.label", headerName: "Recruiter" },
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
+    { field: "owner.label", headerName: "Recruiter" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
@@ -141,9 +141,9 @@ export const activityColumnMap = {
   CONTACTS_CREATED: [
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
-    { field: "owner.label", headerName: "Contact Owner" },
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
+    { field: "owner.label", headerName: "Contact Owner" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
@@ -199,6 +199,7 @@ export const activityColumnMap = {
       }
     },
   ],
+
   EMAILS_SENT:[
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
