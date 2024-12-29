@@ -46,9 +46,11 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
         </Flex>
       ),
       children: (
-        <Flex vertical={true} gap={"large"} style={{paddingLeft:20,paddingTop:10,paddingRight:20,paddingBottom:20}}>
+        <Flex vertical={true} gap={"large"}
+              style={{ paddingLeft: 20, paddingTop: 10, paddingRight: 20, paddingBottom: 20 }}>
           <Flex direction="row" align="flex-start" justify="space-between" gap={"small"} style={{ marginRight: 20 }}>
-            <span style={{ fontSize: "normal" }}><span style={{fontWeight:'bold'}}>{item.title}</span> - {selectedPeriodLabel}</span>
+            <span style={{ fontSize: "normal" }}><span
+              style={{ fontWeight: "bold" }}>{item.title}</span> - {selectedPeriodLabel}</span>
             {item.target > 0 && (
               <Flex direction="row" align="center" justify="start" gap={"small"}>
                 <span style={{ fontSize: "small" }}>Your Progress</span>
@@ -76,13 +78,13 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                       options={{
                         theme: "ag-polychroma",
                         data: [
-                          ...item.prev.slice().reverse().map((prev) => ({
-                            monthName: prev.monthName,
-                            actualValue: prev.actualValue || 0
+                          ...(item.prev || []).reverse().map((prev) => ({
+                            monthName: prev?.monthName || "N/A",
+                            actualValue: prev?.actualValue || 0
                           })),
                           {
-                            monthName: item.monthName,
-                            actualValue: item.actual || 0
+                            monthName: item?.monthName || "N/A",
+                            actualValue: item?.actual || 0
                           }
                         ],
                         background: { fill: "transparent" },
