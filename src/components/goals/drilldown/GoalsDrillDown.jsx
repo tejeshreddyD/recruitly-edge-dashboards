@@ -7,10 +7,10 @@ import "./tabstats.css";
 import { FaRegChartBar } from "react-icons/fa";
 import { TbSum } from "react-icons/tb";
 import { formatNumber } from "@utils/numberUtil.js";
-import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore.js";
 import RecordDataGrid from "@components/goals/drilldown/RecordDataGrid.jsx";
 import GoalProgress from "@components/goals/drilldown/GoalProgress.jsx";
 import { FiTarget } from "react-icons/fi";
+import RecordDataChart from "@components/goals/drilldown/RecordDataChart.jsx";
 
 const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData, selectedPeriodLabel }) => {
 
@@ -130,6 +130,9 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                   </Card>
                 </Col>
               </Row>
+              <RecordDataChart apiServer={apiServer} apiKey={apiKey} activityId={item.activityId}
+                               activityType={item.activityType} selectedPeriodLabel={selectedPeriodLabel}
+                               tileData={item} />
               <RecordDataGrid selectedPeriodLabel={selectedPeriodLabel} tileData={item} />
             </Flex>
           </div>

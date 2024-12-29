@@ -68,24 +68,21 @@ const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
 
   return (
     <div>
-      <Flex vertical={true} gap={"small"}>
-        <Flex direction="row" align="center" justify="start" gap="small">
-          <DiDatabase /><span>{selectedPeriodLabel}</span>
-        </Flex>
-        <div style={{ height: "500px", width: "100%" }} className="ag-theme-quartz">
-          <AgGridReact
-            ref={gridRef}
-            columnDefs={colDefs}
-            defaultColDef={defaultColDef}
-            rowModelType="serverSide"
-            pagination={true}
-            paginationPageSize={25}
-            cacheBlockSize={25}
-            onGridReady={onGridReady}
-            theme={RECRUITLY_AGGRID_THEME}
-          />
-        </div>
-      </Flex>
+      <div style={{ height: "500px", width: "100%" }} className="ag-theme-quartz">
+        <AgGridReact
+          headerHeight={36}
+          rowHeight={30}
+          ref={gridRef}
+          columnDefs={colDefs}
+          defaultColDef={defaultColDef}
+          rowModelType="serverSide"
+          pagination={true}
+          paginationPageSize={25}
+          cacheBlockSize={25}
+          onGridReady={onGridReady}
+          theme={RECRUITLY_AGGRID_THEME}
+        />
+      </div>
     </div>
   );
 };
