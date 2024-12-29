@@ -1,9 +1,8 @@
-import React, { useMemo,useState } from "react";
+import React, { useMemo } from "react";
 import { Card, Empty, Flex, Timeline, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
-import { GrExpand } from "react-icons/gr";
 import { IoFlash } from "react-icons/io5";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
@@ -14,8 +13,7 @@ import { VISTA_URL } from "@constants";
 
 const { Text, Link } = Typography;
 
-const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff", items = [], showDetailView }) => {
-  const [isHovered, setIsHovered] = useState(false);
+const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = [] }) => {
 
   const getTypeIcon = (type) => {
     const iconMap = {
@@ -89,7 +87,7 @@ const DailyTimeline = React.memo(({ title = "Today", date = 0, color = "#f0f6ff"
           <Link href={"#"} style={timelineTextStyle}>
             {label} with {recordType}{" "}
             {item.attendees.map((rec, index) => (
-              <Link key={index} oonClick={(e) => handleLinkClick(e, rec)} href={"#"}>
+              <Link key={index} onClick={(e) => handleLinkClick(e, rec)} href={"#"}>
                 {rec.label}
               </Link>
             ))}
