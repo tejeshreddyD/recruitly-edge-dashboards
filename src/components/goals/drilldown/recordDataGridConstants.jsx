@@ -64,6 +64,8 @@ export const activityColumnMap = {
       }
     },
     { field: "owner.label", headerName: "Owner" },
+    { field: "email", headerName: "Email" },
+    { field: "mobile", headerName: "Mobile" },
     {
       field: "status", headerName: "Pipeline", sortable: false, cellRenderer: function(params) {
         const status = params.data.status;
@@ -90,6 +92,7 @@ export const activityColumnMap = {
       }
     }
   ],
+
   OPPORTUNITIES_CREATED: fetchOpportunitiesColumns(),
 
   OPPORTUNITIES_VALUE: fetchOpportunitiesColumns(),
@@ -126,6 +129,8 @@ export const activityColumnMap = {
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Recruiter" },
+    { field: "email", headerName: "Email" },
+    { field: "mobile", headerName: "Mobile" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
@@ -137,6 +142,8 @@ export const activityColumnMap = {
     { field: "reference", headerName: "#REF" },
     { field: "firstName", headerName: "Name", valueGetter: nameGetter },
     { field: "owner.label", headerName: "Contact Owner" },
+    { field: "email", headerName: "Email" },
+    { field: "mobile", headerName: "Mobile" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
@@ -179,6 +186,32 @@ export const activityColumnMap = {
         return formatGlobalDate(params.data.createdOn);
       }
     }
+  ],
+  EMAILS_SENT:[
+    { field: "subject", headerName: "Subject" },
+    { field: "fromName", headerName: "FromName" },
+    { field: "fromEmail", headerName: "FromEmail" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
+  ],
+  EVENTS_SCHEDULED:[
+    { field: "title", headerName: "Title" },
+    { field: "type", headerName: "Type" },
+    { field: "notes", headerName: "Notes" },
+    { field: "organiser.label", headerName: "Organiser" },
+
+
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    },
   ],
 
   DEFAULT: [
