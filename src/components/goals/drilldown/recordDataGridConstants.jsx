@@ -182,6 +182,33 @@ export const activityColumnMap = {
     }
   ],
 
+  EMAILS_SENT:[
+    { field: "fromName", headerName: "FromName" },
+    { field: "fromEmail", headerName: "FromEmail" },
+    { field: "subject", headerName: "Subject" },
+    { field: "timeReceived", headerName: "TimeReceived" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
+  ],
+
+  CAMPAIGNS_SENT:[
+    { field: "name", headerName: "Name" },
+    { field: "subject", headerName: "Subject" },
+    { field: "template.name", headerName: "Template" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    }
+  ],
+
   DEFAULT: [
     { field: "reference", headerName: "#REF" },
     { field: "name", headerName: "Record" },
