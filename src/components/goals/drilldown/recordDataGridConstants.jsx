@@ -187,25 +187,11 @@ export const activityColumnMap = {
       }
     }
   ],
-  EMAILS_SENT:[
-    { field: "subject", headerName: "Subject" },
-    { field: "fromName", headerName: "FromName" },
-    { field: "fromEmail", headerName: "FromEmail" },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-      valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
-      }
-    }
-  ],
   EVENTS_SCHEDULED:[
     { field: "title", headerName: "Title" },
     { field: "type", headerName: "Type" },
     { field: "notes", headerName: "Notes" },
     { field: "organiser.label", headerName: "Organiser" },
-
-
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
@@ -213,7 +199,6 @@ export const activityColumnMap = {
       }
     },
   ],
-
   EMAILS_SENT:[
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
