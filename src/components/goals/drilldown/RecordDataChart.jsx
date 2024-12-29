@@ -50,7 +50,7 @@ const RecordDataChart = ({ apiServer, apiKey, activityId, activityType, selected
   }, [apiServer, apiKey, activityId, activityType, selectedPeriod]);
 
   return (
-    <div>
+    <div style={{marginBottom:20}}>
       <Flex vertical={true} gap={"small"}>
         <Flex direction="row" align="center" justify="start" gap="small">
           <DiDatabase /><span>{selectedPeriodLabel}</span>

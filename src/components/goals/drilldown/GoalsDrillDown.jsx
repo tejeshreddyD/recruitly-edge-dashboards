@@ -46,7 +46,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
         </Flex>
       ),
       children: (
-        <Flex vertical={true} gap={"large"}>
+        <Flex vertical={true} gap={"large"} style={{paddingLeft:20,paddingTop:10,paddingRight:20,paddingBottom:20}}>
           <Flex direction="row" align="flex-start" justify="space-between" gap={"small"} style={{ marginRight: 20 }}>
             <span style={{ fontSize: "medium", fontWeight: "500" }}>{item.title}</span>
             {item.target > 0 && (
@@ -64,7 +64,7 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
           </Flex>
           <div>
             <Flex vertical={true} gap={"large"} style={{ paddingRight: 20, paddingBottom: 20 }}>
-              <Row gutter={12}>
+              <Row gutter={20}>
                 <Col xs={24} sm={24} md={24} lg={24} xl={12}>
                   <Card style={{ marginBottom: 16 }} title={(
                     <Flex direction="row" align="center" justify="start" gap={"small"}>
