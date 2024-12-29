@@ -18,7 +18,7 @@ const RecordDataChart = ({ apiServer, apiKey, activityId, activityType, selected
 
       try {
         const response = await fetch(
-          `${apiServer}/api/kpi_record_data_metrics?periodCode=${selectedPeriod}&activityId=${activityId}&activityType=${activityType}&apiKey=${apiKey}`
+          `${apiServer}/api/kpi_record_data_metrics?period=${selectedPeriod}&activityId=${activityId}&activityType=${activityType}&apiKey=${apiKey}`
         );
         const result = await response.json();
 
