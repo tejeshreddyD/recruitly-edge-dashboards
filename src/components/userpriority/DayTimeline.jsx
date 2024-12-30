@@ -157,7 +157,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         borderRadius: "8px",
       }}
     >
-      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0" }} /> : (<><Empty style={{
+      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0",minWidth:"340px" }} /> : (<><Empty style={{
         backgroundColor: color,
         overflowWrap: "break-word",
         marginBottom: 10,

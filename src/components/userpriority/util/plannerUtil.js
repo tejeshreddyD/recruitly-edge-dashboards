@@ -162,6 +162,10 @@ export const categorizeData = (apiResponse) => {
   const result = [];
   const upcomingDays = {};
 
+  upcomingDays[moment(tomorrowStart).add(1,'day').startOf('day').valueOf()] = [];
+  upcomingDays[moment(tomorrowStart).add(2,'day').startOf('day').valueOf()] = [];
+  upcomingDays[moment(tomorrowStart).add(3,'day').startOf('day').valueOf()] = [];
+
   let todayApplications = apiResponse.job_applications || 0;
   let todayOverdueCount = 0;
   let todayItems = [];
@@ -178,7 +182,7 @@ export const categorizeData = (apiResponse) => {
   };
 
   apiResponse.data.forEach((dayData) => {
-    const dayTimestamp = dayData.due_date;
+    let dayTimestamp = dayData.due_date;
     const dayItems = dayData.data;
 
     if (dayTimestamp < todayStart) {
@@ -193,7 +197,20 @@ export const categorizeData = (apiResponse) => {
     } else {
 
       if (!upcomingDays[dayTimestamp]) {
-        upcomingDays[dayTimestamp] = [];
+
+        const dayTimestampStart = moment(dayTimestamp).startOf('day').valueOf();
+        const dayTimestampEnd = moment(dayTimestamp).endOf('day').valueOf();
+
+        const isWithinRange = (dayTimestamp) => {
+          return dayTimestamp >= dayTimestampStart && dayTimestamp <= dayTimestampEnd;
+        };
+
+        if(!isWithinRange(dayTimestamp)){
+          upcomingDays[dayTimestamp] = [];
+        }else {
+          dayTimestamp = dayTimestampStart
+        }
+
       }
       upcomingDays[dayTimestamp].push(...dayItems);
     }
