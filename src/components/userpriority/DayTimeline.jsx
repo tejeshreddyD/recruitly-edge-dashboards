@@ -11,6 +11,8 @@ import { SmileOutlined } from "@ant-design/icons";
 import { VISTA_URL } from "@constants";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
 import { dashboardAction, dashboardActionCode } from "@utils/actionsUtil.js";
+import Meta from "antd/es/card/Meta.js";
+import { GiEmptyHourglass } from "react-icons/gi";
 
 const { Text, Link } = Typography;
 
@@ -145,7 +147,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
   return (
     <Card
-      styles={{ header: { borderBottom: 0 } }}
+      styles={{ header: { borderBottom: 0 }}}
       title={
         <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
           <RiCalendarView />
@@ -158,28 +160,16 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         overflowWrap: "break-word",
         marginBottom: 10,
         borderRadius: "8px",
+        textAlign: timelineItems.length > 0 ? "":"center",
       }}
     >
-      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0",minWidth:"340px" }} /> : (<><Empty style={{
-        backgroundColor: color,
-        overflowWrap: "break-word",
-        marginBottom: 10,
-        borderRadius: "8px",
-      }}
-        image={<SmileOutlined style={{ fontSize: 50, color: "#d1c42e" }} />}
-        description={
-          <>
-            <Text type="secondary" style={{
-              backgroundColor: color,
-              overflowWrap: "break-word",
-              marginBottom: 10,
-              borderRadius: "8px",
-            }}>
-              It seems like you don’t have any activity scheduled.
-            </Text>
-          </>
-        }
-      /></>)}
+      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0",minWidth:"350px" }} /> : (<><Card
+        bordered={false}
+        style={{ width: "320px",boxShadow: "none", alignContent: "center" }}
+        cover={<GiEmptyHourglass size={100} color={"#c4b1b1"} />}
+      >
+        <Text color={"lightgray"} style={{fontSize:"12px", color:"lightgrey"}}>No activity found for this date.</Text>
+      </Card></>)}
     </Card>
   );
 });
