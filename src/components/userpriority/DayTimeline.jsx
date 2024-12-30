@@ -65,9 +65,8 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       case "REMINDER":
         return <Link href={`${VISTA_URL}/reminders?type=REMINDER&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Reminder(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "CUSTOM_ACTION":
-        console.log(item.records[0])
         return (<><Link href={`${VISTA_URL}/reminders?type=NEXT_ACTION&date=${item.time}`} style={timelineTextStyle}>{item.count} custom next action(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>
-          {item.records.length > 0 ? item.records[0].map((rec, index) => (<Tooltip key={index} title={rec.name}>
+          {item.records.length > 0 ? item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
               <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
                 {rec.name}
               </Tag>
