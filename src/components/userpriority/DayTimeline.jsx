@@ -158,12 +158,13 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         backgroundColor: color,
         width: "350px",
         overflowWrap: "break-word",
+        paddingRight:"10px",
         marginBottom: 10,
         borderRadius: "8px",
         textAlign: timelineItems.length > 0 ? "":"center",
       }}
     >
-      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0",minWidth:"350px" }} /> : (<><Card
+      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0",minWidth:"330px",paddingRight:'10px' }} /> : (<><Card
         bordered={false}
         style={{ width: "320px",boxShadow: "none", alignContent: "center" }}
         cover={<GiEmptyHourglass size={100} color={"lightblue"} />}
