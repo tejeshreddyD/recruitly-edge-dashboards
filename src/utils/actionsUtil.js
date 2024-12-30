@@ -10,10 +10,7 @@ export const dashboardAction = (e, code, paramObj) => {
 
   return new Promise((resolve, reject) => {
     if (window.EDGE_UTIL && typeof window.EDGE_UTIL.dashboardAction === 'function') {
-      window.EDGE_UTIL.dashboardAction({code, paramObj},
-        (result) => resolve(result),
-        (error) => reject(error)
-      );
+      window.EDGE_UTIL.dashboardAction({code, paramObj}).then(resolve).catch(reject);
     } else {
       reject(new Error("dashboardAction is not available on EDGE_UTIL"));
     }
