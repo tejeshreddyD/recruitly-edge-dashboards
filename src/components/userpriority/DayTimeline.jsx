@@ -168,7 +168,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         style={{ width: "320px",boxShadow: "none", alignContent: "center" }}
         cover={<GiEmptyHourglass size={100} color={"#c4b1b1"} />}
       >
-        <Text color={"lightgray"} style={{fontSize:"12px", color:"lightgrey"}}>No activity found for this date.</Text>
+        <Text color={"lightgray"} style={{fontSize:"14px", color:"lightgrey"}}>No activity found for this date.</Text>
       </Card></>)}
     </Card>
   );
