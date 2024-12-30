@@ -10,6 +10,7 @@ import { RiCalendarView } from "react-icons/ri";
 import { SmileOutlined } from "@ant-design/icons";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
 import { VISTA_URL } from "@constants";
+import { dashboardAction, dashboardActionCode } from "@utils/actionsUtil.js";
 
 const { Text, Link } = Typography;
 
@@ -84,7 +85,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         }
 
         return (
-          <Link href={"#"} style={timelineTextStyle}>
+          <Link href={"#"} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_CALENDAR_EVENT,{records:[{id:item.eventId}]})} style={timelineTextStyle}>
             {label} with {recordType}{" "}
             {item.attendees.map((rec, index) => (
               <Link key={index} onClick={(e) => handleLinkClick(e, rec)} href={"#"}>
