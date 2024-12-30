@@ -272,9 +272,14 @@ export const activityColumnMap = {
     { field: "name", headerName: "Record" },
     { field: "owner.label", headerName: "Owner" },
     {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      field: "createdOn",
+      headerName: "Created At",
+      type: "date",
+      dateFormat: "dd/MM/yy",
+      sort: "desc",
+      sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ]

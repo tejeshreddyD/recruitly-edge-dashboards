@@ -47,6 +47,9 @@ const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
             sortOrder
           });
           const activityCode = result.data.activity?.code;
+
+          console.log(activityCode);
+
           const updatedColDefs = activityColumnMap[activityCode] || activityColumnMap.DEFAULT;
           setColDefs(updatedColDefs);
           params.success({
