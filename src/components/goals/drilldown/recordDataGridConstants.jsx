@@ -42,7 +42,37 @@ const fetchOpportunitiesColumns = () => [
     valueGetter: function(params) {
       return formatGlobalDate(params.data.createdOn);
     }
-  }
+  },
+  {
+    field: "state",
+    headerName: "Pipeline",
+    sortable: false,
+    cellRenderer: function (params) {
+      const { state } = params.data;
+      if (!state || !state.pipeline) {
+        return null;
+      }
+
+
+      let tagColor;
+      if (["WON", "CONVERTED"].includes(state.name)) {
+        tagColor = "green";
+      } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
+        tagColor = "red";
+      } else {
+        tagColor = "default";
+      }
+
+      return (
+        <Flex direction="row" align="center" justify="start" gap="small">
+          <LuSquareKanban />
+          <span>{state.pipeline.name}</span>
+          <Tag color={tagColor}>{state.name}</Tag>
+        </Flex>
+      );
+    },
+  },
+
 ];
 
 export const activityColumnMap = {
@@ -93,7 +123,7 @@ export const activityColumnMap = {
     }
   ],
 
-  OPPORTUNITIES_CREATED: fetchOpportunitiesColumns(),
+  OPPORTUNITIES_CREATED:fetchOpportunitiesColumns(),
 
   OPPORTUNITIES_VALUE: fetchOpportunitiesColumns(),
 
