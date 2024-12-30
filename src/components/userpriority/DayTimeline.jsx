@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import { Card, Empty, Flex, Tag, Timeline, Typography } from "antd";
+import { Card, Empty, Flex, Tag, Timeline, Tooltip, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaFileInvoice, FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
-import { IoFlash } from "react-icons/io5";
+import { IoFlash, IoOpenOutline } from "react-icons/io5";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 
@@ -59,13 +59,19 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
     switch (item.type) {
       case "TASK":
-        return <Link href={`${VISTA_URL}/reminders?type=TASK&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Task(s) is due</Link>;
+        return <Link href={`${VISTA_URL}/reminders?type=TASK&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Task(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "OVERDUE_TASK":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_TASK&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)</Link>;
       case "REMINDER":
-        return <Link href={`${VISTA_URL}/reminders?type=REMINDER&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Reminder(s) is due</Link>;
+        return <Link href={`${VISTA_URL}/reminders?type=REMINDER&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Reminder(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "CUSTOM_ACTION":
-        return <Link href={`${VISTA_URL}/reminders?type=NEXT_ACTION&date=${item.time}`} style={timelineTextStyle}>{item.count} custom next action(s) is due</Link>;
+        console.log(item.records[0])
+        return (<><Link href={`${VISTA_URL}/reminders?type=NEXT_ACTION&date=${item.time}`} style={timelineTextStyle}>{item.count} custom next action(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>
+          {item.records.length > 0 ? item.records[0].map((rec, index) => (<Tooltip key={index} title={rec.name}>
+              <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
+                {rec.name}
+              </Tag>
+            </Tooltip>)):""}</>);
       case "OVERDUE_REMINDER":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_REMINDER&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)</Link>;
       case "CALL":
