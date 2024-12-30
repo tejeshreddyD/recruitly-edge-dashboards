@@ -103,7 +103,7 @@ export const aggregateData = (respData,plannerType) => {
 
   starters.forEach((starter) => {
     const time = getTimestampByDay(starter.day);
-    addToMap(starter.day, time,"PLACEMENT_STARTER",{count:starter.count,time:time});
+    addToMap(starter.day, time,"PLACEMENT_STARTER",{count:starter.count,time:time,placements:starter.placements});
   });
 
   if(plannerType === 'ALL'){

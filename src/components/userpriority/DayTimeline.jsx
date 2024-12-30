@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Card, Empty, Flex, Timeline, Typography } from "antd";
+import { Card, Empty, Flex, Tag, Timeline, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
@@ -97,7 +97,12 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       }
 
       case "PLACEMENT_STARTER":
-        return <Link style={timelineTextStyle}>Follow-up {item.count} Placement(s) starting</Link>;
+        return (<><Text style={timelineTextStyle}>Follow-up {item.count} Placement(s) starting</Text>
+      {item.placements.map((rec, index) => (
+        <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.placementId,type:'PLACEMENT'})} href={"#"}>
+          {rec.reference}
+        </Tag>
+      ))}</>);
       case "APPLICATION":
         return <Link style={timelineTextStyle} href={`${VISTA_URL}/applications/pending`}>Review your {item.count} pending job applications</Link>;
       default:
