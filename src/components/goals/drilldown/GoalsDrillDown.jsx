@@ -11,6 +11,7 @@ import RecordDataGrid from "@components/goals/drilldown/RecordDataGrid.jsx";
 import GoalProgress from "@components/goals/drilldown/GoalProgress.jsx";
 import { FiTarget } from "react-icons/fi";
 import RecordDataChart from "@components/goals/drilldown/RecordDataChart.jsx";
+import ProgressGauge from "@components/goals/drilldown/ProgressGauge.jsx";
 
 const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData, selectedPeriodLabel }) => {
 
@@ -51,12 +52,6 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
           <Flex direction="row" align="flex-start" justify="space-between" gap={"small"} style={{ marginRight: 20 }}>
             <span style={{ fontSize: "normal" }}><span
               style={{ fontWeight: "bold" }}>{item.title}</span> - {selectedPeriodLabel}</span>
-            {item.target > 0 && (
-              <Flex direction="row" align="center" justify="start" gap={"small"}>
-                <span style={{ fontSize: "small" }}>Your Progress</span>
-                <GoalProgress target={item.target} actual={item.actual} />
-              </Flex>
-            )}
             {item.target <= 0 && (
               <Flex direction="row" align="center" justify="start" gap={"small"}>
                 <FiTarget />
@@ -67,7 +62,19 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
           <div>
             <Flex vertical={true} gap={"large"} style={{ paddingRight: 20, paddingBottom: 20 }}>
               <Row gutter={20}>
-                <Col xs={24} sm={24} md={24} lg={24} xl={12}>
+                {item.target > 0 && (
+                <Col xs={24} sm={24} md={24} lg={24} xl={8}>
+                  <Card title={(
+                    <Flex direction="row" align="center" justify="start" gap={"small"}>
+                      <TrophyOutlined />
+                      {item.title}
+                    </Flex>
+                  )}>
+                    <ProgressGauge tileData={item} />
+                  </Card>
+                </Col>
+                  )}
+                <Col xs={24} sm={24} md={24} lg={24} xl={item.target > 0 ? 16 : 24}>
                   <Card style={{ marginBottom: 16 }} title={(
                     <Flex direction="row" align="center" justify="start" gap={"small"}>
                       <FaRegChartBar />
@@ -119,16 +126,6 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
                         ]
                       }}
                     />
-                  </Card>
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={24} xl={12}>
-                  <Card title={(
-                    <Flex direction="row" align="center" justify="start" gap={"small"}>
-                      <TrophyOutlined />
-                      Leader Board
-                    </Flex>
-                  )}>
-                    <LeaderBoard apiKey={apiKey} apiServer={apiServer} currentTile={item} />
                   </Card>
                 </Col>
               </Row>
