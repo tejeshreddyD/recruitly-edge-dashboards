@@ -84,16 +84,15 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
           recordType = match ? "Client" : "Candidate";
         }
 
-        return (
+        return (<>
           <Link href={"#"} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_CALENDAR_EVENT,{records:[{id:item.eventId}]})} style={timelineTextStyle}>
             {label} with {recordType}{" "}
-            {item.attendees.map((rec, index) => (
-              <Link key={index} onClick={(e) => handleLinkClick(e, rec)} href={"#"}>
-                {rec.label}
-              </Link>
-            ))}
-          </Link>
-        );
+          </Link>{item.attendees.map((rec, index) => (
+            <Link key={index} onClick={(e) => handleLinkClick(e, rec)} href={"#"}>
+              {rec.label}
+            </Link>
+          ))}
+        </>);
       }
 
       case "PLACEMENT_STARTER":
