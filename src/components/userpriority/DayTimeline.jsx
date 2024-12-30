@@ -88,8 +88,9 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
           <Link href={"#"} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_CALENDAR_EVENT,{records:[{id:item.eventId}]})} style={timelineTextStyle}>
             {label} with {recordType}{" "}
           </Link>{item.attendees.map((rec, index) => (
+
             <Link key={index} onClick={(e) => handleLinkClick(e, rec)} href={"#"}>
-              {rec.label}
+              {index > 0 ? ", ":''}{rec.label}
             </Link>
           ))}
         </>);
