@@ -2,8 +2,10 @@ import React, {
   useState
 } from "react";
 import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-theme-quartz.css";
+
 import { RECRUITLY_AGGRID_THEME } from "@constants";
+
+import "ag-grid-community/styles/ag-theme-quartz.css";
 
 const JobsDrillDown = ({ apiServer, apiKey, tenantId, userId, tile }) => {
 

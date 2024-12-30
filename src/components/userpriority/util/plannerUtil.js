@@ -1,11 +1,12 @@
 
+import moment from "moment-timezone";
+
 import {
   extractTimeFromTimestamp,
   getEndOfDayTimestamp,
   getTimestampByDay,
   getTodayTimestampByTimeZone
 } from "@utils/dateUtil.js";
-import moment from "moment-timezone";
 
 export const aggregateData = (respData,plannerType) => {
   const uniqueDayMap = new Map();
@@ -105,6 +106,16 @@ export const aggregateData = (respData,plannerType) => {
     const time = getTimestampByDay(starter.day);
     addToMap(starter.day, time,"PLACEMENT_STARTER",{count:starter.count,time:time,placements:starter.placements});
   });
+
+  if(invoices_due && invoices_due.length > 0){
+
+    invoices_due.forEach((invoice) => {
+      invoice.records.forEach((inv) => {
+        addToMap(invoice.day, inv.time, "INVOICE_DUE", inv);
+      });
+    });
+
+  }
 
   if(plannerType === 'ALL'){
 

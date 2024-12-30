@@ -2,14 +2,14 @@ import React, { useMemo } from "react";
 import { Card, Empty, Flex, Tag, Timeline, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
-import { FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
+import { FaFileInvoice, FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
 import { IoFlash } from "react-icons/io5";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 
 import { SmileOutlined } from "@ant-design/icons";
-import { Alarm, PhoneCall } from "@phosphor-icons/react";
 import { VISTA_URL } from "@constants";
+import { Alarm, PhoneCall } from "@phosphor-icons/react";
 import { dashboardAction, dashboardActionCode } from "@utils/actionsUtil.js";
 
 const { Text, Link } = Typography;
@@ -28,6 +28,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       APPLICATION: <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />,
       PLACEMENT_STARTER: <FaHandshake style={{ fontSize: "16px", color: "#faad14" }} />,
       CUSTOM_ACTION:<IoFlash style={{ fontSize: "16px", color: "#faad14" }} />,
+      INVOICE_DUE:<FaFileInvoice style={{ fontSize: "16px", color: "#faad14" }} />,
       DEFAULT: <MdAlarm style={{ fontSize: "16px", color: "#f5222d" }} />,
     };
 
@@ -105,6 +106,8 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       ))}</>);
       case "APPLICATION":
         return <Link style={timelineTextStyle} href={`${VISTA_URL}/applications/pending`}>Review your {item.count} pending job applications</Link>;
+      case "INVOICE_DUE":
+        return (<><Text style={timelineTextStyle}>Follow-up {item.count} invoice(s) due of total ${item.invoice_due}</Text></>)
       default:
         return <Link>Event</Link>;
     }
