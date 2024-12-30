@@ -202,6 +202,16 @@ export const activityColumnMap = {
       }
     }
   ],
+  SPEC_CVSHARE:[
+    { field: "shareName", headerName: "Title" },
+    { field: "candidateOwner", headerName: "Candidate Owner" },
+    {
+      field: "shareDate", headerName: "Shared On", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.shareDate);
+      }
+    }
+  ],
 
   JOBS_CREATED :[
     { field: "reference", headerName: "#REF" },
