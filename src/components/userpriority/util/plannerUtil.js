@@ -165,7 +165,6 @@ export const aggregateData = (respData,plannerType) => {
 
 export const categorizeData = (apiResponse) => {
 
-  const now = new Date();
   const todayStart = moment().startOf('day').valueOf();
   const tomorrowStart = moment().add(1,'day').startOf('day').valueOf();
   const endOfToday = moment(todayStart).endOf('day').valueOf();
@@ -174,7 +173,6 @@ export const categorizeData = (apiResponse) => {
 
   const result = [];
   const upcomingDays = {};
-
 
   for (let date = moment().add(2,'days').startOf('day'); date.isSameOrBefore(endOfWeek); date.add(1,'day')) {
     if(date.isoWeekday() <=5){
