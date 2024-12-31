@@ -1,7 +1,7 @@
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
 
-import { formatGlobalDate, getLocalizedDateString } from "@utils/dateUtil.js";
+import { formatGlobalDate, getDateStringByUserTimeZone} from "@utils/dateUtil.js";
 
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
@@ -265,7 +265,7 @@ export const activityColumnMap = {
         if (!timestamp) {
           return null;
         }
-        return getLocalizedDateString(timestamp, "DD/MM/YYYY HH:mm:ss");
+        return getDateStringByUserTimeZone(timestamp, "DD/MM/YYYY HH:mm:ss");
       }
     }
   ],
