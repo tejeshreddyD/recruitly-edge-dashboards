@@ -30,6 +30,28 @@ const getAttendeeField = (params, type, field) => {
   const attendee = params.data.attendees?.find(attendee => attendee.type === type);
   return attendee ? attendee[field] : "";
 };
+const viewRecord = (params, recordType) => {
+  if (params.data && params.data._id) {
+    window.COOLUTIL.viewRecordPopupByType(recordType, params.data._id);
+  }
+};
+const renderClickableField = (params, fieldName) => {
+  if (!params.data) return ""; // Return an empty string if data is missing
+
+  const isClickable = !!params.data._id; // Check if the record is clickable
+
+  return (
+    <span
+      style={{
+        color: "blue",
+        cursor: isClickable ? "pointer" : "default",
+      }}
+    >
+      {fieldName }
+    </span>
+  );
+};
+
 
 const fetchOpportunitiesColumns = () => [
   { field: "reference", headerName: "#REF" },
@@ -260,33 +282,27 @@ export const activityColumnMap = {
     }
   ],
   LEADS_CLOSED:[
-    { field: "reference", headerName: "#REF" },
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "LEAD"),
+    },
+
+
     {
       field: "firstName",
       headerName: "Name",
-      cellRenderer: (params) => {
-        if (!params.data) {
-          return ""; // Return an empty string if data is missing
-        }
-
-        const isClickable = !!params.data._id;
-
-        return (
-          <span
-            style={{
-              color: "blue",
-              cursor: isClickable ? "pointer" : "default",
-            }}
-          >
-        {`${params.data.firstName} ${params.data.surname}`}
-      </span>
-        );
-      },
-      onCellClicked: (params) => {
-        if (params.data && params.data._id) {
-          window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
-        }
-      }
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, `${params.data.firstName} ${params.data.surname}`)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
 
 
