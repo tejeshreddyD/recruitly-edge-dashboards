@@ -193,7 +193,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -207,7 +207,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -241,7 +241,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -275,7 +275,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -319,7 +319,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -329,7 +329,7 @@ export const activityColumnMap = {
     {
       field: "shareDate", headerName: "Shared On", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.shareDate);
+        return params.data.shareDate ? formatGlobalDate(params.data.shareDate) : "";
       }
     }
   ],
@@ -344,7 +344,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -514,7 +514,7 @@ export const activityColumnMap = {
       sort: "desc",
       sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     },
     {
@@ -539,7 +539,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
