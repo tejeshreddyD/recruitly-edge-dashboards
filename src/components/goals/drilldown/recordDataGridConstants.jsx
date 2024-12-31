@@ -1,6 +1,7 @@
-import { formatGlobalDate } from "@utils/dateUtil.js";
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
+
+import { formatGlobalDate, getLocalizedDateString } from "@utils/dateUtil.js";
 
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
@@ -37,17 +38,6 @@ const fetchOpportunitiesColumns = () => [
   { field: "bid.value", headerName: "Value" },
   { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
   { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-  { field: "owner.label", headerName: "Owner" },
-  {
-    field: "createdOn",
-    headerName: "Created At",
-    type: "date",
-    sort: "desc",
-    sortedAt: 0,
-    valueGetter: function(params) {
-      return formatGlobalDate(params.data.createdOn);
-    }
-  },
   {
     field: "state",
     headerName: "Pipeline",
@@ -77,7 +67,17 @@ const fetchOpportunitiesColumns = () => [
       );
     },
   },
-
+  { field: "owner.label", headerName: "Owner" },
+  {
+    field: "createdOn",
+    headerName: "Created At",
+    type: "date",
+    sort: "desc",
+    sortedAt: 0,
+    valueGetter: function(params) {
+      return formatGlobalDate(params.data.createdOn);
+    }
+  },
 ];
 
 export const activityColumnMap = {
@@ -250,12 +250,22 @@ export const activityColumnMap = {
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
     { field: "subject", headerName: "Subject" },
-    { field: "timeReceived", headerName: "TimeReceived" },
-    { field: "owner.label", headerName: "Owner" },
+    { field: "toList", headerName: "ToList",
+      valueGetter: (params) => {
+        return params.data.toList?.map(data => data.label).join(", ") || "N/A";
+      }
+    },
     {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      field: "createdOn",
+      headerName: "Time Sent",
+      sort: "desc",
+      sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        const timestamp = params.data.createdOn;
+        if (!timestamp) {
+          return null;
+        }
+        return getLocalizedDateString(timestamp, "DD/MM/YYYY HH:mm:ss");
       }
     }
   ],
