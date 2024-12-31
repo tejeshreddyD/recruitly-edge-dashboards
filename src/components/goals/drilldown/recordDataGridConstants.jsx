@@ -104,22 +104,27 @@ const fetchOpportunitiesColumns = () => [
 
 export const activityColumnMap = {
   LEADS_CREATED: [
-    { field: "reference", headerName: "#REF" },
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "LEAD"),
+    },
     {
       field: "firstName",
       headerName: "Name",
-      cellRenderer: (params) => {
-        if (!params.data) {
-          return ""; // Return an empty string if data is missing
-        }
-        return `${params.data.firstName} ${params.data.surname}`;
-      },
-      onCellClicked: (params) => {
-        if (params.data && params.data._id) {
-          window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
-        }
-      }
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, `${params.data.firstName} ${params.data.surname}`)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
+
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
     { field: "owner.label", headerName: "Owner" },
