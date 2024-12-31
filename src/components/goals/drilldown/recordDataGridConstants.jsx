@@ -26,6 +26,11 @@ const sysrecordCompanyGetter = function(params) {
   return `${params.data.company.label || ""}`.trim();
 };
 
+const getAttendeeField = (params, type, field) => {
+  const attendee = params.data.attendees?.find(attendee => attendee.type === type);
+  return attendee ? attendee[field] : "";
+};
+
 const fetchOpportunitiesColumns = () => [
   { field: "reference", headerName: "#REF" },
   { field: "name", headerName: "Name" },
@@ -147,6 +152,7 @@ export const activityColumnMap = {
     { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
     { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
     { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "placementValue", headerName: "Value" },
     { field: "owner.label", headerName: "Owner" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
@@ -253,7 +259,63 @@ export const activityColumnMap = {
       }
     }
   ],
-
+  LEADS_CLOSED:[
+    { field: "reference", headerName: "#REF" },
+    {
+      field: "firstName",
+      headerName: "Name",
+      cellRenderer: (params) => {
+        if (!params.data) {
+          return ""; // Return an empty string if data is missing
+        }
+        return `${params.data.firstName} ${params.data.surname}`;
+      },
+      onCellClicked: (params) => {
+        if (params.data && params.data._id) {
+          window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
+        }
+      }
+    },
+    { field: "email", headerName: "Email" },
+    { field: "mobile", headerName: "Mobile" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "status", headerName: "Pipeline", sortable: false, cellRenderer: function(params) {
+        const status = params.data.status;
+        if (!status || !status.pipeline) {
+          return null;
+        }
+        return (
+            <Flex direction="row" align="center" justify="start" gap="small">
+              <LuSquareKanban />
+              <span>{status.pipeline.name}</span>
+              <Tag color={status.type.code === "CLOSED" ? "default" : "success"}>{status.name}</Tag>
+            </Flex>
+        );
+      }
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      valueGetter: (params) => params.data.statusLog?.[0]?.current?.name || ''
+    },
+    {
+      field: "createdOn",
+      headerName: "Created At",
+      type: "date",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    },
+    {
+      field: "addedOn",
+      headerName: "Closing Date",
+      type: "date",
+      valueGetter: (params) => formatGlobalDate(params.data.statusLog?.[0]?.addedOn)
+    }
+  ],
   CAMPAIGNS_SENT:[
     { field: "name", headerName: "Name" },
     { field: "subject", headerName: "Subject" },
