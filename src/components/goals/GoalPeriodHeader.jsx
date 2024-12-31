@@ -35,8 +35,7 @@ const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
     };
 
     const getMonthName = (date, offset = 0) => {
-      const adjustedDate = new Date(date);
-      adjustedDate.setMonth(adjustedDate.getMonth() + offset);
+      const adjustedDate = new Date(date.getFullYear(), date.getMonth() + offset, 1); // Use the proper month offset
       return adjustedDate.toLocaleString("default", { month: "long" });
     };
 
@@ -50,14 +49,7 @@ const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
         key: "PREVIOUS_QUARTER",
         label: `Last Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() - 3, 1))})`
       },
-      { key: "LAST_MONTH", label: `Last Month (${getMonthName(now, -1)})` },
-      // { type: "divider" },
-      // { key: "NEXT_YEAR", label: `Next Year (${currentYear + 1})` },
-      // {
-      //   key: "NEXT_QUARTER",
-      //   label: `Next Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() + 3, 1))})`
-      // },
-      // { key: "NEXT_MONTH", label: `Next Month (${getMonthName(now, 1)})` }
+      { key: "LAST_MONTH", label: `Last Month (${getMonthName(now, -1)})` }
     ];
   }, []);
 

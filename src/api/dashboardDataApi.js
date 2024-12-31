@@ -144,7 +144,7 @@ export const fetchUserGoalsRecordData = async ({
                                                }) => {
   const apiManager = getApiManager();
   try {
-    const response = await apiManager.get(`/kpi_record_data?periodCode=${periodCode}&activityId=${activityId}&activityType=${activityType}&pageNumber=${pageNumber}&pageSize=${pageSize}&sortField=${sortField}&sortOrder=${sortOrder}`);
+    const response = await apiManager.get(`/kpi_record_data?period=${periodCode}&activityId=${activityId}&activityType=${activityType}&pageNumber=${pageNumber}&pageSize=${pageSize}&sortField=${sortField}&sortOrder=${sortOrder}`);
     console.log("fetchUserGoalsRecordData", response);
     return response.data;
   } catch (error) {

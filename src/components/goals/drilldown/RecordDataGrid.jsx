@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { fetchUserGoalsRecordData } from "@api/dashboardDataApi.js";
@@ -6,8 +6,6 @@ import { RECRUITLY_AGGRID_THEME } from "@constants";
 import useUserDashboardGoalsDataStore from "@api/userDashboardGoalsDataStore";
 import { CsvExportModule, ModuleRegistry } from "ag-grid-community";
 import { ExcelExportModule, ServerSideRowModelModule, SparklinesModule } from "ag-grid-enterprise";
-import { Button, Flex } from "antd";
-import { DiDatabase } from "react-icons/di";
 import { activityColumnMap } from "@components/goals/drilldown/recordDataGridConstants.jsx";
 import { AgChartsEnterpriseModule } from "ag-charts-enterprise";
 
@@ -62,12 +60,20 @@ const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
         }
       }
     };
-  }, [selectedPeriod, tileData]);
+  }, [selectedPeriod,tileData]);
 
   const onGridReady = useCallback((params) => {
     const datasource = getServerSideDatasource();
     params.api.setGridOption("serverSideDatasource", datasource);
   }, [getServerSideDatasource]);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.api) {
+      const datasource = getServerSideDatasource();
+      gridRef.current.api.setGridOption("serverSideDatasource", datasource);
+      gridRef.current.api.setGridOption("refreshServerSideStore", { purge: true });
+    }
+  }, [selectedPeriod]);
 
   return (
     <div>
