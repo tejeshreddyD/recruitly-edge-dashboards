@@ -4,17 +4,14 @@ import { BsFunnel } from "react-icons/bs";
 import { RiFocus2Line } from "react-icons/ri";
 
 import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
-import DayTimeline from "@components/userpriority/DayTimeline.jsx";
-import PlannerDrillDownModal from "@components/userpriority/drilldown/PlannerDrillDownModal.jsx";
-import { aggregateData, categorizeData } from "@components/userpriority/util/plannerUtil.js";
+import DayTimeline from "@components/weekplanner/DayTimeline.jsx";
+import { aggregateData, categorizeData } from "@components/weekplanner/util/plannerUtil.js";
 import { Spinner } from "@phosphor-icons/react";
 
-const CardUserPriority = () => {
+const CardUserWeekPlanner = () => {
   const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
 
   const [selectedPlannerType, setSelectedPlannerType] = useState("ALL");
-  const [showPlannerDetail, setShowPlannerDetail] = useState(false);
-  const [detailViewType, setDetailViewType] = useState({ title: "", date: 0 });
   const [filteredPlanner, setFilteredPlanner] = useState([]);
 
   useEffect(() => {
@@ -32,16 +29,6 @@ const CardUserPriority = () => {
       setFilteredPlanner(categorizedData);
     }
   }, [data, selectedPlannerType]);
-
-
-  const onDetailViewClose = () => {
-    setShowPlannerDetail(false);
-  };
-
-  const onShowPlannerDetail = ({ title, date, view_type, data }) => {
-    setShowPlannerDetail(true);
-    setDetailViewType({ title, date, view_type, data });
-  };
 
   return (
     <div>
@@ -108,16 +95,12 @@ const CardUserPriority = () => {
             </div>
           </Flex>
           : error ? <Alert message="Error loading data" type="error" /> : filteredPlanner.map((data) => (
-            <DayTimeline title={data.date} date={data.dayTimestamp} key={data.date} color="" items={data.items}
-                         showDetailView={onShowPlannerDetail} />
+            <DayTimeline title={data.date} date={data.dayTimestamp} key={data.date} color="" items={data.items} />
           ))}
         </div>
       </Card>
-      <PlannerDrillDownModal modalVisible={showPlannerDetail} type={detailViewType.title} date={detailViewType.date}
-                             filterType={selectedPlannerType} viewType={detailViewType.view_type}
-                             data={detailViewType.data} onDetailViewClose={onDetailViewClose} />
     </div>
   );
 };
 
-export default CardUserPriority;
+export default CardUserWeekPlanner;

@@ -6,7 +6,7 @@ import useGoalsPeriodStore from "@api/userDashboardGoalsDataStore.js";
 
 const { Text } = Typography;
 
-const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
+const GoalPeriodHeader = ({ theme = "dark", selectedPeriodLabel }) => {
   const {
     selectedPeriod,
     setPeriod,
@@ -35,9 +35,19 @@ const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
     };
 
     const getMonthName = (date, offset = 0) => {
-      const adjustedDate = new Date(date);
-      adjustedDate.setMonth(adjustedDate.getMonth() + offset);
+      const adjustedDate = new Date(date.getFullYear(), date.getMonth() + offset, 1); // Use the proper month offset
       return adjustedDate.toLocaleString("default", { month: "long" });
+    };
+
+    const getLast6Months = () => {
+      const months = [];
+      for (let i = -2; i >= -7; i--) { // Generate last 6 months (not including last month)
+        const adjustedDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
+        const key = `${String(adjustedDate.getMonth() + 1).padStart(2, "0")}/${adjustedDate.getFullYear()}`;
+        const label = `${adjustedDate.toLocaleString("default", { month: "short" })} ${adjustedDate.getFullYear()}`;
+        months.push({ key, label });
+      }
+      return months;
     };
 
     return [
@@ -45,21 +55,17 @@ const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
       { key: "CURRENT_QUARTER", label: `This Quarter (${getQuarterRange(now)})` },
       { key: "THIS_MONTH", label: `This Month (${getMonthName(now)})` },
       { type: "divider" },
-      { key: "PREVIOUS_YEAR", label: `Last Year (${currentYear - 1})` },
+      { key: "LAST_MONTH", label: `Last Month (${getMonthName(now, -1)})` },
       {
         key: "PREVIOUS_QUARTER",
         label: `Last Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() - 3, 1))})`
       },
-      { key: "LAST_MONTH", label: `Last Month (${getMonthName(now, -1)})` },
-      // { type: "divider" },
-      // { key: "NEXT_YEAR", label: `Next Year (${currentYear + 1})` },
-      // {
-      //   key: "NEXT_QUARTER",
-      //   label: `Next Quarter (${getQuarterRange(new Date(now.getFullYear(), now.getMonth() + 3, 1))})`
-      // },
-      // { key: "NEXT_MONTH", label: `Next Month (${getMonthName(now, 1)})` }
+      { key: "PREVIOUS_YEAR", label: `Last Year (${currentYear - 1})` },
+      { type: "divider" },
+      ...getLast6Months() // Add last 6 months dynamically
     ];
   }, []);
+
 
   useEffect(() => {
     if (!selectedPeriod) {
@@ -76,7 +82,10 @@ const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
 
   const fetchDebouncedData = useCallback(
     debounce((period, month, year, quarter) => {
-      if (period.includes("_MONTH") && month && year) {
+      console.log("fetchDebouncedData ", period, month, year, quarter);
+      if (period.includes("/")) {
+        fetchPeriodDataByMonth(month, year);
+      } else if (period.includes("_MONTH") && month && year) {
         fetchPeriodDataByMonth(month, year);
       } else if (period.includes("_QUARTER") && quarter) {
         fetchPeriodDataByQuarter(quarter);
@@ -93,6 +102,9 @@ const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
   }, [selectedPeriod, selectedMonth, selectedYear, selectedQuarter, fetchDebouncedData]);
 
   const handleMenuClick = ({ key }) => {
+
+    console.log(key);
+
     const currentDate = new Date();
     let month = currentDate.getMonth() + 1;
     let year = currentDate.getFullYear();
@@ -118,6 +130,11 @@ const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
       quarter = "PREVIOUS_QUARTER";
     } else if (key === "NEXT_QUARTER") {
       quarter = "NEXT_QUARTER";
+    } else if (key.includes("/")) {
+      const [m, y] = key.split("/");
+      month = parseInt(m);
+      year = parseInt(y);
+      console.log(`Month: ${m}, Year: ${y}`);
     }
 
     setPeriod(key, month, year, quarter);
@@ -137,7 +154,7 @@ const GoalPeriodHeader = ({ theme="dark", selectedPeriodLabel }) => {
         <Button
           size="small"
           style={{
-            color: `${theme==="dark" ? "white" : "black"}`,
+            color: `${theme === "dark" ? "white" : "black"}`,
             background: "transparent",
             boxShadow: "none",
             border: "none",

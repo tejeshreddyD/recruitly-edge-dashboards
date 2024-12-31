@@ -144,7 +144,7 @@ export const fetchUserGoalsRecordData = async ({
                                                }) => {
   const apiManager = getApiManager();
   try {
-    const response = await apiManager.get(`/kpi_record_data?periodCode=${periodCode}&activityId=${activityId}&activityType=${activityType}&pageNumber=${pageNumber}&pageSize=${pageSize}&sortField=${sortField}&sortOrder=${sortOrder}`);
+    const response = await apiManager.get(`/kpi_record_data?period=${periodCode}&activityId=${activityId}&activityType=${activityType}&pageNumber=${pageNumber}&pageSize=${pageSize}&sortField=${sortField}&sortOrder=${sortOrder}`);
     console.log("fetchUserGoalsRecordData", response);
     return response.data;
   } catch (error) {
@@ -152,4 +152,18 @@ export const fetchUserGoalsRecordData = async ({
     throw new Error("Failed to fetch goals record data. Please try again.");
   }
 };
+
+export const fetchPipelineStatuses = async () => {
+
+  const apiManager = getApiManager();
+
+  try {
+    const response = await apiManager.get(`/masterdata/job_pipeline_statuses`);
+    console.log("fetchPipelineStatuses", response);
+    return response.data;
+  }catch (e) {
+    console.error("Error fetching pipeline statuses data", e);
+    throw new Error("Failed to fetch pipeline statuses data. Please try again.");
+  }
+}
 

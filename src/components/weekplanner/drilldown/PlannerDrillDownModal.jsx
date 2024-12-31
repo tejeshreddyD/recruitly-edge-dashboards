@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Modal, Spin } from "antd";
 
-import PlannerDrillDownData from "@components/userpriority/drilldown/PlannerDrillDownData.jsx";
+import PlannerDrillDownData from "@components/weekplanner/drilldown/PlannerDrillDownData.jsx";
 
 
 const PlannerDrillDownModal = ({modalVisible = false, type="TODAY", date=0, filterType="ALL",viewType="FULL_DAY", data = [], onDetailViewClose}) => {

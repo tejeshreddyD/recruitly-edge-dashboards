@@ -1,6 +1,10 @@
+
 import { formatGlobalDate, formatGlobalDateWithTime } from "@utils/dateUtil.js";
+
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
+
+import { formatGlobalDate, getLocalizedDateString } from "@utils/dateUtil.js";
 
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
@@ -43,7 +47,7 @@ const renderClickableField = (params, fieldName) => {
   return (
     <span
       style={{
-        color: "blue",
+        color: "#0057FF",
         cursor: isClickable ? "pointer" : "default",
       }}
     >
@@ -81,17 +85,6 @@ const fetchOpportunitiesColumns = () => [
   { field: "bid.value", headerName: "Value" },
   { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
   { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-  { field: "owner.label", headerName: "Owner" },
-  {
-    field: "createdOn",
-    headerName: "Created At",
-    type: "date",
-    sort: "desc",
-    sortedAt: 0,
-    valueGetter: function(params) {
-      return formatGlobalDate(params.data.createdOn);
-    }
-  },
   {
     field: "state",
     headerName: "Pipeline",
@@ -121,7 +114,17 @@ const fetchOpportunitiesColumns = () => [
       );
     },
   },
-
+  { field: "owner.label", headerName: "Owner" },
+  {
+    field: "createdOn",
+    headerName: "Created At",
+    type: "date",
+    sort: "desc",
+    sortedAt: 0,
+    valueGetter: function(params) {
+      return formatGlobalDate(params.data.createdOn);
+    }
+  },
 ];
 
 export const activityColumnMap = {
@@ -280,10 +283,33 @@ export const activityColumnMap = {
   ],
 
   OPEN_JOBS_VALUE:[
-    { field: "reference", headerName: "#REF" },
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "title", headerName: "Title" },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.company.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.contact.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "commissionDetails", headerName: "Value",
       valueGetter: (params) => {
         const commissionAmount = params.data.commissionAmount;
@@ -416,12 +442,22 @@ export const activityColumnMap = {
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
     { field: "subject", headerName: "Subject" },
-    { field: "timeReceived", headerName: "TimeReceived" },
-    { field: "owner.label", headerName: "Owner" },
+    { field: "toList", headerName: "ToList",
+      valueGetter: (params) => {
+        return params.data.toList?.map(data => data.label).join(", ") || "N/A";
+      },
+    },
     {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      field: "createdOn",
+      headerName: "Time Sent",
+      sort: "desc",
+      sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        const timestamp = params.data.createdOn;
+        if (!timestamp) {
+          return null;
+        }
+        return getLocalizedDateString(timestamp, "DD/MM/YYYY HH:mm:ss");
       }
     }
   ],
@@ -491,7 +527,14 @@ export const activityColumnMap = {
     }
   ],
   CAMPAIGNS_SENT:[
-    { field: "name", headerName: "Name" },
+    { field: "name", headerName: "Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.name)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "EMAIL_CAMPAIGN"),
+    },
     { field: "subject", headerName: "Subject" },
     { field: "template.name", headerName: "Template" },
     { field: "owner.label", headerName: "Owner" },
