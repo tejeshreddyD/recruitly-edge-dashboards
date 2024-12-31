@@ -61,18 +61,13 @@ const JobForecastGrid = ({ statuses = [] }) => {
       cellRenderer: (row) => {
 
         return (<><Flex justify="start" align={"center"}>
-          <Tooltip title={"Perform search"}><SmileOutlined size={35}/></Tooltip>
-          <Flex  vertical align="flex-end" justify="start">
+          <Tooltip title={"Perform search"}><SmileOutlined color={"blue"} size={50}/></Tooltip>
+          <Flex  vertical align="flex-start" justify="space-between">
             {row.data.jobLabel}
           </Flex>
         </Flex></>)
 
       }
-    },
-    {
-      headerName: "Pulse",
-      field: "",
-      minWidth: 100,
     },
     {
       headerName: "Created",
