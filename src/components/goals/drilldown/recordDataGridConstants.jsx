@@ -260,7 +260,34 @@ export const activityColumnMap = {
     }
   ],
   LEADS_CLOSED:[
-    { field: "reference", headerName: "#REF" },
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => {
+        if (!params.data) {
+          return ""; // Return an empty string if data is missing
+        }
+
+        const isClickable = !!params.data._id;
+
+        return (
+          <span
+            style={{
+              color: "blue",
+              cursor: isClickable ? "pointer" : "default",
+            }}
+          >
+        {params.data.reference}
+      </span>
+        );
+      },
+      onCellClicked: (params) => {
+        if (params.data && params.data._id) {
+          window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
+        }
+      }
+    },
+
     {
       field: "firstName",
       headerName: "Name",
