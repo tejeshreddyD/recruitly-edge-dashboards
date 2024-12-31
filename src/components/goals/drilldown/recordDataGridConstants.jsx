@@ -285,9 +285,14 @@ export const activityColumnMap = {
     {
       field: "reference",
       headerName: "#REF",
-      cellRenderer: (params) => renderClickableField(params, "reference"),
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.reference)}
+        </>
+      ),
       onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
+
 
     {
       field: "firstName",
