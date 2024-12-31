@@ -153,3 +153,17 @@ export const fetchUserGoalsRecordData = async ({
   }
 };
 
+export const fetchPipelineStatuses = async () => {
+
+  const apiManager = getApiManager();
+
+  try {
+    const response = await apiManager.get(`/masterdata/job_pipeline_statuses`);
+    console.log("fetchPipelineStatuses", response);
+    return response.data;
+  }catch (e) {
+    console.error("Error fetching pipeline statuses data", e);
+    throw new Error("Failed to fetch pipeline statuses data. Please try again.");
+  }
+}
+

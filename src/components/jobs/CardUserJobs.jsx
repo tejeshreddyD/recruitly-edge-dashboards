@@ -5,54 +5,26 @@ import { RiFocus2Line } from "react-icons/ri";
 
 import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
 import DayTimeline from "@components/weekplanner/DayTimeline.jsx";
+import PlannerDrillDownModal from "@components/weekplanner/drilldown/PlannerDrillDownModal.jsx";
 import { aggregateData, categorizeData } from "@components/weekplanner/util/plannerUtil.js";
 import { Spinner } from "@phosphor-icons/react";
+import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
+import { FaSuitcase } from "react-icons/fa";
+import JobForecastGrid from "@components/jobs/JobsForecastGrid.jsx";
 
-const CardUserWeekPlanner = () => {
-  const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
-
-  const [selectedPlannerType, setSelectedPlannerType] = useState("ALL");
-  const [filteredPlanner, setFilteredPlanner] = useState([]);
+const CardUserJobs = () => {
+  const { data, loading, error, fetchPipelineStatuses } = useUserDashboardJobsStore();
 
   useEffect(() => {
-    fetchUserPlannerData();
+    fetchPipelineStatuses();
   }, []);
-
-
-  useEffect(() => {
-    if (data && data.tasks) {
-
-      const aggregated_data = aggregateData(data, selectedPlannerType);
-
-      const categorizedData = categorizeData(aggregated_data);
-
-      setFilteredPlanner(categorizedData);
-    }
-  }, [data, selectedPlannerType]);
 
   return (
     <div>
       <Card
-        extra={
-          <Flex direction="row" align="center" justify="start" gap="small">
-            <BsFunnel />
-            <Segmented
-              options={[
-                { label: "All", value: "ALL" },
-                { label: "Interviews", value: "INTERVIEWS" },
-                { label: "Tasks/Reminders", value: "REMINDER" },
-                { label: "Events", value: "EVENTS" },
-                { label: "Invoice Due", value: "INVOICE_DUE" }
-              ]}
-              value={selectedPlannerType}
-              onChange={(value) => setSelectedPlannerType(value)}
-            />
-          </Flex>
-        }
         style={{
           marginTop: "2rem",
           marginBottom: "2rem",
-          backgroundImage: "url('https://recruitlycdn.com/edge/plannerbg.png')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           border: "none"
@@ -60,9 +32,9 @@ const CardUserWeekPlanner = () => {
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
         title={
           <Flex direction="row" align="center" justify="start" gap="small">
-            <RiFocus2Line />
+            <FaSuitcase />
             <span>
-              Week Planner
+              Jobs
             </span>
           </Flex>
         }>
@@ -90,17 +62,15 @@ const CardUserWeekPlanner = () => {
             />
             <div>
               <h4 style={{ fontWeight: "normal", fontSize: "1rem", margin: 0 }}>
-                Organizing your planner
+                Fetching you jobs
               </h4>
             </div>
           </Flex>
-          : error ? <Alert message="Error loading data" type="error" /> : filteredPlanner.map((data) => (
-            <DayTimeline title={data.date} date={data.dayTimestamp} key={data.date} color="" items={data.items} />
-          ))}
+          : error ? <Alert message="Error loading data" type="error" /> : <JobForecastGrid statuses={data} />}
         </div>
       </Card>
     </div>
   );
 };
 
-export default CardUserWeekPlanner;
+export default CardUserJobs;
