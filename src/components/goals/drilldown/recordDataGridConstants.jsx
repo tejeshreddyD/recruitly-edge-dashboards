@@ -30,6 +30,27 @@ const getAttendeeField = (params, type, field) => {
   const attendee = params.data.attendees?.find(attendee => attendee.type === type);
   return attendee ? attendee[field] : "";
 };
+const viewRecord = (params, recordType) => {
+  if (params.data && params.data._id) {
+    window.COOLUTIL.viewRecordPopupByType(recordType, params.data._id);
+  }
+};
+const renderClickableField = (params, fieldName) => {
+  if (!params.data) return ""; // Return an empty string if data is missing
+
+  const isClickable = !!params.data._id;
+
+  return (
+    <span
+      style={{
+        color: "blue",
+        cursor: isClickable ? "pointer" : "default",
+      }}
+    >
+      {params.data[fieldName]} {/* Use the dynamic field name */}
+    </span>
+  );
+};
 
 const fetchOpportunitiesColumns = () => [
   { field: "reference", headerName: "#REF" },
@@ -263,57 +284,19 @@ export const activityColumnMap = {
     {
       field: "reference",
       headerName: "#REF",
-      cellRenderer: (params) => {
-        if (!params.data) {
-          return ""; // Return an empty string if data is missing
-        }
-
-        const isClickable = !!params.data._id;
-
-        return (
-          <span
-            style={{
-              color: "blue",
-              cursor: isClickable ? "pointer" : "default",
-            }}
-          >
-        {params.data.reference}
-      </span>
-        );
-      },
-      onCellClicked: (params) => {
-        if (params.data && params.data._id) {
-          window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
-        }
-      }
+      cellRenderer: (params) => renderClickableField(params, "reference"),
+      onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
 
     {
       field: "firstName",
       headerName: "Name",
-      cellRenderer: (params) => {
-        if (!params.data) {
-          return ""; // Return an empty string if data is missing
-        }
-
-        const isClickable = !!params.data._id;
-
-        return (
-          <span
-            style={{
-              color: "blue",
-              cursor: isClickable ? "pointer" : "default",
-            }}
-          >
-        {`${params.data.firstName} ${params.data.surname}`}
-      </span>
-        );
-      },
-      onCellClicked: (params) => {
-        if (params.data && params.data._id) {
-          window.COOLUTIL.viewRecordPopupByType("LEAD", params.data._id);
-        }
-      }
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, "firstName")} {renderClickableField(params, "surname")}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
 
 
