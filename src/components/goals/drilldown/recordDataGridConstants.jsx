@@ -44,7 +44,7 @@ const renderClickableField = (params, fieldName) => {
   return (
     <span
       style={{
-        color: "blue",
+        color: "#0057FF",
         cursor: isClickable ? "pointer" : "default",
       }}
     >
@@ -216,10 +216,33 @@ export const activityColumnMap = {
   ],
 
   OPEN_JOBS_VALUE:[
-    { field: "reference", headerName: "#REF" },
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "title", headerName: "Title" },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.company.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.contact.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "commissionDetails", headerName: "Value",
       valueGetter: (params) => {
         const commissionAmount = params.data.commissionAmount;
@@ -362,7 +385,14 @@ export const activityColumnMap = {
     }
   ],
   CAMPAIGNS_SENT:[
-    { field: "name", headerName: "Name" },
+    { field: "name", headerName: "Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.name)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "EMAIL_CAMPAIGN"),
+    },
     { field: "subject", headerName: "Subject" },
     { field: "template.name", headerName: "Template" },
     { field: "owner.label", headerName: "Owner" },
