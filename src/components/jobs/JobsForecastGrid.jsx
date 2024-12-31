@@ -1,7 +1,7 @@
 import {
-  useCallback,
+  useCallback, useEffect,
   useMemo,
-  useState,
+  useState
 } from "react";
 import {
   ClientSideRowModelModule,
@@ -9,28 +9,75 @@ import {
   ValidationModule,
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
+import { RECRUITLY_AGGRID_THEME } from "@constants";
+import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
+import { getDateStringByUserTimeZone } from "@utils/dateUtil.js";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   ValidationModule
 ]);
 
 const JobForecastGrid = ({ statuses = [] }) => {
+
+  const { forecastData, loading, error, fetchPipelineForecastData } = useUserDashboardJobsStore();
+
   const containerStyle = useMemo(() => ({ width: "100%", height: "70vh" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
+
   const [rowData, setRowData] = useState();
 
   const status_list = [];
-
-  console.log("status_list", statuses);
 
   statuses.forEach((status) => {
     status_list.push({
       headerName: status.name,
       field: status.statusCode,
+      width:100
     });
   });
 
+  const defaultColDef = useMemo(() => {
+    return {
+      flex: 1,
+      suppressMovable:false,
+      resizable: false,
+      minWidth: 100,
+    };
+  }, []);
+
   const [columnDefs, setColumnDefs] = useState([
+    {
+      headerName: "Job",
+      field: "jobLabel",
+      minWidth: 250,
+      pinned:'left'
+    },
+    {
+      headerName: "Pulse",
+      field: "",
+      minWidth: 100,
+    },
+    {
+      headerName: "Created",
+      field: "createdDate",
+      minWidth: 150,
+      cellRenderer: (param) => {
+        return getDateStringByUserTimeZone(param.data.createdDate);
+      }
+    },
+    {
+      headerName: "Closing Date",
+      field: "closingDate",
+      minWidth: 150,
+      cellRenderer: (param) => {
+
+        return getDateStringByUserTimeZone(param.data.closingDate);
+      }
+    },{
+      headerName: "Fee",
+      field: "fee",
+      minWidth: 150,
+    },
     {
       headerName: "Pipeline Count",
       children: status_list,
@@ -47,18 +94,26 @@ const JobForecastGrid = ({ statuses = [] }) => {
     },
   ]);
 
-  console.log(columnDefs);
-
   const onGridReady = useCallback((params) => {
-    fetch("https://www.ag-grid.com/example-assets/olympic-winners.json")
-      .then((resp) => resp.json())
-      .then((data) => setRowData(data));
+
+   fetchPipelineForecastData();
+
   }, []);
+
+  useEffect(() => {
+
+    if(forecastData && forecastData.length > 0) {
+      setRowData(forecastData);
+    }
+
+  },[error,forecastData])
+
+
 
   return (
     <div style={containerStyle}>
       <div style={gridStyle}>
-        <AgGridReact rowData={rowData} columnDefs={columnDefs} onGridReady={onGridReady} />
+        <AgGridReact loading={loading} theme={RECRUITLY_AGGRID_THEME} defaultColDef={defaultColDef} rowData={rowData} columnDefs={columnDefs} onGridReady={onGridReady} />
       </div>
     </div>
   );

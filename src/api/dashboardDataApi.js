@@ -167,3 +167,17 @@ export const fetchPipelineStatuses = async () => {
   }
 }
 
+export const fetchPipelineForecastData = async () => {
+
+  const apiManager = getApiManager();
+
+  try {
+    const response = await apiManager.get(`/user_dashboard/job_forecast`);
+    console.log("fetchPipelineStatuses", response);
+    return response.data;
+  }catch (e) {
+    console.error("Error fetching pipeline forecast data", e);
+    throw new Error("Failed to fetch pipeline forecast data. Please try again.");
+  }
+}
+
