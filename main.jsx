@@ -8,6 +8,8 @@ const root = createRoot(container);
 
 root.render(
   <StrictMode>
+    <div style={{padding:16}}>
     <App />
+    </div>
   </StrictMode>
 );

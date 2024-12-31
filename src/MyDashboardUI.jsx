@@ -23,7 +23,7 @@ const MyDashboardUI = ({ apiServer="", apiKey = "", tenantId = "", userId = "" ,
       backgroundColor: "transparent",
       height: "100vh",
       overflowY: "auto",
-      padding: 16,
+      padding: 0,
       boxSizing: "border-box"
     }}>
       <CardGoals dashboardId={dashboardId} apiKey={apiKey} apiServer={apiServer} tenantId={tenantId} userId={userId}
