@@ -46,9 +46,8 @@ const RecordDataGrid = ({ tileData, selectedPeriodLabel }) => {
           });
           const activityCode = result.data.activity?.code;
 
-          console.log(activityCode);
 
-          const updatedColDefs = activityColumnMap[activityCode] || activityColumnMap.DEFAULT;
+          const updatedColDefs = activityColumnMap[activityCode] ? activityColumnMap[activityCode] : (activityType === 'USER' ? activityColumnMap.JOURNAL : activityColumnMap.DEFAULT);
           setColDefs(updatedColDefs);
           params.success({
             rowData: result.data.records || [],

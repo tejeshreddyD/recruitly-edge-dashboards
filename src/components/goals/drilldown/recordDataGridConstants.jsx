@@ -1,4 +1,6 @@
-import { formatGlobalDate } from "@utils/dateUtil.js";
+
+import { formatGlobalDate, formatGlobalDateWithTime } from "@utils/dateUtil.js";
+
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
 
@@ -43,7 +45,7 @@ const renderClickableField = (params, fieldName) => {
   return (
     <span
       style={{
-        color: "blue",
+        color: "#0057FF",
         cursor: isClickable ? "pointer" : "default",
       }}
     >
@@ -54,22 +56,33 @@ const renderClickableField = (params, fieldName) => {
 
 
 const fetchOpportunitiesColumns = () => [
-  { field: "reference", headerName: "#REF" },
-  { field: "name", headerName: "Name" },
+  {
+    field: "reference",
+    headerName: "#REF",
+    cellRenderer: (params) => (
+      <>
+        {renderClickableField(params, params.data.reference)}
+      </>
+    ),
+    onCellClicked: (params) => viewRecord(params, "OPPORTUNITIES"),
+  },
+
+
+  {
+    field: "name",
+    headerName: "Name",
+    cellRenderer: (params) => (
+      <>
+        {renderClickableField(params, `${params.data.name} `)}
+      </>
+    ),
+    onCellClicked: (params) => viewRecord(params, "OPPORTUNITIES"),
+  },
+
+
   { field: "bid.value", headerName: "Value" },
   { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
   { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-  { field: "owner.label", headerName: "Owner" },
-  {
-    field: "createdOn",
-    headerName: "Created At",
-    type: "date",
-    sort: "desc",
-    sortedAt: 0,
-    valueGetter: function(params) {
-      return formatGlobalDate(params.data.createdOn);
-    }
-  },
   {
     field: "state",
     headerName: "Pipeline",
@@ -99,7 +112,17 @@ const fetchOpportunitiesColumns = () => [
       );
     },
   },
-
+  { field: "owner.label", headerName: "Owner" },
+  {
+    field: "createdOn",
+    headerName: "Created At",
+    type: "date",
+    sort: "desc",
+    sortedAt: 0,
+    valueGetter: function(params) {
+      return formatGlobalDate(params.data.createdOn);
+    }
+  },
 ];
 
 export const activityColumnMap = {
@@ -170,7 +193,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -184,42 +207,107 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
   CANDIDATES_CREATED: [
-    { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
+
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+
+    {
+      field: "firstName",
+      headerName: "Name",
+      valueGetter: nameGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, `${params.data.firstName} `)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
     { field: "owner.label", headerName: "Recruiter" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
   CONTACTS_CREATED: [
-    { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
+
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CONTACT"),
+    },
+
+    {
+      field: "firstName",
+      headerName: "Name",
+      valueGetter: nameGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, `${params.data.firstName} `)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CONTACT"),
+    },
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
     { field: "owner.label", headerName: "Contact Owner" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
 
   OPEN_JOBS_VALUE:[
-    { field: "reference", headerName: "#REF" },
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "title", headerName: "Title" },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.company.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.contact.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "commissionDetails", headerName: "Value",
       valueGetter: (params) => {
         const commissionAmount = params.data.commissionAmount;
@@ -231,7 +319,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -241,7 +329,7 @@ export const activityColumnMap = {
     {
       field: "shareDate", headerName: "Shared On", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.shareDate);
+        return params.data.shareDate ? formatGlobalDate(params.data.shareDate) : "";
       }
     }
   ],
@@ -256,7 +344,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -264,11 +352,86 @@ export const activityColumnMap = {
     { field: "title", headerName: "Title" },
     { field: "type", headerName: "Type" },
     { field: "notes", headerName: "Notes" },
+    {
+      field: "attendees.label",
+      headerName: "Attendees",
+      valueGetter: (params) => {
+        let attendees = "N/A";
+        let isFirst = true;
+
+        params.data.attendees?.forEach((attendee) => {
+          if (isFirst) {
+            attendees = attendee.label;
+            isFirst = false;
+          } else {
+            attendees += `, ${attendee.label}`;
+          }
+        });
+
+        return attendees;
+      },
+      cellRenderer: (params) => {
+        const attendees = params.data.attendees;
+
+        if (!attendees || attendees.length === 0) {
+          return <div></div>; // Render an empty div if no attendees
+        }
+
+        return (
+          <>
+            {attendees.map((attendee) => (
+              <div key={attendee.label}>
+                {renderClickableField(params, attendee.label)}
+              </div>
+            ))}
+          </>
+        );
+      },
+      onCellClicked: (params) => {
+        const attendees = params.data.attendees;
+
+        attendees?.forEach((attendee) => {
+          viewRecord(params, attendee.type);
+        });
+      },
+    },
+
+
+
+
+
     { field: "organiser.label", headerName: "Organiser" },
+    {
+      field: "eventStartDate",
+      headerName: "Event Start Date",
+      type: "date",
+      dateFormat: "dd/MM/yy HH:mm",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
+      }
+    },
+
+    {
+      field: "eventEndDate",
+      headerName: "Event End Date",
+      type: "date",
+      dateFormat: "dd/MM/yy HH:mm",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
+      }
+    },
+
+
+
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+
       }
     },
   ],
@@ -277,12 +440,22 @@ export const activityColumnMap = {
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
     { field: "subject", headerName: "Subject" },
-    { field: "timeReceived", headerName: "TimeReceived" },
-    { field: "owner.label", headerName: "Owner" },
+    { field: "toList", headerName: "ToList",
+      valueGetter: (params) => {
+        return params.data.toList?.map(data => data.label).join(", ") || "N/A";
+      },
+    },
     {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      field: "createdOn",
+      headerName: "Time Sent",
+      sort: "desc",
+      sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        const timestamp = params.data.createdOn;
+        if (!timestamp) {
+          return null;
+        }
+        return getLocalizedDateString(timestamp, "DD/MM/YYYY HH:mm:ss");
       }
     }
   ],
@@ -341,7 +514,7 @@ export const activityColumnMap = {
       sort: "desc",
       sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     },
     {
@@ -352,18 +525,40 @@ export const activityColumnMap = {
     }
   ],
   CAMPAIGNS_SENT:[
-    { field: "name", headerName: "Name" },
+    { field: "name", headerName: "Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.name)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "EMAIL_CAMPAIGN"),
+    },
     { field: "subject", headerName: "Subject" },
     { field: "template.name", headerName: "Template" },
     { field: "owner.label", headerName: "Owner" },
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
-
+  JOURNAL : [
+    {field: "journalFrom.label", headerName: "User" },
+    {field: "journalActivityLabel", headerName: "Activity Type" },
+    {field: "journalMessage", headerName: "Message" },
+    {
+      field: "journalDate",
+      headerName: "Activity Date",
+      type: "date",
+      dateFormat: "dd/MM/yy",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.journalDate ? formatGlobalDate(params.data.journalDate) : "";
+      }
+    }
+  ],
   DEFAULT: [
     { field: "reference", headerName: "#REF" },
     { field: "name", headerName: "Record" },

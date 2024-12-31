@@ -148,6 +148,15 @@ export function formatGlobalDate(dateString) {
   return format(date, formatString);
 }
 
+export function formatGlobalDateWithTime(dateString) {
+  const date = new Date(dateString);
+
+
+  const formatString = "dd/MM/yyyy hh:mm a";
+
+  return format(date, formatString);
+}
+
 export const dateRanges = {
   TODAY: {
     start: moment().utc().startOf("day").valueOf(),
