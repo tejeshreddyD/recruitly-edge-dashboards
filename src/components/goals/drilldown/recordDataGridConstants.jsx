@@ -544,7 +544,9 @@ export const activityColumnMap = {
     }
   ],
   JOURNAL : [
-    {field: "journalActivityLabel", headerName: "Title" },
+    {field: "journalFrom.label", headerName: "User" },
+    {field: "journalActivityLabel", headerName: "Activity Type" },
+    {field: "journalMessage", headerName: "Message" },
     {
       field: "journalDate",
       headerName: "Activity Date",
