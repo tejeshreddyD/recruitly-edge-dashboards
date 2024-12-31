@@ -268,7 +268,19 @@ export const activityColumnMap = {
         if (!params.data) {
           return ""; // Return an empty string if data is missing
         }
-        return `${params.data.firstName} ${params.data.surname}`;
+
+        const isClickable = !!params.data._id;
+
+        return (
+          <span
+            style={{
+              color: "blue",
+              cursor: isClickable ? "pointer" : "default",
+            }}
+          >
+        {`${params.data.firstName} ${params.data.surname}`}
+      </span>
+        );
       },
       onCellClicked: (params) => {
         if (params.data && params.data._id) {
@@ -276,6 +288,8 @@ export const activityColumnMap = {
         }
       }
     },
+
+
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
     { field: "owner.label", headerName: "Owner" },
