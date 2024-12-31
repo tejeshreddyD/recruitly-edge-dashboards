@@ -117,7 +117,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         </Tag>
       ))}</>);
       case "APPLICATION":
-        return <Link style={timelineTextStyle} href={`${VISTA_URL}/applications/pending`}>Review your {item.count} pending job applications</Link>;
+        return <Link style={timelineTextStyle} href={`${VISTA_URL}/applications/pending`}>Review your {item.count} pending job applications<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "INVOICE_DUE":
         return (<><Text style={timelineTextStyle}>Follow-up {item.count} invoice(s) due of total ${item.invoice_due}</Text></>)
       default:
