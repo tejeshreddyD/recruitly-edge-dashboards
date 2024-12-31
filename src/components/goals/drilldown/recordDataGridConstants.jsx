@@ -4,8 +4,6 @@ import { formatGlobalDate, formatGlobalDateWithTime } from "@utils/dateUtil.js";
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
 
-import { formatGlobalDate, getLocalizedDateString } from "@utils/dateUtil.js";
-
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
 };
@@ -545,7 +543,20 @@ export const activityColumnMap = {
       }
     }
   ],
-
+  JOURNAL : [
+    {field: "journalActivityLabel", headerName: "Title" },
+    {
+      field: "journalDate",
+      headerName: "Activity Date",
+      type: "date",
+      dateFormat: "dd/MM/yy",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.journalDate ? formatGlobalDate(params.data.journalDate) : "";
+      }
+    }
+  ],
   DEFAULT: [
     { field: "reference", headerName: "#REF" },
     { field: "name", headerName: "Record" },
