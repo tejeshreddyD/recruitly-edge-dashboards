@@ -166,16 +166,21 @@ export const aggregateData = (respData,plannerType) => {
 export const categorizeData = (apiResponse) => {
 
   const now = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const tomorrowStart = todayStart + 24 * 60 * 60 * 1000;
-  const endOfToday = tomorrowStart - 1;
+  const todayStart = moment().startOf('day').valueOf();
+  const tomorrowStart = moment().add(1,'day').startOf('day').valueOf();
+  const endOfToday = moment(todayStart).endOf('day').valueOf();
+
+  const endOfWeek = moment().endOf('week').isoWeekday(5);
 
   const result = [];
   const upcomingDays = {};
 
-  upcomingDays[moment(tomorrowStart).add(1,'day').startOf('day').valueOf()] = [];
-  upcomingDays[moment(tomorrowStart).add(2,'day').startOf('day').valueOf()] = [];
-  upcomingDays[moment(tomorrowStart).add(3,'day').startOf('day').valueOf()] = [];
+
+  for (let date = moment().add(2,'days').startOf('day'); date.isSameOrBefore(endOfWeek); date.add(1,'day')) {
+    if(date.isoWeekday() <=5){
+      upcomingDays[date.startOf('day').valueOf()] = [];
+    }
+  }
 
   let todayApplications = apiResponse.job_applications || 0;
   let todayOverdueCount = 0;
@@ -188,7 +193,7 @@ export const categorizeData = (apiResponse) => {
       dayTimestamp,
       applications,
       overDueTasks: overdueCount,
-      items: items.sort((a, b) => a.time - b.time), // Sort items by time
+      items: items.sort((a, b) => a.time - b.time),
     });
   };
 
