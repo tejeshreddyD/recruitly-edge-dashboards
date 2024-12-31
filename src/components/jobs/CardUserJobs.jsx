@@ -1,12 +1,5 @@
-import { useEffect, useState } from "react";
-import { Alert, Card, Flex, Segmented } from "antd";
-import { BsFunnel } from "react-icons/bs";
-import { RiFocus2Line } from "react-icons/ri";
-
-import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
-import DayTimeline from "@components/weekplanner/DayTimeline.jsx";
-import PlannerDrillDownModal from "@components/weekplanner/drilldown/PlannerDrillDownModal.jsx";
-import { aggregateData, categorizeData } from "@components/weekplanner/util/plannerUtil.js";
+import { useEffect } from "react";
+import { Alert, Card, Flex } from "antd";
 import { Spinner } from "@phosphor-icons/react";
 import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
 import { FaSuitcase } from "react-icons/fa";

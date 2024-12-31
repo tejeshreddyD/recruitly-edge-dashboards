@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([
 
 const JobForecastGrid = ({ statuses = [] }) => {
 
-  const { forecastData, loading, error, fetchPipelineForecastData } = useUserDashboardJobsStore();
+  const { forecastData, forecastloading, error, fetchPipelineForecastData } = useUserDashboardJobsStore();
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "70vh" }), []);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
@@ -102,18 +102,20 @@ const JobForecastGrid = ({ statuses = [] }) => {
 
   useEffect(() => {
 
-    if(forecastData && forecastData.length > 0) {
-      setRowData(forecastData);
-    }
+    setRowData(forecastData);
 
-  },[error,forecastData])
-
-
+  },[forecastData])
 
   return (
     <div style={containerStyle}>
       <div style={gridStyle}>
-        <AgGridReact loading={loading} theme={RECRUITLY_AGGRID_THEME} defaultColDef={defaultColDef} rowData={rowData} columnDefs={columnDefs} onGridReady={onGridReady} />
+        <AgGridReact
+          loading={forecastloading}
+          theme={RECRUITLY_AGGRID_THEME}
+          defaultColDef={defaultColDef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          onGridReady={onGridReady} />
       </div>
     </div>
   );

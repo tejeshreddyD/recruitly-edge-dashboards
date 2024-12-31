@@ -6,6 +6,7 @@ const useUserDashboardJobsStore = create((set, getState) => ({
   data: [],
   forecastData:[],
   loading: false,
+  forecastloading:false,
   error: null,
   fetchPipelineStatuses: async () => {
 
@@ -22,14 +23,14 @@ const useUserDashboardJobsStore = create((set, getState) => ({
   },
   fetchPipelineForecastData: async () => {
 
-    if (!getState().loading) {
+    if (!getState().forecastloading) {
 
-      set({ loading: true, error: null });
+      set({ forecastloading: true, error: null });
       try {
         const data = await fetchPipelineForecastData();
-        set({ forecastData:data.data, loading: false });
+        set({ forecastData:data.data, forecastloading: false });
       } catch (error) {
-        set({ error: error.message, loading: false });
+        set({ error: error.message, forecastloading: false });
       }
     }
   }
