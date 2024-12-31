@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Flex, Row, Tabs } from "antd";
-import { DollarCircleFilled, TrophyOutlined } from "@ant-design/icons";
-import { AgCharts } from "ag-charts-react";
-import LeaderBoard from "@components/goals/drilldown/LeaderBoard.jsx";
+import { Col, Flex, Row, Tabs } from "antd";
+import { DollarCircleFilled } from "@ant-design/icons";
 import "./tabstats.css";
-import { FaRegChartBar } from "react-icons/fa";
 import { TbSum } from "react-icons/tb";
-import { formatNumber } from "@utils/numberUtil.js";
 import RecordDataGrid from "@components/goals/drilldown/RecordDataGrid.jsx";
-import GoalProgress from "@components/goals/drilldown/GoalProgress.jsx";
 import { FiTarget } from "react-icons/fi";
 import RecordDataChart from "@components/goals/drilldown/RecordDataChart.jsx";
 import ProgressGauge from "@components/goals/drilldown/ProgressGauge.jsx";
+import PerformanceTrends from "@components/goals/drilldown/PerformanceTrends.jsx";
 
 const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matchedData, selectedPeriodLabel }) => {
 
@@ -63,70 +59,12 @@ const GoalsDrillDown = ({ apiServer, apiKey, tenantId, userId, tileData, matched
             <Flex vertical={true} gap={"large"} style={{ paddingRight: 20, paddingBottom: 20 }}>
               <Row gutter={20}>
                 {item.target > 0 && (
-                <Col xs={24} sm={24} md={24} lg={24} xl={8}>
-                  <Card title={(
-                    <Flex direction="row" align="center" justify="start" gap={"small"}>
-                      <TrophyOutlined />
-                      {item.title}
-                    </Flex>
-                  )}>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={8}>
                     <ProgressGauge tileData={item} />
-                  </Card>
-                </Col>
-                  )}
+                  </Col>
+                )}
                 <Col xs={24} sm={24} md={24} lg={24} xl={item.target > 0 ? 16 : 24}>
-                  <Card style={{ marginBottom: 16 }} title={(
-                    <Flex direction="row" align="center" justify="start" gap={"small"}>
-                      <FaRegChartBar />
-                      Your Performance Trends
-                    </Flex>
-                  )}>
-                    <AgCharts
-                      options={{
-                        theme: "ag-polychroma",
-                        data: [
-                          ...(item.prev || []).reverse().map((prev) => ({
-                            monthName: prev?.monthName || "N/A",
-                            actualValue: prev?.actualValue || 0
-                          })),
-                          {
-                            monthName: item?.monthName || "N/A",
-                            actualValue: item?.actual || 0
-                          }
-                        ],
-                        background: { fill: "transparent" },
-                        series: [
-                          {
-                            type: "bar",
-                            xKey: "monthName",
-                            yKey: "actualValue",
-                            stroke: "transparent",
-                            label: {
-                              formatter: ({ value }) => formatNumber(value)
-                            },
-                            itemStyler: (dataItem) => {
-                              const color = dataItem.datum.monthName === item.monthName ? "orange" : "#436ff4";
-                              return { fill: color };
-                            }
-                          }
-                        ],
-                        axes: [
-                          {
-                            type: "category",
-                            position: "bottom",
-                            title: false
-                          },
-                          {
-                            type: "number",
-                            position: "left",
-                            label: {
-                              formatter: ({ value }) => formatNumber(value)
-                            }
-                          }
-                        ]
-                      }}
-                    />
-                  </Card>
+                  <PerformanceTrends item={item} />
                 </Col>
               </Row>
               <RecordDataChart apiServer={apiServer} apiKey={apiKey} activityId={item.activityId}
