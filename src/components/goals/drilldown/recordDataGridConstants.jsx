@@ -38,7 +38,7 @@ const viewRecord = (params, recordType) => {
 const renderClickableField = (params, fieldName) => {
   if (!params.data) return ""; // Return an empty string if data is missing
 
-  const isClickable = !!params.data._id;
+  const isClickable = !!params.data._id; // Check if the record is clickable
 
   return (
     <span
@@ -47,10 +47,11 @@ const renderClickableField = (params, fieldName) => {
         cursor: isClickable ? "pointer" : "default",
       }}
     >
-      {params.data[fieldName]} {/* Use the dynamic field name */}
+      {fieldName }
     </span>
   );
 };
+
 
 const fetchOpportunitiesColumns = () => [
   { field: "reference", headerName: "#REF" },
@@ -293,7 +294,7 @@ export const activityColumnMap = {
       headerName: "Name",
       cellRenderer: (params) => (
         <>
-          {renderClickableField(params, "firstName")} {renderClickableField(params, "surname")}
+          {renderClickableField(params, `${params.data.firstName} ${params.data.surname}`)}
         </>
       ),
       onCellClicked: (params) => viewRecord(params, "LEAD"),
