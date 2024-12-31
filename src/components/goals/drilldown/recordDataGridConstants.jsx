@@ -1,3 +1,6 @@
+
+import { formatGlobalDate, formatGlobalDateWithTime } from "@utils/dateUtil.js";
+
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
 
@@ -55,8 +58,30 @@ const renderClickableField = (params, fieldName) => {
 
 
 const fetchOpportunitiesColumns = () => [
-  { field: "reference", headerName: "#REF" },
-  { field: "name", headerName: "Name" },
+  {
+    field: "reference",
+    headerName: "#REF",
+    cellRenderer: (params) => (
+      <>
+        {renderClickableField(params, params.data.reference)}
+      </>
+    ),
+    onCellClicked: (params) => viewRecord(params, "OPPORTUNITIES"),
+  },
+
+
+  {
+    field: "name",
+    headerName: "Name",
+    cellRenderer: (params) => (
+      <>
+        {renderClickableField(params, `${params.data.name} `)}
+      </>
+    ),
+    onCellClicked: (params) => viewRecord(params, "OPPORTUNITIES"),
+  },
+
+
   { field: "bid.value", headerName: "Value" },
   { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
   { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
@@ -189,8 +214,29 @@ export const activityColumnMap = {
     }
   ],
   CANDIDATES_CREATED: [
-    { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
+
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+
+    {
+      field: "firstName",
+      headerName: "Name",
+      valueGetter: nameGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, `${params.data.firstName} `)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
     { field: "owner.label", headerName: "Recruiter" },
@@ -202,8 +248,29 @@ export const activityColumnMap = {
     }
   ],
   CONTACTS_CREATED: [
-    { field: "reference", headerName: "#REF" },
-    { field: "firstName", headerName: "Name", valueGetter: nameGetter },
+
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CONTACT"),
+    },
+
+    {
+      field: "firstName",
+      headerName: "Name",
+      valueGetter: nameGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, `${params.data.firstName} `)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CONTACT"),
+    },
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
     { field: "owner.label", headerName: "Contact Owner" },
@@ -287,11 +354,86 @@ export const activityColumnMap = {
     { field: "title", headerName: "Title" },
     { field: "type", headerName: "Type" },
     { field: "notes", headerName: "Notes" },
+    {
+      field: "attendees.label",
+      headerName: "Attendees",
+      valueGetter: (params) => {
+        let attendees = "N/A";
+        let isFirst = true;
+
+        params.data.attendees?.forEach((attendee) => {
+          if (isFirst) {
+            attendees = attendee.label;
+            isFirst = false;
+          } else {
+            attendees += `, ${attendee.label}`;
+          }
+        });
+
+        return attendees;
+      },
+      cellRenderer: (params) => {
+        const attendees = params.data.attendees;
+
+        if (!attendees || attendees.length === 0) {
+          return <div></div>; // Render an empty div if no attendees
+        }
+
+        return (
+          <>
+            {attendees.map((attendee) => (
+              <div key={attendee.label}>
+                {renderClickableField(params, attendee.label)}
+              </div>
+            ))}
+          </>
+        );
+      },
+      onCellClicked: (params) => {
+        const attendees = params.data.attendees;
+
+        attendees?.forEach((attendee) => {
+          viewRecord(params, attendee.type);
+        });
+      },
+    },
+
+
+
+
+
     { field: "organiser.label", headerName: "Organiser" },
+    {
+      field: "eventStartDate",
+      headerName: "Event Start Date",
+      type: "date",
+      dateFormat: "dd/MM/yy HH:mm",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
+      }
+    },
+
+    {
+      field: "eventEndDate",
+      headerName: "Event End Date",
+      type: "date",
+      dateFormat: "dd/MM/yy HH:mm",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
+      }
+    },
+
+
+
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+
       }
     },
   ],
