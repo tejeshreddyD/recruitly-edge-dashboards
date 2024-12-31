@@ -4,12 +4,12 @@ import { BsFunnel } from "react-icons/bs";
 import { RiFocus2Line } from "react-icons/ri";
 
 import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
-import DayTimeline from "@components/userpriority/DayTimeline.jsx";
-import PlannerDrillDownModal from "@components/userpriority/drilldown/PlannerDrillDownModal.jsx";
-import { aggregateData, categorizeData } from "@components/userpriority/util/plannerUtil.js";
+import DayTimeline from "@components/weekplanner/DayTimeline.jsx";
+import PlannerDrillDownModal from "@components/weekplanner/drilldown/PlannerDrillDownModal.jsx";
+import { aggregateData, categorizeData } from "@components/weekplanner/util/plannerUtil.js";
 import { Spinner } from "@phosphor-icons/react";
 
-const CardUserPriority = () => {
+const CardUserWeekPlanner = () => {
   const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
 
   const [selectedPlannerType, setSelectedPlannerType] = useState("ALL");
@@ -120,4 +120,4 @@ const CardUserPriority = () => {
   );
 };
 
-export default CardUserPriority;
+export default CardUserWeekPlanner;

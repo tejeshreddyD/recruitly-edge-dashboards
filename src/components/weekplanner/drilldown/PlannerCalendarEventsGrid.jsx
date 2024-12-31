@@ -21,7 +21,7 @@ import {
   getDateStringByUserTimeZone,
   getTodayTimestampByTimeZone
 } from "@utils/dateUtil.js";
-import { getDateRangeByCodeAndDate } from "@components/userpriority/util/plannerUtil.js";
+import { getDateRangeByCodeAndDate } from "@components/weekplanner/util/plannerUtil.js";
 import { fetchUserPlannerCalendarEvents } from "@api/dashboardDataApi.js";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,

@@ -1,6 +1,6 @@
-import PlannerDailyTimeline from "@components/userpriority/drilldown/PlannerDrilldownTimeline.jsx";
+import PlannerDailyTimeline from "@components/weekplanner/drilldown/PlannerDrilldownTimeline.jsx";
 import { Col, Row } from "antd";
-import PlannerJobApplicationsGrid from "@components/userpriority/drilldown/PlannerJobApplicationsGrid.jsx";
+import PlannerJobApplicationsGrid from "@components/weekplanner/drilldown/PlannerJobApplicationsGrid.jsx";
 
 
 const PlannerDrillDownData = ({type="TODAY",filterType="ALL",viewType="FULL_DAY",date = 0, data=[]}) => {

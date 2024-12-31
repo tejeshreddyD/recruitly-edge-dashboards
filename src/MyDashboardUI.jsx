@@ -3,7 +3,7 @@ import { LicenseManager as LicenseManagerGrid } from "ag-grid-enterprise";
 
 import { initializeApiManager } from "@api/apiManager.js";
 import CardGoals from "@components/goals/CardGoals.jsx";
-import CardUserPriority from "@components/userpriority/CardUserPriority.jsx";
+import CardUserWeekPlanner from "@components/weekplanner/CardUserWeekPlanner.jsx";
 import { RECRUITLY_AGGRID_LICENSE } from "@constants";
 
 LicenseManagerGrid.setLicenseKey(RECRUITLY_AGGRID_LICENSE);
@@ -22,13 +22,12 @@ const MyDashboardUI = ({ apiServer="", apiKey = "", tenantId = "", userId = "" ,
     <div style={{
       backgroundColor: "transparent",
       height: "100vh",
-      overflowY: "auto",
       padding: 0,
       boxSizing: "border-box"
     }}>
       <CardGoals dashboardId={dashboardId} apiKey={apiKey} apiServer={apiServer} tenantId={tenantId} userId={userId}
                  title={"Help"} description={"Desc"} />
-      <CardUserPriority userId={userId} tenantId={tenantId} />
+      <CardUserWeekPlanner userId={userId} tenantId={tenantId} />
     </div>
   );
 };
