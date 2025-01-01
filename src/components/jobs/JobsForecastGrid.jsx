@@ -110,7 +110,7 @@ const JobForecastGrid = ({ statuses = [] }) => {
               </Text>
             </Flex>
             <Flex gap={"small"} align={"flex-start"}>
-              <Text ellipsis color="secondary" title={job.companyLabel} style={{ marginBottom: 0, fontSize: 11, color: "#6b7483", maxWidth: 100 }}>
+              <Text ellipsis color="secondary" title={job.companyLabel} style={{ marginBottom: 0, fontSize: 11, color: "#6b7483", maxWidth: job.jobLocation ? 100 : 200 }}>
                 {job.companyLabel}
               </Text>
               {job.jobLocation && (
