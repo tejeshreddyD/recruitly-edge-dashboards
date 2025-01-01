@@ -12,7 +12,7 @@ import { AgGridReact } from "ag-grid-react";
 import { RECRUITLY_AGGRID_THEME } from "@constants";
 import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
 import { getDateStringByUserTimeZone } from "@utils/dateUtil.js";
-import { Flex, Tooltip,Typography } from "antd";
+import { Flex, Tag, Tooltip, Typography } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { FaRegGrinStars, FaRegSmile } from "react-icons/fa";
 import { PiSmileySadBold } from "react-icons/pi";
@@ -100,11 +100,11 @@ const JobForecastGrid = ({ statuses = [] }) => {
           {getTrends(job)}
           <Flex vertical align="start" justify="center" style={{ flexGrow: 1 }} gap={0}>
             <Flex align="center" style={{ whiteSpace: "nowrap" }}>
-              <Text
+             <Text
                 ellipsis
                 className="recruitly-candidate-name"
                 style={{ maxWidth: 190, fontSize: "14.5px", fontWeight: "500", cursor: "pointer" }}
-                onClick={(e) => {}}
+                onClick={(e) => {e.preventDefault(); window.COOLUTIL.viewRecordPopupByType('JOB',job.jobRef);}}
               >
                 {job.jobLabel}
               </Text>
