@@ -11,13 +11,14 @@ import {
 import { AgGridReact } from "ag-grid-react";
 import { Flex, Tooltip, Typography } from "antd";
 import { FaRegBuilding, FaRegGrinStars, FaRegSmile } from "react-icons/fa";
+import { IoLocationOutline } from "react-icons/io5";
 import { LuTurtle } from "react-icons/lu";
 import { PiSmileySadBold } from "react-icons/pi";
 
 import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
 import { RECRUITLY_AGGRID_THEME } from "@constants";
 import { getDateStringByUserTimeZone } from "@utils/dateUtil.js";
-import { IoLocationOutline } from "react-icons/io5";
+import { dashboardAction, dashboardActionCode } from "@utils/actionsUtil.js";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   ValidationModule
@@ -74,6 +75,9 @@ const JobForecastGrid = ({ statuses = [] }) => {
       width:100,
       align: "center",
       cellDataType:'number',
+      onCellClicked:(params) => {
+        dashboardAction(params.event,dashboardActionCode.VIEW_PIPELINE_SIDEBAR,{records:[{jobId:params.data.jobId}]});
+      },
       cellRenderer: (row) => {
         return row.data.pipelines[status.statusCode];
       }

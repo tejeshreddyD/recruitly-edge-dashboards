@@ -1,5 +1,6 @@
 export const dashboardActionCode = {
-  VIEW_CALENDAR_EVENT:"VIEW_CALENDAR_EVENT"
+  VIEW_CALENDAR_EVENT:"VIEW_CALENDAR_EVENT",
+  VIEW_PIPELINE_SIDEBAR:"VIEW_PIPELINE_SIDEBAR",
 }
 
 export const dashboardAction = (e, code, paramObj) => {
