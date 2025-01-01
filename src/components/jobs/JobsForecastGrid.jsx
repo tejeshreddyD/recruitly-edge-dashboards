@@ -9,14 +9,14 @@ import {
   ValidationModule,
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { RECRUITLY_AGGRID_THEME } from "@constants";
-import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
-import { getDateStringByUserTimeZone } from "@utils/dateUtil.js";
-import { Flex, Tag, Tooltip, Typography } from "antd";
-import { SmileOutlined } from "@ant-design/icons";
+import { Flex, Tooltip, Typography } from "antd";
 import { FaRegGrinStars, FaRegSmile } from "react-icons/fa";
-import { PiSmileySadBold } from "react-icons/pi";
 import { LuTurtle } from "react-icons/lu";
+import { PiSmileySadBold } from "react-icons/pi";
+
+import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
+import { RECRUITLY_AGGRID_THEME } from "@constants";
+import { getDateStringByUserTimeZone } from "@utils/dateUtil.js";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   ValidationModule
@@ -26,7 +26,7 @@ const { Text, Link } = Typography;
 
 const JobForecastGrid = ({ statuses = [] }) => {
 
-  const { forecastData, forecastloading, error, fetchPipelineForecastData } = useUserDashboardJobsStore();
+  const { forecastData, forecastloading, error, tenantCurrency, fetchPipelineForecastData } = useUserDashboardJobsStore();
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "450px" }), []);
   const gridStyle = useMemo(() => ({ height: "100vh", width: "100%" }), []);
@@ -143,7 +143,7 @@ const JobForecastGrid = ({ statuses = [] }) => {
 
         const formatter = new Intl.NumberFormat('en-GB', {
           style: 'currency',
-          currency: 'GBP',
+          currency: tenantCurrency,
           minimumFractionDigits: 0,
         });
 
