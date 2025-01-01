@@ -10,13 +10,14 @@ import {
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { Flex, Tooltip, Typography } from "antd";
-import { FaRegGrinStars, FaRegSmile } from "react-icons/fa";
+import { FaRegBuilding, FaRegGrinStars, FaRegSmile } from "react-icons/fa";
 import { LuTurtle } from "react-icons/lu";
 import { PiSmileySadBold } from "react-icons/pi";
 
 import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
 import { RECRUITLY_AGGRID_THEME } from "@constants";
 import { getDateStringByUserTimeZone } from "@utils/dateUtil.js";
+import { IoLocationOutline } from "react-icons/io5";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   ValidationModule
@@ -113,11 +114,11 @@ const JobForecastGrid = ({ statuses = [] }) => {
             </Flex>
             <Flex gap={"small"} align={"flex-start"}>
               <Text ellipsis color="secondary" title={job.companyLabel} style={{ marginBottom: 0, fontSize: 11, color: "#6b7483", maxWidth: job.jobLocation ? 100 : 200 }}>
-                {job.companyLabel}
+                <FaRegBuilding size={10} color={'#6b7483'}/>{job.companyLabel}
               </Text>
               {job.jobLocation && (
                 <Text ellipsis color="secondary" title={job.jobLocation} style={{ marginBottom: 0, fontSize: 11, color: "#6b7483", maxWidth: 100 }}>
-                  {"| "}{job.jobLocation}
+                  {"| "}<IoLocationOutline size={10} color={'#6b7483'}/>{job.jobLocation}
                 </Text>
               )}
             </Flex>
