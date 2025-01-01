@@ -103,7 +103,7 @@ const JobForecastGrid = ({ statuses = [] }) => {
               <Text
                 ellipsis
                 className="recruitly-candidate-name"
-                style={{ maxWidth: 200, fontSize: "14.5px", fontWeight: "500", cursor: "pointer" }}
+                style={{ maxWidth: 190, fontSize: "14.5px", fontWeight: "500", cursor: "pointer" }}
                 onClick={(e) => {}}
               >
                 {job.jobLabel}
