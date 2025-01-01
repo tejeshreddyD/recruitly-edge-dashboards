@@ -395,11 +395,6 @@ export const activityColumnMap = {
         });
       },
     },
-
-
-
-
-
     { field: "organiser.label", headerName: "Organiser" },
     {
       field: "eventStartDate",
@@ -412,7 +407,6 @@ export const activityColumnMap = {
         return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
       }
     },
-
     {
       field: "eventEndDate",
       headerName: "Event End Date",
@@ -424,9 +418,6 @@ export const activityColumnMap = {
         return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
       }
     },
-
-
-
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
@@ -435,7 +426,13 @@ export const activityColumnMap = {
       }
     },
   ],
+  INTERVIEWS_SCHEDULED : [
 
+  ],
+  INTERVIEW_SCHEDULED_VALUE : [
+
+  ],
+  JOBS_ADVERTISED : [],
   EMAILS_SENT:[
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
@@ -470,8 +467,6 @@ export const activityColumnMap = {
       ),
       onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
-
-
     {
       field: "firstName",
       headerName: "Name",
@@ -482,8 +477,6 @@ export const activityColumnMap = {
       ),
       onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
-
-
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
     { field: "owner.label", headerName: "Owner" },
@@ -585,6 +578,7 @@ export const activityColumnMap = {
       }
     }
   ],
+  PIPELINE_VALUE : [],
   JOURNAL : [
     {field: "journalFrom.label", headerName: "User" },
     {field: "journalActivityLabel", headerName: "Activity Type" },
