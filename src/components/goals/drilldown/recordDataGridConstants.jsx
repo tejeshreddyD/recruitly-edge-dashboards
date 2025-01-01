@@ -543,6 +543,20 @@ export const activityColumnMap = {
       }
     }
   ],
+  CANDIDATES_SHORTLISTED : [
+    {field: "statusCode", headerName: "Status" },
+    {
+      field: "createdOn",
+      headerName: "Added On",
+      type: "date",
+      dateFormat: "dd/MM/yy",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+      }
+    }
+  ],
   JOURNAL : [
     {field: "journalFrom.label", headerName: "User" },
     {field: "journalActivityLabel", headerName: "Activity Type" },
