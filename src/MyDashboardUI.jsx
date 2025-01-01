@@ -23,7 +23,6 @@ const MyDashboardUI = ({ apiServer="", apiKey = "", tenantId = "", userId = "" ,
     <div style={{
       backgroundColor: "transparent",
       height: "100vh",
-      overflowY: "auto",
       padding: 0,
       boxSizing: "border-box"
     }}>
