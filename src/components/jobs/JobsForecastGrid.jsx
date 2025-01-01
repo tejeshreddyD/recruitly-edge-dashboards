@@ -22,7 +22,7 @@ ModuleRegistry.registerModules([
   ValidationModule
 ]);
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 const JobForecastGrid = ({ statuses = [] }) => {
 
