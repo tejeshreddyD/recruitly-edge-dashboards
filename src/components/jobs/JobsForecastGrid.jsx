@@ -14,6 +14,9 @@ import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
 import { getDateStringByUserTimeZone } from "@utils/dateUtil.js";
 import { Flex, Tooltip,Typography } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
+import { FaRegGrinStars, FaRegSmile } from "react-icons/fa";
+import { PiSmileySadBold } from "react-icons/pi";
+import { LuTurtle } from "react-icons/lu";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   ValidationModule
@@ -30,6 +33,37 @@ const JobForecastGrid = ({ statuses = [] }) => {
 
   const [rowData, setRowData] = useState();
 
+  const getTrends = (model) => {
+    const avgDaysInCurrentStage = model.avgDaysPerStage;
+    const estDaysToClose = model.estimatedDaysToClose;
+    const daysRemainingToClose = model.daysRemainingToClose;
+    const daysInCurrentStage = model.daysInCurrentStage;
+    const actualDaysToPlace = model.actualDaysToClose;
+    const weightedStageCode = model.weightedStageCode;
+
+    switch (weightedStageCode) {
+      case 'PLACED':
+        if (actualDaysToPlace <= estDaysToClose) {
+          return (<Tooltip title={`Exceeded expectations! Placement was made within ${actualDaysToPlace} days, meeting the expectation of ${estDaysToClose} days.`}><FaRegGrinStars color={"green"} size={20}/></Tooltip> )
+        } else if (actualDaysToPlace <= (estDaysToClose + (estDaysToClose * 25 / 100))) {
+          return (<Tooltip title={`Good job! Placement took ${actualDaysToPlace} days, slightly longer than the expected ${estDaysToClose} days.`}><FaRegGrinStars color={"green"} size={20}/></Tooltip> )
+        } else {
+          return (<Tooltip title={`Placement took ${actualDaysToPlace} days, exceeding the expected ${estDaysToClose} days.`}><PiSmileySadBold color={"red"} size={20}/></Tooltip> )
+        }
+      case 'OFFER':
+      case 'INTERVIEW':
+      case 'CV_SENT':
+      case 'SHORT_LIST':
+        if (daysInCurrentStage > avgDaysInCurrentStage) {
+          return (<Tooltip title={`Start chasing! ${daysInCurrentStage} days in the current stage, slower than the average of ${avgDaysInCurrentStage} days.`}><LuTurtle color={"rgb(255, 95, 21)"} size={20}/></Tooltip> );
+        } else {
+          return (<Tooltip title={`${daysInCurrentStage} days in the current stage.`}><FaRegSmile color={"rgb(255, 95, 21)"} size={20}/></Tooltip> );
+        }
+      default:
+        return (<Tooltip title={`${daysInCurrentStage} days in the current stage with no progress.`}><PiSmileySadBold color={"red"} size={20}/></Tooltip> );
+    }
+  };
+
   const status_list = [];
 
   statuses.forEach((status) => {
@@ -42,8 +76,6 @@ const JobForecastGrid = ({ statuses = [] }) => {
       }
     });
   });
-
-  console.log(status_list);
 
   const defaultColDef = useMemo(() => {
     return {
@@ -65,10 +97,9 @@ const JobForecastGrid = ({ statuses = [] }) => {
         const job = row.data;
 
         return (<Flex align="center" gap={10} style={{ marginBottom: "auto" }}>
-          <SmileOutlined color={"blue"} size={50}/>
+          {getTrends(job)}
           <Flex vertical align="start" justify="center" style={{ flexGrow: 1 }} gap={0}>
             <Flex align="center" style={{ whiteSpace: "nowrap" }}>
-
               <Text
                 ellipsis
                 className="recruitly-candidate-name"
