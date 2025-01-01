@@ -73,11 +73,13 @@ const JobForecastGrid = ({ statuses = [] }) => {
       headerName: status.name,
       field: `pipelines.${status.statusCode}`,
       width:100,
-      cellStyle: {
-        alignSelf: "center",
-        alignContent: "center",
-        textAlign: "center",
-        justifyContent: "center"
+      cellStyle: (param) =>{
+
+        return{
+          textAlign: "center",
+          cursor: "pointer",
+        }
+
       },
       cellDataType:'number',
       onCellClicked:(params) => {
