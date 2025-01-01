@@ -69,8 +69,10 @@ const JobForecastGrid = ({ statuses = [] }) => {
   statuses.forEach((status) => {
     status_list.push({
       headerName: status.name,
-      field: `pipelines['${status.statusCode}']`,
+      field: `pipelines.${status.statusCode}`,
       width:100,
+      align: "center",
+      cellDataType:'number',
       cellRenderer: (row) => {
         return row.data.pipelines[status.statusCode];
       }
@@ -97,13 +99,13 @@ const JobForecastGrid = ({ statuses = [] }) => {
         const job = row.data;
 
         return (<Flex align="center" gap={10} style={{ marginBottom: "auto" }}>
-          {getTrends(job)}
+          <Flex align={"center"} justify={"center"}>{getTrends(job)}</Flex>
           <Flex vertical align="start" justify="center" style={{ flexGrow: 1 }} gap={0}>
             <Flex align="center" style={{ whiteSpace: "nowrap" }}>
              <Text
                 ellipsis
                 className="recruitly-candidate-name"
-                style={{ maxWidth: 190, fontSize: "14px", fontWeight: "400", cursor: "pointer" }}
+                style={{ maxWidth: 200, fontSize: "14px", fontWeight: "400", cursor: "pointer" }}
                 onClick={(e) => {e.preventDefault(); window.COOLUTIL.viewRecordPopupByType('JOB',job.jobRef);}}
               >
                 {job.jobLabel}
