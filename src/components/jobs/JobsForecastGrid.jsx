@@ -34,11 +34,11 @@ const JobForecastGrid = ({ statuses = [] }) => {
   const [rowData, setRowData] = useState();
 
   const getTrends = (model) => {
-    const avgDaysInCurrentStage = model.avgDaysPerStage;
-    const estDaysToClose = model.estimatedDaysToClose;
-    const daysRemainingToClose = model.daysRemainingToClose;
-    const daysInCurrentStage = model.daysInCurrentStage;
-    const actualDaysToPlace = model.actualDaysToClose;
+    const avgDaysInCurrentStage = Math.round(model.avgDaysPerStage);
+    const estDaysToClose = Math.round(model.estimatedDaysToClose);
+    const daysRemainingToClose = Math.round(model.daysRemainingToClose);
+    const daysInCurrentStage = Math.round(model.daysInCurrentStage);
+    const actualDaysToPlace = Math.round(model.actualDaysToClose);
     const weightedStageCode = model.weightedStageCode;
 
     switch (weightedStageCode) {
