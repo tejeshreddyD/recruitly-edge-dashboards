@@ -18,8 +18,7 @@ const CardUserJobs = () => {
         style={{
           marginTop: "2rem",
           marginBottom: "2rem",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
+          background:"rgb(221 208 229)",
           border: "none"
         }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
@@ -27,7 +26,7 @@ const CardUserJobs = () => {
           <Flex direction="row" align="center" justify="start" gap="small">
             <FaSuitcase />
             <span>
-              Jobs
+              Open Jobs
             </span>
           </Flex>
         }>
@@ -35,7 +34,7 @@ const CardUserJobs = () => {
           style={{
             display: "flex",
             overflowX: "auto",
-            gap: "16px",
+            gap: "8px",
             whiteSpace: "nowrap"
           }}
         >{loading ? <Flex
@@ -55,7 +54,7 @@ const CardUserJobs = () => {
             />
             <div>
               <h4 style={{ fontWeight: "normal", fontSize: "1rem", margin: 0 }}>
-                Fetching you jobs
+                Fetching your jobs...
               </h4>
             </div>
           </Flex>

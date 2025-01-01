@@ -23,8 +23,8 @@ const JobForecastGrid = ({ statuses = [] }) => {
 
   const { forecastData, forecastloading, error, fetchPipelineForecastData } = useUserDashboardJobsStore();
 
-  const containerStyle = useMemo(() => ({ width: "100%", height: "70vh" }), []);
-  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
+  const containerStyle = useMemo(() => ({ width: "100%", height: "450px" }), []);
+  const gridStyle = useMemo(() => ({ height: "100vh", width: "100%" }), []);
 
   const [rowData, setRowData] = useState();
 
