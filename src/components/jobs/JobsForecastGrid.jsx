@@ -12,12 +12,14 @@ import { AgGridReact } from "ag-grid-react";
 import { RECRUITLY_AGGRID_THEME } from "@constants";
 import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
 import { getDateStringByUserTimeZone } from "@utils/dateUtil.js";
-import { Flex, Tooltip } from "antd";
+import { Flex, Tooltip,Typography } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
   ValidationModule
 ]);
+
+const { Text, Link } = Typography;
 
 const JobForecastGrid = ({ statuses = [] }) => {
 
@@ -60,12 +62,29 @@ const JobForecastGrid = ({ statuses = [] }) => {
       pinned:'left',
       cellRenderer: (row) => {
 
-        return (<><Flex justify="start" align={"center"}>
-          <Tooltip title={"Perform search"}><SmileOutlined color={"blue"} size={50}/></Tooltip>
-          <Flex  vertical align="flex-start" justify="space-between">
-            {row.data.jobLabel}
+        const job = row.data;
+
+        return (<Flex align="center" gap={10} style={{ marginBottom: "auto" }}>
+          <SmileOutlined color={"blue"} size={50}/>
+          <Flex vertical align="start" justify="center" style={{ flexGrow: 1 }} gap={0}>
+            <Flex align="center" style={{ whiteSpace: "nowrap" }}>
+
+              <Text
+                ellipsis
+                className="recruitly-candidate-name"
+                style={{ maxWidth: 200, fontSize: "14.5px", fontWeight: "500", cursor: "pointer" }}
+                onClick={(e) => {}}
+              >
+                {job.jobLabel}
+              </Text>
+            </Flex>
+            {job.jobLocation && (
+              <Text ellipsis color="secondary" style={{ marginBottom: 0, fontSize: 11, color: "#6b7483", width: 150 }}>
+                {job.jobLocation}
+              </Text>
+            )}
           </Flex>
-        </Flex></>)
+        </Flex>)
 
       }
     },
@@ -110,6 +129,7 @@ const JobForecastGrid = ({ statuses = [] }) => {
       <div style={gridStyle}>
         <AgGridReact
           loading={forecastloading}
+          rowHeight={50}
           theme={RECRUITLY_AGGRID_THEME}
           defaultColDef={defaultColDef}
           rowData={rowData}

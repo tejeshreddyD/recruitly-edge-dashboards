@@ -1,18 +1,16 @@
 import React, { useMemo } from "react";
-import { Card, Empty, Flex, Tag, Timeline, Tooltip, Typography } from "antd";
+import { Card, Flex, Tag, Timeline, Tooltip, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaFileInvoice, FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
+import { GiEmptyHourglass } from "react-icons/gi";
 import { IoFlash, IoOpenOutline } from "react-icons/io5";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 
-import { SmileOutlined } from "@ant-design/icons";
 import { VISTA_URL } from "@constants";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
 import { dashboardAction, dashboardActionCode } from "@utils/actionsUtil.js";
-import Meta from "antd/es/card/Meta.js";
-import { GiEmptyHourglass } from "react-icons/gi";
 
 const { Text, Link } = Typography;
 
