@@ -22,14 +22,14 @@ ModuleRegistry.registerModules([
   ValidationModule
 ]);
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 const JobForecastGrid = ({ statuses = [] }) => {
 
   const { forecastData, forecastloading, error, tenantCurrency, fetchPipelineForecastData } = useUserDashboardJobsStore();
 
   const containerStyle = useMemo(() => ({ width: "100%", height: "450px" }), []);
-  const gridStyle = useMemo(() => ({ height: "100vh", width: "100%" }), []);
+  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
   const [rowData, setRowData] = useState();
 
@@ -109,11 +109,16 @@ const JobForecastGrid = ({ statuses = [] }) => {
                 {job.jobLabel}
               </Text>
             </Flex>
-            {job.jobLocation && (
-              <Text ellipsis color="secondary" style={{ marginBottom: 0, fontSize: 11, color: "#6b7483", width: 150 }}>
-                {job.jobLocation}
+            <Flex gap={"small"} align={"flex-start"}>
+              <Text ellipsis color="secondary" title={job.companyLabel} style={{ marginBottom: 0, fontSize: 11, color: "#6b7483", maxWidth: job.jobLocation ? 100 : 200 }}>
+                {job.companyLabel}
               </Text>
-            )}
+              {job.jobLocation && (
+                <Text ellipsis color="secondary" title={job.jobLocation} style={{ marginBottom: 0, fontSize: 11, color: "#6b7483", maxWidth: 100 }}>
+                  {"| "}{job.jobLocation}
+                </Text>
+              )}
+            </Flex>
           </Flex>
         </Flex>)
 
