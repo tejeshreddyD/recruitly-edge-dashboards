@@ -74,6 +74,10 @@ const JobForecastGrid = ({ statuses = [] }) => {
       field: `pipelines.${status.statusCode}`,
       width:100,
       align: "center",
+      cellStyle: {
+        textAlign: "center",
+        justifyContent: "center"
+      },
       cellDataType:'number',
       onCellClicked:(params) => {
         dashboardAction(params.event,dashboardActionCode.VIEW_PIPELINE_SIDEBAR,{records:[{jobId:params.data.jobId}]});
