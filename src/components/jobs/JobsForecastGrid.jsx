@@ -139,6 +139,17 @@ const JobForecastGrid = ({ statuses = [] }) => {
       headerName: "Fee",
       field: "fee",
       minWidth: 150,
+      cellRenderer: (param) => {
+
+        const formatter = new Intl.NumberFormat('en-GB', {
+          style: 'currency',
+          currency: 'GBP',
+          minimumFractionDigits: 0,
+        });
+
+        return formatter.format(param.value);
+
+      }
     },
     ...status_list
   ]);

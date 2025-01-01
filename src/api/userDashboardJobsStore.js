@@ -7,6 +7,7 @@ const useUserDashboardJobsStore = create((set, getState) => ({
   forecastData:[],
   loading: false,
   forecastloading:false,
+  tenantCurrency:'GBP',
   error: null,
   fetchPipelineStatuses: async () => {
 
@@ -28,7 +29,7 @@ const useUserDashboardJobsStore = create((set, getState) => ({
       set({ forecastloading: true, error: null });
       try {
         const data = await fetchPipelineForecastData();
-        set({ forecastData:data.data, forecastloading: false });
+        set({ forecastData:data.data, forecastloading: false,tenantCurrency:data.currency || 'GBP' });
       } catch (error) {
         set({ error: error.message, forecastloading: false });
       }
