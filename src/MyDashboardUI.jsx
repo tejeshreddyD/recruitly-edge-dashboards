@@ -20,12 +20,14 @@ const MyDashboardUI = ({ apiServer="", apiKey = "", tenantId = "", userId = "" ,
   }catch (e) {
     console.error("Failed to init api manager",e);
   }
+
+  const isLocal = window.location.hostname.includes("localhost");
   
   return (
     <div style={{
       backgroundColor: "transparent",
-      height: "100vh",
-      overflowY: window.location.hostname.includes("localhost") ? "auto" : "hidden",
+      height: isLocal ? "100vh" : "auto",
+      overflowY: isLocal ? "auto" : "",
       padding: 0,
       boxSizing: "border-box"
     }}>
