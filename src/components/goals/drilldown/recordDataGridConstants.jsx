@@ -362,60 +362,32 @@ export const activityColumnMap = {
     }
   ],
   EVENTS_SCHEDULED:[
-    { field: "title", headerName: "Title" },
-    { field: "type", headerName: "Type" },
-    { field: "notes", headerName: "Notes" },
-    {
-      field: "attendees.label",
-      headerName: "Attendees",
-      valueGetter: (params) => {
-        let attendees = "";
-
-        if (params.data.attendees && params.data.attendees.length > 0) {
-
-          params.data.attendees.forEach((attendee, index) => {
-            if (index === 0) {
-              attendees = attendee.label;
-            } else {
-              attendees += ", " + attendee.label;
-            }
-          });
-        }
 
 
-        return attendees || "";
-      },
+
+
+
+
+    { field: "title",
+      headerName: "Title" ,
       cellRenderer: (params) => {
-        const attendees = params.data.attendees;
-
-        if (!attendees || attendees.length === 0) {
-          return <div></div>;
-        }
-
+        const title = params.data?.title || "";
+        const type = params.data?.type || "";
         return (
-          <>
-            {attendees.map((attendee, index) => (
-              <div key={`${attendee.label}-${index}`}>
-                {attendee.type === "USER" || attendee.type === "UNRECORDED" ? (
-                  <span>{attendee.label}</span>
-                ) : (
-                  renderClickableField(params, attendee.label)
-                )}
-              </div>
-            ))}
-          </>
+          <Flex direction="row" align="center" justify="start" gap="small" >
+            <span>{title}</span>
+            <Tag >{type}</Tag>
+          </Flex>
         );
       },
-      onCellClicked: (params) => {
-        const attendees = params.data.attendees;
 
-        attendees?.forEach((attendee) => {
-          if (attendee.type !== "USER" && attendee.type !== "UNRECORDED") {
-            viewRecord(params, attendee.type);
-          }
-        });
-      },
+
+
+
+
     },
+
+
     {
       field: "attendees.label",
       headerName: "Attendees",
@@ -423,9 +395,13 @@ export const activityColumnMap = {
         let attendees = "";
 
         if (params.data.attendees && params.data.attendees.length > 0) {
+          params.data.attendees.forEach((attendee) => {
 
-          params.data.attendees.forEach((attendee, index) => {
-            if (index === 0) {
+            if (attendee.type === "USER" || attendee.type === "UNRECORDED") {
+              return;
+            }
+
+            if (attendees === "") {
               attendees = attendee.label;
             } else {
               attendees += ", " + attendee.label;
@@ -433,10 +409,11 @@ export const activityColumnMap = {
           });
         }
 
-
         return attendees || "";
       },
     },
+
+
     { field: "organiser.label", headerName: "Organiser" },
     {
       field: "eventStartDate",
