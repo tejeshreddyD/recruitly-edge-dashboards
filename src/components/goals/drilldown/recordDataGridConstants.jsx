@@ -1,10 +1,10 @@
 
-import { formatGlobalDate, formatGlobalDateWithTime } from "@utils/dateUtil.js";
+import { formatGlobalDate, formatGlobalDateWithTime,getLocalizedDateString } from "@utils/dateUtil.js";
 
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
 
-import {  getLocalizedDateString } from "@utils/dateUtil.js";
+
 
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
