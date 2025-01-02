@@ -17,7 +17,7 @@ const CardUserJobs = () => {
       <Card
         style={{
           marginTop: "2rem",
-          marginBottom: "2rem",
+          marginBottom: "15rem",
           background:"rgb(221 208 229)",
           border: "none"
         }}
