@@ -1,10 +1,13 @@
 import { create } from "zustand";
 
-import { fetchPipelineStatuses } from "../api/dashboardDataApi.js";
+import { fetchPipelineForecastData, fetchPipelineStatuses } from "../api/dashboardDataApi.js";
 
 const useUserDashboardJobsStore = create((set, getState) => ({
   data: [],
+  forecastData:[],
   loading: false,
+  forecastloading:false,
+  tenantCurrency:'GBP',
   error: null,
   fetchPipelineStatuses: async () => {
 
@@ -16,6 +19,19 @@ const useUserDashboardJobsStore = create((set, getState) => ({
         set({ data:data.data, loading: false });
       } catch (error) {
         set({ error: error.message, loading: false });
+      }
+    }
+  },
+  fetchPipelineForecastData: async () => {
+
+    if (!getState().forecastloading) {
+
+      set({ forecastloading: true, error: null });
+      try {
+        const data = await fetchPipelineForecastData();
+        set({ forecastData:data.data, forecastloading: false,tenantCurrency:data.currency || 'GBP' });
+      } catch (error) {
+        set({ error: error.message, forecastloading: false });
       }
     }
   }

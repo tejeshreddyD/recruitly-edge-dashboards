@@ -4,8 +4,6 @@ import { formatGlobalDate, formatGlobalDateWithTime,getLocalizedDateString } fro
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
 
-
-
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
 };
@@ -195,7 +193,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -209,7 +207,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -243,7 +241,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -277,7 +275,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -334,7 +332,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -344,7 +342,7 @@ export const activityColumnMap = {
     {
       field: "shareDate", headerName: "Shared On", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.shareDate);
+        return params.data.shareDate ? formatGlobalDate(params.data.shareDate) : "";
       }
     }
   ],
@@ -359,7 +357,7 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
@@ -418,7 +416,6 @@ export const activityColumnMap = {
         });
       },
     },
-
     {
       field: "attendees.label",
       headerName: "Attendees",
@@ -440,16 +437,6 @@ export const activityColumnMap = {
         return attendees || "";
       },
     },
-
-
-
-
-
-
-
-
-
-
     { field: "organiser.label", headerName: "Organiser" },
     {
       field: "eventStartDate",
@@ -462,7 +449,6 @@ export const activityColumnMap = {
         return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
       }
     },
-
     {
       field: "eventEndDate",
       headerName: "Event End Date",
@@ -474,9 +460,6 @@ export const activityColumnMap = {
         return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
       }
     },
-
-
-
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
@@ -485,7 +468,13 @@ export const activityColumnMap = {
       }
     },
   ],
+  INTERVIEWS_SCHEDULED : [
 
+  ],
+  INTERVIEW_SCHEDULED_VALUE : [
+
+  ],
+  JOBS_ADVERTISED : [],
   EMAILS_SENT:[
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
@@ -520,8 +509,6 @@ export const activityColumnMap = {
       ),
       onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
-
-
     {
       field: "firstName",
       headerName: "Name",
@@ -532,8 +519,6 @@ export const activityColumnMap = {
       ),
       onCellClicked: (params) => viewRecord(params, "LEAD"),
     },
-
-
     { field: "email", headerName: "Email" },
     { field: "mobile", headerName: "Mobile" },
     { field: "owner.label", headerName: "Owner" },
@@ -564,7 +549,7 @@ export const activityColumnMap = {
       sort: "desc",
       sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     },
     {
@@ -589,11 +574,198 @@ export const activityColumnMap = {
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
-        return formatGlobalDate(params.data.createdOn);
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
     }
   ],
-
+  CANDIDATES_SHORTLISTED : [
+    {
+      field: "statusName",
+      headerName: "Status",
+      cellRenderer: (params) => {
+        const statusName = params.data?.statusName || "";
+        const subStateName = params.data?.subStateName || "";
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{statusName}</span>
+            <Tag>{subStateName}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "candidateLabel", headerName: "Candidate",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.candidateLabel)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+    { field: "candidateEmail", headerName: "Email" },
+    { field: "contactName", headerName: "Contact Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.contactName)}
+        </>
+      ),
+      onCellClicked: (params) => {
+        if (params.data && params.data._id) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        }
+      },
+    },
+    { field: "jobCommissionValue", headerName: "Value",
+      valueGetter: (params) => {
+        const value = params.data.jobCommissionValue?.value;
+        const currencyName  = params.data.jobCommissionValue?.currency?.name;
+        return `${value} ${currencyName }`;
+      },
+    },
+    { field: "companyLabel", headerName: "Company"},
+    { field: "jobTitle", headerName: "Job" },
+    {
+      field: "shortlistDate",
+      headerName: "ShortlistDate",
+      type: "date",
+      dateFormat: "dd/MM/yy",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.shortlistDate ? formatGlobalDate(params.data.shortlistDate) : "";
+      }
+    }
+  ],
+  PIPELINE_CVSENT : [
+    {
+      field: "statusName",
+      headerName: "Status",
+      cellRenderer: (params) => {
+        const statusName = params.data?.statusName || "";
+        const subStateName = params.data?.subStateName || "";
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{statusName}</span>
+            <Tag>{subStateName}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "candidateLabel", headerName: "Candidate",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.candidateLabel)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+    { field: "candidateEmail", headerName: "Email" },
+    { field: "contactName", headerName: "Contact Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.contactName)}
+        </>
+      ),
+      onCellClicked: (params) => {
+        if (params.data && params.data._id) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        }
+      },
+    },
+    { field: "jobCommissionValue", headerName: "Value",
+      valueGetter: (params) => {
+        const value = params.data.jobCommissionValue?.value;
+        const currencyName  = params.data.jobCommissionValue?.currency?.name;
+        return `${value} ${currencyName }`;
+      },
+    },
+    { field: "companyLabel", headerName: "Company"},
+    { field: "jobTitle", headerName: "Job" },
+    {
+      field: "cvSentDate",
+      headerName: "CVSentDate",
+      type: "date",
+      dateFormat: "dd/MM/yy",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.cvSentDate ? formatGlobalDate(params.data.cvSentDate) : "";
+      }
+    }
+  ],
+  PIPELINE_OFFER : [
+    {
+      field: "status",
+      headerName: "Status",
+      cellRenderer: (params) => {
+        const statusName = params.data?.statusName || "";
+        const subStateName = params.data?.subStateName || "";
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{statusName}</span>
+            <Tag>{subStateName}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "candidateLabel", headerName: "Candidate",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.candidateLabel)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+    { field: "candidateEmail", headerName: "Email" },
+    { field: "contactName", headerName: "Contact Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.contactName)}
+        </>
+      ),
+      onCellClicked: (params) => {
+        if (params.data && params.data._id) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        }
+      },
+    },
+    { field: "jobCommissionValue", headerName: "Value",
+      valueGetter: (params) => {
+        const value = params.data.jobCommissionValue?.value;
+        const currencyName  = params.data.jobCommissionValue?.currency?.name;
+        return `${value} ${currencyName }`;
+      },
+    },
+    { field: "companyLabel", headerName: "Company"},
+    { field: "jobTitle", headerName: "Job" },
+    {
+      field: "offerDate",
+      headerName: "OfferDate",
+      type: "date",
+      dateFormat: "dd/MM/yy",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.offerDate ? formatGlobalDate(params.data.offerDate) : "";
+      }
+    }
+  ],
+  PIPELINE_VALUE : [],
+  JOURNAL : [
+    {field: "journalFrom.label", headerName: "User" },
+    {field: "journalActivityLabel", headerName: "Activity Type" },
+    {field: "journalMessage", headerName: "Message" },
+    {
+      field: "journalDate",
+      headerName: "Activity Date",
+      type: "date",
+      dateFormat: "dd/MM/yy",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.journalDate ? formatGlobalDate(params.data.journalDate) : "";
+      }
+    }
+  ],
   DEFAULT: [
     { field: "reference", headerName: "#REF" },
     { field: "name", headerName: "Record" },

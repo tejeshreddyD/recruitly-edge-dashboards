@@ -1,12 +1,5 @@
-import { useEffect, useState } from "react";
-import { Alert, Card, Flex, Segmented } from "antd";
-import { BsFunnel } from "react-icons/bs";
-import { RiFocus2Line } from "react-icons/ri";
-
-import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
-import DayTimeline from "@components/weekplanner/DayTimeline.jsx";
-import PlannerDrillDownModal from "@components/weekplanner/drilldown/PlannerDrillDownModal.jsx";
-import { aggregateData, categorizeData } from "@components/weekplanner/util/plannerUtil.js";
+import { useEffect } from "react";
+import { Alert, Card, Flex } from "antd";
 import { Spinner } from "@phosphor-icons/react";
 import useUserDashboardJobsStore from "@api/userDashboardJobsStore.js";
 import { FaSuitcase } from "react-icons/fa";
@@ -24,9 +17,8 @@ const CardUserJobs = () => {
       <Card
         style={{
           marginTop: "2rem",
-          marginBottom: "2rem",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
+          marginBottom: "15rem",
+          background:"rgb(221 208 229)",
           border: "none"
         }}
         styles={{ header: { borderBottom: "none", fontSize: 18 } }}
@@ -34,7 +26,7 @@ const CardUserJobs = () => {
           <Flex direction="row" align="center" justify="start" gap="small">
             <FaSuitcase />
             <span>
-              Jobs
+              Open Jobs
             </span>
           </Flex>
         }>
@@ -42,7 +34,7 @@ const CardUserJobs = () => {
           style={{
             display: "flex",
             overflowX: "auto",
-            gap: "16px",
+            gap: "8px",
             whiteSpace: "nowrap"
           }}
         >{loading ? <Flex
@@ -62,7 +54,7 @@ const CardUserJobs = () => {
             />
             <div>
               <h4 style={{ fontWeight: "normal", fontSize: "1rem", margin: 0 }}>
-                Fetching you jobs
+                Fetching your jobs...
               </h4>
             </div>
           </Flex>
