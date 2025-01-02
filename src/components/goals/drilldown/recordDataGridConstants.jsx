@@ -358,19 +358,21 @@ export const activityColumnMap = {
       field: "attendees.label",
       headerName: "Attendees",
       valueGetter: (params) => {
-        let attendees = "N/A";
-        let isFirst = true;
+        let attendees = "";
 
-        params.data.attendees?.forEach((attendee) => {
-          if (isFirst) {
-            attendees = attendee.label;
-            isFirst = false;
-          } else {
-            attendees += `, ${attendee.label}`;
-          }
-        });
+        if (params.data.attendees && params.data.attendees.length > 0) {
 
-        return attendees;
+          params.data.attendees.forEach((attendee, index) => {
+            if (index === 0) {
+              attendees = attendee.label;
+            } else {
+              attendees += ", " + attendee.label;
+            }
+          });
+        }
+
+
+        return attendees || "";
       },
       cellRenderer: (params) => {
         const attendees = params.data.attendees;
@@ -381,13 +383,11 @@ export const activityColumnMap = {
 
         return (
           <>
-            {attendees.map((attendee) => (
-              <div key={attendee.label}>
+            {attendees.map((attendee, index) => (
+              <div key={`${attendee.label}-${index}`}>
                 {attendee.type === "USER" || attendee.type === "UNRECORDED" ? (
-
                   <span>{attendee.label}</span>
                 ) : (
-
                   renderClickableField(params, attendee.label)
                 )}
               </div>
@@ -400,17 +400,18 @@ export const activityColumnMap = {
 
         attendees?.forEach((attendee) => {
           if (attendee.type !== "USER" && attendee.type !== "UNRECORDED") {
-
             viewRecord(params, attendee.type);
           }
         });
       },
-    }
+    },
 
 
 
 
-    ,
+
+
+
 
 
 
