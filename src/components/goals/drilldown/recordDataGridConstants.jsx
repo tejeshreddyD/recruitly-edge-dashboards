@@ -855,7 +855,17 @@ export const activityColumnMap = {
       }
     }
   ],
-  PIPELINE_VALUE : [],
+  PIPELINE_VALUE : [{ field: "reference", headerName: "#REF" },
+    { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+      }
+    }],
   JOURNAL : [
     {field: "journalFrom.label", headerName: "User" },
     {field: "journalActivityLabel", headerName: "Activity Type" },
