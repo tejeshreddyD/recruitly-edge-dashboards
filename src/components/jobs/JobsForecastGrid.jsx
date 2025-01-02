@@ -210,25 +210,8 @@ const JobForecastGrid = ({ statuses = [] }) => {
       cellRenderer: (row) => {
         const job = row.data;
         return (
-          <span style={{display:"flex",alignItems:"center", height:"100%"}}>{getTrends(job)}</span>
+          <span style={{ display: "flex", alignItems: "center", height: "100%" }}>{getTrends(job)}</span>
         );
-      }
-    },
-    {
-      headerName: "Created",
-      field: "createdDate",
-      minWidth: 150,
-      cellRenderer: (param) => {
-        return getDateStringByUserTimeZone(param.data.createdDate);
-      }
-    },
-    {
-      headerName: "Est.Closing Date",
-      field: "closingDate",
-      minWidth: 150,
-      cellRenderer: (param) => {
-
-        return getDateStringByUserTimeZone(param.data.closingDate);
       }
     }, {
       headerName: "Fee",
