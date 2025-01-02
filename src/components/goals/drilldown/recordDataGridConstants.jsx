@@ -358,39 +358,59 @@ export const activityColumnMap = {
       field: "attendees.label",
       headerName: "Attendees",
       valueGetter: (params) => {
-        // Check if attendees data exists and has elements
-        if (params.data.attendees && params.data.attendees.length > 0) {
-          // Concatenate all attendee labels with a comma separator
-          return params.data.attendees
-            .map((attendee) => attendee.label)
-            .join(", ");
+        let attendees = "N/A";
+        let isFirst = true;
+
+        params.data.attendees?.forEach((attendee) => {
+          if (isFirst) {
+            attendees = attendee.label;
+            isFirst = false;
+          } else {
+            attendees += `, ${attendee.label}`;
+          }
+        });
+
+        return attendees;
+      },
+      cellRenderer: (params) => {
+        const attendees = params.data.attendees;
+
+        if (!attendees || attendees.length === 0) {
+          return <div></div>;
         }
 
-        // Return "N/A" if no attendees data is available
-        return "";
+        return (
+          <>
+            {attendees.map((attendee) => (
+              <div key={attendee.label}>
+                {attendee.type === "USER" || attendee.type === "UNRECORDED" ? (
+
+                  <span>{attendee.label}</span>
+                ) : (
+
+                  renderClickableField(params, attendee.label)
+                )}
+              </div>
+            ))}
+          </>
+        );
       },
-    },
+      onCellClicked: (params) => {
+        const attendees = params.data.attendees;
 
+        attendees?.forEach((attendee) => {
+          if (attendee.type !== "USER" && attendee.type !== "UNRECORDED") {
 
-
-
-
-    {
-      field: "attendees.type",
-      headerName: "Attendees Type",
-      valueGetter: (params) => {
-        // Check if attendees data exists and has elements
-        if (params.data.attendees && params.data.attendees.length > 0) {
-          // Concatenate all attendee types with a comma separator
-          return params.data.attendees
-            .map((attendee) => attendee.type)
-            .join(", ");
-        }
-
-        // Return "N/A" if no attendees data is available
-        return " ";
+            viewRecord(params, attendee.type);
+          }
+        });
       },
-    },
+    }
+
+
+
+
+    ,
 
 
 
