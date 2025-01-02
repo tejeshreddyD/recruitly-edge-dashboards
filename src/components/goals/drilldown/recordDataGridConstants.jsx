@@ -412,22 +412,7 @@ export const activityColumnMap = {
         return attendees || "";
       },
     },
-    {
-      field: "attendees.type",
-      headerName: "Attendees Type",
-      valueGetter: (params) => {
 
-        if (params.data.attendees && params.data.attendees.length > 0) {
-
-          return params.data.attendees
-            .map((attendee) => attendee.type)
-            .join(", ");
-        }
-
-
-        return "";
-      },
-    },
 
     { field: "organiser.label", headerName: "Organiser" },
     {
