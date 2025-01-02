@@ -279,6 +279,19 @@ export const activityColumnMap = {
       }
     }
   ],
+  JOBS_ADVERTISED:[
+    { field: "job.label", headerName: "Job" },
+    { field: "advert.postingAccount", headerName: "Posting Account" },
+    { field: "lookupJobBoard.name", headerName: "Job Board" },
+    { field: "userName", headerName: "Publisher" },
+    {
+      field: "createdOn",
+      headerName: "Posting Date",
+      valueGetter: function(params) {
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+      }
+    },
+  ],
 
   OPEN_JOBS_VALUE:[
     {
@@ -356,32 +369,38 @@ export const activityColumnMap = {
       field: "attendees.label",
       headerName: "Attendees",
       valueGetter: (params) => {
-        let attendees = "N/A";
-        let isFirst = true;
+        let attendees = "";
 
-        params.data.attendees?.forEach((attendee) => {
-          if (isFirst) {
-            attendees = attendee.label;
-            isFirst = false;
-          } else {
-            attendees += `, ${attendee.label}`;
-          }
-        });
+        if (params.data.attendees && params.data.attendees.length > 0) {
 
-        return attendees;
+          params.data.attendees.forEach((attendee, index) => {
+            if (index === 0) {
+              attendees = attendee.label;
+            } else {
+              attendees += ", " + attendee.label;
+            }
+          });
+        }
+
+
+        return attendees || "";
       },
       cellRenderer: (params) => {
         const attendees = params.data.attendees;
 
         if (!attendees || attendees.length === 0) {
-          return <div></div>; // Render an empty div if no attendees
+          return <div></div>;
         }
 
         return (
           <>
-            {attendees.map((attendee) => (
-              <div key={attendee.label}>
-                {renderClickableField(params, attendee.label)}
+            {attendees.map((attendee, index) => (
+              <div key={`${attendee.label}-${index}`}>
+                {attendee.type === "USER" || attendee.type === "UNRECORDED" ? (
+                  <span>{attendee.label}</span>
+                ) : (
+                  renderClickableField(params, attendee.label)
+                )}
               </div>
             ))}
           </>
@@ -391,8 +410,31 @@ export const activityColumnMap = {
         const attendees = params.data.attendees;
 
         attendees?.forEach((attendee) => {
-          viewRecord(params, attendee.type);
+          if (attendee.type !== "USER" && attendee.type !== "UNRECORDED") {
+            viewRecord(params, attendee.type);
+          }
         });
+      },
+    },
+    {
+      field: "attendees.label",
+      headerName: "Attendees",
+      valueGetter: (params) => {
+        let attendees = "";
+
+        if (params.data.attendees && params.data.attendees.length > 0) {
+
+          params.data.attendees.forEach((attendee, index) => {
+            if (index === 0) {
+              attendees = attendee.label;
+            } else {
+              attendees += ", " + attendee.label;
+            }
+          });
+        }
+
+
+        return attendees || "";
       },
     },
     { field: "organiser.label", headerName: "Organiser" },
