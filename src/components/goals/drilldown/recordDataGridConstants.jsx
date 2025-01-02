@@ -362,12 +362,6 @@ export const activityColumnMap = {
     }
   ],
   EVENTS_SCHEDULED:[
-
-
-
-
-
-
     { field: "title",
       headerName: "Title" ,
       cellRenderer: (params) => {
@@ -380,14 +374,7 @@ export const activityColumnMap = {
           </Flex>
         );
       },
-
-
-
-
-
     },
-
-
     {
       field: "attendees.label",
       headerName: "Attendees",
@@ -408,12 +395,9 @@ export const activityColumnMap = {
             }
           });
         }
-
         return attendees || "";
       },
     },
-
-
     { field: "organiser.label", headerName: "Organiser" },
     {
       field: "eventStartDate",
