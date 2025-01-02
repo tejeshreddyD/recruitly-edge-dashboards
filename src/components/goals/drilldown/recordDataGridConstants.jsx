@@ -283,9 +283,16 @@ export const activityColumnMap = {
   ],
   JOBS_ADVERTISED:[
     { field: "job.label", headerName: "Job" },
-    { field: "advert.posterUserName", headerName: "Posting Account" },
-    { field: "lookupJobBoard.name", headerName: "Job board" },
-    { field: "job.ownerName", headerName: "Publisher" },
+    { field: "advert.postingAccount", headerName: "Posting Account" },
+    { field: "lookupJobBoard.name", headerName: "Job Board" },
+    { field: "userName", headerName: "Publisher" },
+    {
+      field: "createdOn",
+      headerName: "Posting Date",
+      valueGetter: function(params) {
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+      }
+    },
   ],
 
   OPEN_JOBS_VALUE:[
