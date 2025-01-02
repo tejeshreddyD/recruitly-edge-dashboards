@@ -281,6 +281,12 @@ export const activityColumnMap = {
       }
     }
   ],
+  JOBS_ADVERTISED:[
+    { field: "job.label", headerName: "Job" },
+    { field: "advert.posterUserName", headerName: "Posting Account" },
+    { field: "lookupJobBoard.name", headerName: "Job board" },
+    { field: "job.ownerName", headerName: "Publisher" },
+  ],
 
   OPEN_JOBS_VALUE:[
     {
@@ -403,6 +409,28 @@ export const activityColumnMap = {
             viewRecord(params, attendee.type);
           }
         });
+      },
+    },
+
+    {
+      field: "attendees.label",
+      headerName: "Attendees",
+      valueGetter: (params) => {
+        let attendees = "";
+
+        if (params.data.attendees && params.data.attendees.length > 0) {
+
+          params.data.attendees.forEach((attendee, index) => {
+            if (index === 0) {
+              attendees = attendee.label;
+            } else {
+              attendees += ", " + attendee.label;
+            }
+          });
+        }
+
+
+        return attendees || "";
       },
     },
 
