@@ -4,7 +4,7 @@ import { formatGlobalDate, formatGlobalDateWithTime } from "@utils/dateUtil.js";
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
 
-import { formatGlobalDate, getLocalizedDateString } from "@utils/dateUtil.js";
+import {  getLocalizedDateString } from "@utils/dateUtil.js";
 
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
@@ -358,47 +358,39 @@ export const activityColumnMap = {
       field: "attendees.label",
       headerName: "Attendees",
       valueGetter: (params) => {
-        let attendees = "N/A";
-        let isFirst = true;
-
-        params.data.attendees?.forEach((attendee) => {
-          if (isFirst) {
-            attendees = attendee.label;
-            isFirst = false;
-          } else {
-            attendees += `, ${attendee.label}`;
-          }
-        });
-
-        return attendees;
-      },
-      cellRenderer: (params) => {
-        const attendees = params.data.attendees;
-
-        if (!attendees || attendees.length === 0) {
-          return <div></div>; // Render an empty div if no attendees
+        // Check if attendees data exists and has elements
+        if (params.data.attendees && params.data.attendees.length > 0) {
+          // Concatenate all attendee labels with a comma separator
+          return params.data.attendees
+            .map((attendee) => attendee.label)
+            .join(", ");
         }
 
-        return (
-          <>
-            {attendees.map((attendee) => (
-              <div key={attendee.label}>
-                {renderClickableField(params, attendee.label)}
-              </div>
-            ))}
-          </>
-        );
-      },
-      onCellClicked: (params) => {
-        const attendees = params.data.attendees;
-
-        attendees?.forEach((attendee) => {
-          viewRecord(params, attendee.type);
-        });
+        // Return "N/A" if no attendees data is available
+        return "";
       },
     },
 
 
+
+
+
+    {
+      field: "attendees.type",
+      headerName: "Attendees Type",
+      valueGetter: (params) => {
+        // Check if attendees data exists and has elements
+        if (params.data.attendees && params.data.attendees.length > 0) {
+          // Concatenate all attendee types with a comma separator
+          return params.data.attendees
+            .map((attendee) => attendee.type)
+            .join(", ");
+        }
+
+        // Return "N/A" if no attendees data is available
+        return " ";
+      },
+    },
 
 
 
