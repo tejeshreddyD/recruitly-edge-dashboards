@@ -620,7 +620,6 @@ export const activityColumnMap = {
       }
     }
   ],
-
   EMAILS_SENT:[
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
