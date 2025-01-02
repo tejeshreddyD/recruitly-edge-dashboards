@@ -537,44 +537,173 @@ export const activityColumnMap = {
     }
   ],
   CANDIDATES_SHORTLISTED : [
-    {field: "statusCode", headerName: "Status" },
     {
-      field: "createdOn",
-      headerName: "Added On",
+      field: "statusName",
+      headerName: "Status",
+      cellRenderer: (params) => {
+        const statusName = params.data?.statusName || "";
+        const subStateName = params.data?.subStateName || "";
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{statusName}</span>
+            <Tag>{subStateName}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "candidateLabel", headerName: "Candidate",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.candidateLabel)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+    { field: "candidateEmail", headerName: "Email" },
+    { field: "contactName", headerName: "Contact Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.contactName)}
+        </>
+      ),
+      onCellClicked: (params) => {
+        if (params.data && params.data._id) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        }
+      },
+    },
+    { field: "jobCommissionValue", headerName: "Value",
+      valueGetter: (params) => {
+        const value = params.data.jobCommissionValue?.value;
+        const currencyName  = params.data.jobCommissionValue?.currency?.name;
+        return `${value} ${currencyName }`;
+      },
+    },
+    { field: "companyLabel", headerName: "Company"},
+    { field: "jobTitle", headerName: "Job" },
+    {
+      field: "shortlistDate",
+      headerName: "ShortlistDate",
       type: "date",
       dateFormat: "dd/MM/yy",
       sort: "desc",
       sortedAt: 0,
       valueGetter: function(params) {
-        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+        return params.data.shortlistDate ? formatGlobalDate(params.data.shortlistDate) : "";
       }
     }
   ],
   PIPELINE_CVSENT : [
-    {field: "statusCode", headerName: "Status" },
     {
-      field: "createdOn",
-      headerName: "Added On",
+      field: "statusName",
+      headerName: "Status",
+      cellRenderer: (params) => {
+        const statusName = params.data?.statusName || "";
+        const subStateName = params.data?.subStateName || "";
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{statusName}</span>
+            <Tag>{subStateName}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "candidateLabel", headerName: "Candidate",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.candidateLabel)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+    { field: "candidateEmail", headerName: "Email" },
+    { field: "contactName", headerName: "Contact Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.contactName)}
+        </>
+      ),
+      onCellClicked: (params) => {
+        if (params.data && params.data._id) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        }
+      },
+    },
+    { field: "jobCommissionValue", headerName: "Value",
+      valueGetter: (params) => {
+        const value = params.data.jobCommissionValue?.value;
+        const currencyName  = params.data.jobCommissionValue?.currency?.name;
+        return `${value} ${currencyName }`;
+      },
+    },
+    { field: "companyLabel", headerName: "Company"},
+    { field: "jobTitle", headerName: "Job" },
+    {
+      field: "cvSentDate",
+      headerName: "CVSentDate",
       type: "date",
       dateFormat: "dd/MM/yy",
       sort: "desc",
       sortedAt: 0,
       valueGetter: function(params) {
-        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+        return params.data.cvSentDate ? formatGlobalDate(params.data.cvSentDate) : "";
       }
     }
   ],
   PIPELINE_OFFER : [
-    {field: "statusCode", headerName: "Status" },
     {
-      field: "createdOn",
-      headerName: "Added On",
+      field: "status",
+      headerName: "Status",
+      cellRenderer: (params) => {
+        const statusName = params.data?.statusName || "";
+        const subStateName = params.data?.subStateName || "";
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{statusName}</span>
+            <Tag>{subStateName}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "candidateLabel", headerName: "Candidate",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.candidateLabel)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+    { field: "candidateEmail", headerName: "Email" },
+    { field: "contactName", headerName: "Contact Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.contactName)}
+        </>
+      ),
+      onCellClicked: (params) => {
+        if (params.data && params.data._id) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        }
+      },
+    },
+    { field: "jobCommissionValue", headerName: "Value",
+      valueGetter: (params) => {
+        const value = params.data.jobCommissionValue?.value;
+        const currencyName  = params.data.jobCommissionValue?.currency?.name;
+        return `${value} ${currencyName }`;
+      },
+    },
+    { field: "companyLabel", headerName: "Company"},
+    { field: "jobTitle", headerName: "Job" },
+    {
+      field: "offerDate",
+      headerName: "OfferDate",
       type: "date",
       dateFormat: "dd/MM/yy",
       sort: "desc",
       sortedAt: 0,
       valueGetter: function(params) {
-        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+        return params.data.offerDate ? formatGlobalDate(params.data.offerDate) : "";
       }
     }
   ],
