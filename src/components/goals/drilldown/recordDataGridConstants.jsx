@@ -469,12 +469,158 @@ export const activityColumnMap = {
     },
   ],
   INTERVIEWS_SCHEDULED : [
-
+    {
+      field: "title",
+      headerName: "Title",
+      cellRenderer: (params) => {
+        const title = params.data?.title || "";
+        const type = params.data?.type || "";
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{title}</span>
+            <Tag>{type}</Tag>
+          </Flex>
+        );
+      },
+    },
+    {
+      field: "label",
+      headerName: "Candidate",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, getAttendeeField(params, 'CANDIDATE', 'label'))}
+        </>
+      ),
+      onCellClicked: (params) => {
+        const candidateId = getAttendeeField(params, 'CANDIDATE', '_id');
+        console.log("candidateId",candidateId);
+        if (candidateId) {
+          window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
+        }
+      },
+    },
+    {
+      field: "label",
+      headerName: "Contact Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, getAttendeeField(params, 'CONTACT', 'reference'))}
+          {" "}
+          {renderClickableField(params, getAttendeeField(params, 'CONTACT', 'label'))}
+        </>
+      ),
+      onCellClicked: (params) => {
+        const contactId = getAttendeeField(params, 'CONTACT', '_id');
+        console.log("contactId",contactId);
+        if (contactId) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", contactId);
+        }
+      },
+    },
+    {
+      field: "companyName",
+      headerName: "Company",
+      valueGetter: (params) => {
+        const contact = params.data.attendees?.find(attendee => attendee.type === 'CONTACT');
+        return contact ? contact.params.companyName : "";
+      }
+    },
+    {
+      field: "mobile",
+      headerName: "Contact Mobile",
+      valueGetter: (params) => getAttendeeField(params, 'CONTACT', 'mobile')
+    },
+    {
+      field:"eventStartDate",headerName: "Interview StartDate",type: "date",
+      dateFormat: "dd/MM/yy HH:mm",
+      valueGetter: function(params) {
+        return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
+      }
+    },
+    {
+      field:"eventEndDate",headerName: "Interview EndDate",type: "date",  dateFormat: "dd/MM/yy HH:mm",
+      valueGetter: function(params) {
+        return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
+      }
+    }
   ],
   INTERVIEW_SCHEDULED_VALUE : [
-
+    {
+      field: "title",
+      headerName: "Title",
+      cellRenderer: (params) => {
+        const title = params.data?.title || "";
+        const type = params.data?.type || "";
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{title}</span>
+            <Tag>{type}</Tag>
+          </Flex>
+        );
+      },
+    },
+    {
+      field: "label",
+      headerName: "Candidate",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, getAttendeeField(params, 'CANDIDATE', 'label'))}
+        </>
+      ),
+      onCellClicked: (params) => {
+        const candidateId = getAttendeeField(params, 'CANDIDATE', '_id');
+        console.log("candidateId",candidateId);
+        if (candidateId) {
+          window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
+        }
+      },
+    },
+    {
+      field: "label",
+      headerName: "Contact Name",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, getAttendeeField(params, 'CONTACT', 'reference'))}
+          {" "}
+          {renderClickableField(params, getAttendeeField(params, 'CONTACT', 'label'))}
+        </>
+      ),
+      onCellClicked: (params) => {
+        const contactId = getAttendeeField(params, 'CONTACT', '_id');
+        console.log("contactId",contactId);
+        if (contactId) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", contactId);
+        }
+      },
+    },
+    {
+      field: "companyName",
+      headerName: "Company",
+      valueGetter: (params) => {
+        const contact = params.data.attendees?.find(attendee => attendee.type === 'CONTACT');
+        return contact ? contact.params.companyName : "";
+      }
+    },
+    {
+      field: "mobile",
+      headerName: "Contact Mobile",
+      valueGetter: (params) => getAttendeeField(params, 'CONTACT', 'mobile')
+    },
+    {
+      field:"eventStartDate",headerName: "Interview StartDate",type: "date",
+      dateFormat: "dd/MM/yy HH:mm",
+      valueGetter: function(params) {
+        return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
+      }
+    },
+    {
+      field:"eventEndDate",headerName: "Interview EndDate",type: "date",  dateFormat: "dd/MM/yy HH:mm",
+      valueGetter: function(params) {
+        return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
+      }
+    }
   ],
-  JOBS_ADVERTISED : [],
+
   EMAILS_SENT:[
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
