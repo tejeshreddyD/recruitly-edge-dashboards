@@ -474,7 +474,6 @@ export const activityColumnMap = {
   INTERVIEW_SCHEDULED_VALUE : [
 
   ],
-  JOBS_ADVERTISED : [],
   EMAILS_SENT:[
     { field: "fromName", headerName: "FromName" },
     { field: "fromEmail", headerName: "FromEmail" },
