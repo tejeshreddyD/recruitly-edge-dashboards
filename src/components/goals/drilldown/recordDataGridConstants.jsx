@@ -438,7 +438,7 @@ export const activityColumnMap = {
         {
             field: "commissionDetails", headerName: "Fees",
             valueGetter: (params) => {
-                const commissionAmount = params.data.commissionAmount;
+                const commissionAmount = params.data.commission;
                 const commissionValue = params.data.commissionValue?.currency?.name;
                 return `${commissionAmount} ${commissionValue}`;
             },
