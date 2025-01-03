@@ -174,10 +174,8 @@ export const categorizeData = (apiResponse) => {
   const result = [];
   const upcomingDays = {};
 
-  for (let date = moment().add(2,'days').startOf('day'); date.isSameOrBefore(endOfWeek); date.add(1,'day')) {
-    if(date.isoWeekday() <=5){
-      upcomingDays[date.startOf('day').valueOf()] = [];
-    }
+  for (let date = moment().add(2, 'days').startOf('day'), i = 0; i < 5; date.add(1, 'day'), i++) {
+    upcomingDays[date.startOf('day').valueOf()] = [];
   }
 
   let todayApplications = apiResponse.job_applications || 0;
