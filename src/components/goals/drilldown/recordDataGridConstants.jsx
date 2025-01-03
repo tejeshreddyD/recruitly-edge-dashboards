@@ -505,6 +505,10 @@ export const activityColumnMap = {
     }
   ],
   INTERVIEW_SCHEDULED_VALUE : [
+
+    {
+      field: "job.reference",
+      headerName: "Job Reference",},
     {
       field: "title",
       headerName: "Title",
@@ -520,6 +524,10 @@ export const activityColumnMap = {
       },
     },
     {
+      field: "owner.label",
+      headerName: "PipeCard Owner"},
+
+    {
       field: "label",
       headerName: "Candidate",
       cellRenderer: (params) => (
@@ -534,6 +542,14 @@ export const activityColumnMap = {
           window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
         }
       },
+    },
+    {
+      field: "companyName",
+      headerName: "Company",
+      valueGetter: (params) => {
+        const contact = params.data.attendees?.find(attendee => attendee.type === 'CONTACT');
+        return contact ? contact.params.companyName : "";
+      }
     },
     {
       field: "label",
@@ -553,19 +569,8 @@ export const activityColumnMap = {
         }
       },
     },
-    {
-      field: "companyName",
-      headerName: "Company",
-      valueGetter: (params) => {
-        const contact = params.data.attendees?.find(attendee => attendee.type === 'CONTACT');
-        return contact ? contact.params.companyName : "";
-      }
-    },
-    {
-      field: "mobile",
-      headerName: "Contact Mobile",
-      valueGetter: (params) => getAttendeeField(params, 'CONTACT', 'mobile')
-    },
+
+
     {
       field:"eventStartDate",headerName: "Interview StartDate",type: "date",
       dateFormat: "dd/MM/yy HH:mm",
@@ -578,7 +583,39 @@ export const activityColumnMap = {
       valueGetter: function(params) {
         return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
       }
-    }
+    },
+    {
+      field:"location.cityName",headerName: "Interview Location",
+
+    },
+    {
+      field:"interviewPipeline.state.name",headerName: "Interview Stage",
+
+    },
+    {
+      field: "interviewPipeline.rejected",
+      headerName: "Rejected Flag",
+      valueGetter: (params) => {
+        const rejected = params.data?.interviewPipeline?.rejected;
+        if (rejected) {
+          return params.data?.interviewPipeline?.rejectInfo?.reason?.name || "";
+        }
+        return "";
+      },
+      cellRenderer: (params) => {
+        const rejected = params.data?.interviewPipeline?.rejected;
+        const rejectionReason = params.data?.interviewPipeline?.rejectInfo?.reason?.name || "";
+
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{rejectionReason}</span>
+            {rejected && <Tag color="red">Rejected</Tag>}
+          </Flex>
+        );
+      },
+    },
+
+
   ],
   EMAILS_SENT:[
     { field: "fromName", headerName: "FromName" },
@@ -854,17 +891,68 @@ export const activityColumnMap = {
       }
     }
   ],
-  PIPELINE_VALUE : [{ field: "reference", headerName: "#REF" },
-    { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+  PIPELINE_VALUE : [
+
+
+    {
+      field: "candidate._id",
+      headerName: "Candidate",
+      valueGetter: sysrecordCandidateGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.candidate.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+    },
+    {
+      field: "company._id",
+      headerName: "Company",
+      valueGetter: sysrecordCompanyGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data.company.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "COMPANY"),
+    },
+
     { field: "owner.label", headerName: "Owner" },
+
     {
       field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
         return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
-    }],
+    },
+    { field: "status.name", headerName: "Pipeline Status" },
+    { field: "state.name", headerName: "Pipeline SubStatus" },
+    {
+      field: "rejected",
+      headerName: "Rejected Flag",
+      valueGetter: (params) => {
+        const rejected = params.data?.rejected;
+        if (rejected) {
+          return params.data?.rejectInfo?.reason?.name || "";
+        }
+        return "";
+      },
+      cellRenderer: (params) => {
+        const rejected = params.data?.rejected;
+        const rejectionReason = params.data?.rejectInfo?.reason?.name || "";
+
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <span>{rejectionReason}</span>
+            {rejected && <Tag color="red">Rejected</Tag>}
+          </Flex>
+        );
+      },
+    },
+
+
+
+  ],
   JOURNAL : [
     {field: "journalFrom.label", headerName: "User" },
     {field: "journalActivityLabel", headerName: "Activity Type" },
