@@ -174,10 +174,8 @@ export const categorizeData = (apiResponse) => {
   const result = [];
   const upcomingDays = {};
 
-  for (let date = moment().add(2,'days').startOf('day'); date.isSameOrBefore(endOfWeek); date.add(1,'day')) {
-    if(date.isoWeekday() <=5){
-      upcomingDays[date.startOf('day').valueOf()] = [];
-    }
+  for (let date = moment().add(2, 'days').startOf('day'), i = 0; i < 5; date.add(1, 'day'), i++) {
+    upcomingDays[date.startOf('day').valueOf()] = [];
   }
 
   let todayApplications = apiResponse.job_applications || 0;
@@ -226,6 +224,11 @@ export const categorizeData = (apiResponse) => {
         }
 
       }
+
+      if(!upcomingDays[dayTimestamp]){
+        upcomingDays[dayTimestamp] = [];
+      }
+
       upcomingDays[dayTimestamp].push(...dayItems);
     }
   });
@@ -245,8 +248,6 @@ export const categorizeData = (apiResponse) => {
 export const getDateRangeByCodeAndDate = (code,date, viewType) => {
 
   const start_day = getTodayTimestampByTimeZone();
-
-  console.log(code,date,viewType)
 
   if(date && viewType === 'ACTUAL'){
     return {start_date: date, end_date: date};

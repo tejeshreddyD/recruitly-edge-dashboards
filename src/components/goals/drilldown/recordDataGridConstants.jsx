@@ -1,8 +1,7 @@
-
-import { formatGlobalDate, formatGlobalDateWithTime,getLocalizedDateString } from "@utils/dateUtil.js";
-
 import { Flex, Tag } from "antd";
 import { LuSquareKanban } from "react-icons/lu";
+
+import { formatGlobalDate, formatGlobalDateWithTime,getLocalizedDateString } from "@utils/dateUtil.js";
 
 const nameGetter = function(params) {
   return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
@@ -64,7 +63,7 @@ const fetchOpportunitiesColumns = () => [
         {renderClickableField(params, params.data.reference)}
       </>
     ),
-    onCellClicked: (params) => viewRecord(params, "OPPORTUNITIES"),
+    onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
   },
 
 
@@ -76,7 +75,7 @@ const fetchOpportunitiesColumns = () => [
         {renderClickableField(params, `${params.data.name} `)}
       </>
     ),
-    onCellClicked: (params) => viewRecord(params, "OPPORTUNITIES"),
+    onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
   },
 
 
@@ -362,12 +361,6 @@ export const activityColumnMap = {
     }
   ],
   EVENTS_SCHEDULED:[
-
-
-
-
-
-
     { field: "title",
       headerName: "Title" ,
       cellRenderer: (params) => {
@@ -380,14 +373,7 @@ export const activityColumnMap = {
           </Flex>
         );
       },
-
-
-
-
-
     },
-
-
     {
       field: "attendees.label",
       headerName: "Attendees",
@@ -408,7 +394,6 @@ export const activityColumnMap = {
             }
           });
         }
-
         return attendees || "";
       },
     },
@@ -421,9 +406,6 @@ export const activityColumnMap = {
         return notes.replace(/<\/?[^>]+(>|$)/g, "");
       }
     },
-
-
-
     { field: "organiser.label", headerName: "Organiser" },
     {
       field: "eventStartDate",
@@ -741,8 +723,8 @@ export const activityColumnMap = {
         </>
       ),
       onCellClicked: (params) => {
-        if (params.data && params.data._id) {
-          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        if (params.data && params.data.contactRef) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.data.contactRef);
         }
       },
     },
@@ -881,7 +863,17 @@ export const activityColumnMap = {
       }
     }
   ],
-  PIPELINE_VALUE : [],
+  PIPELINE_VALUE : [{ field: "reference", headerName: "#REF" },
+    { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+      }
+    }],
   JOURNAL : [
     {field: "journalFrom.label", headerName: "User" },
     {field: "journalActivityLabel", headerName: "Activity Type" },
