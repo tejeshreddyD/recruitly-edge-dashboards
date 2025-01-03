@@ -53,77 +53,6 @@ const renderClickableField = (params, fieldName) => {
   );
 };
 
-
-const fetchOpportunitiesColumns = () => [
-  {
-    field: "reference",
-    headerName: "#REF",
-    cellRenderer: (params) => (
-      <>
-        {renderClickableField(params, params.data.reference)}
-      </>
-    ),
-    onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
-  },
-
-
-  {
-    field: "name",
-    headerName: "Name",
-    cellRenderer: (params) => (
-      <>
-        {renderClickableField(params, `${params.data.name} `)}
-      </>
-    ),
-    onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
-  },
-
-
-  { field: "bid.value", headerName: "Value" },
-  { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-  { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-  {
-    field: "state",
-    headerName: "Pipeline",
-    sortable: false,
-    cellRenderer: function (params) {
-      const { state } = params.data;
-      if (!state || !state.pipeline) {
-        return null;
-      }
-
-
-      let tagColor;
-      if (["WON", "CONVERTED"].includes(state.name)) {
-        tagColor = "green";
-      } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
-        tagColor = "red";
-      } else {
-        tagColor = "default";
-      }
-
-      return (
-        <Flex direction="row" align="center" justify="start" gap="small">
-          <LuSquareKanban />
-          <span>{state.pipeline.name}</span>
-          <Tag color={tagColor}>{state.name}</Tag>
-        </Flex>
-      );
-    },
-  },
-  { field: "owner.label", headerName: "Owner" },
-  {
-    field: "createdOn",
-    headerName: "Created At",
-    type: "date",
-    sort: "desc",
-    sortedAt: 0,
-    valueGetter: function(params) {
-      return formatGlobalDate(params.data.createdOn);
-    }
-  },
-];
-
 export const activityColumnMap = {
   LEADS_CREATED: [
     {
@@ -177,11 +106,180 @@ export const activityColumnMap = {
     }
   ],
 
-  OPPORTUNITIES_CREATED:fetchOpportunitiesColumns(),
+  OPPORTUNITIES_CREATED:[
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
+    },
+    {
+      field: "name",
+      headerName: "Title",
+    },
+    { field: "", headerName: "Pulse" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn",
+      headerName: "Created Date",
+      type: "date",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    },
+    {
+      field: "state",
+      headerName: "Pipeline",
+      sortable: false,
+      cellRenderer: function (params) {
+        const { state } = params.data;
+        if (!state || !state.pipeline) {
+          return null;
+        }
+        let tagColor;
+        if (["WON", "CONVERTED"].includes(state.name)) {
+          tagColor = "green";
+        } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
+          tagColor = "red";
+        } else {
+          tagColor = "default";
+        }
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <LuSquareKanban />
+            <span>{state.pipeline.name}</span>
+            <Tag color={tagColor}>{state.name}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "bid.value",headerName: "Deal Value"},
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+  ],
 
-  OPPORTUNITIES_VALUE: fetchOpportunitiesColumns(),
+  OPPORTUNITIES_VALUE:[
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
+    },
+    {
+      field: "name",
+      headerName: "Title",
+    },
+    { field: "", headerName: "Pulse" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn",
+      headerName: "Created Date",
+      type: "date",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    },
+    {
+      field: "state",
+      headerName: "Pipeline",
+      sortable: false,
+      cellRenderer: function (params) {
+        const { state } = params.data;
+        if (!state || !state.pipeline) {
+          return null;
+        }
+        let tagColor;
+        if (["WON", "CONVERTED"].includes(state.name)) {
+          tagColor = "green";
+        } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
+          tagColor = "red";
+        } else {
+          tagColor = "default";
+        }
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <LuSquareKanban />
+            <span>{state.pipeline.name}</span>
+            <Tag color={tagColor}>{state.name}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "bid.value",headerName: "Deal Value"},
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+  ],
 
-  OPPORTUNITIES_PIPELINE_VALUE: fetchOpportunitiesColumns(),
+  OPPORTUNITIES_PIPELINE_VALUE:[
+    {
+      field: "reference",
+      headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
+    },
+    {
+      field: "name",
+      headerName: "Title",
+    },
+    { field: "", headerName: "Pulse" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn",
+      headerName: "Created Date",
+      type: "date",
+      sort: "desc",
+      sortedAt: 0,
+      valueGetter: function(params) {
+        return formatGlobalDate(params.data.createdOn);
+      }
+    },
+    {
+      field: "state",
+      headerName: "Pipeline",
+      sortable: false,
+      cellRenderer: function (params) {
+        const { state } = params.data;
+        if (!state || !state.pipeline) {
+          return null;
+        }
+        let tagColor;
+        if (["WON", "CONVERTED"].includes(state.name)) {
+          tagColor = "green";
+        } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
+          tagColor = "red";
+        } else {
+          tagColor = "default";
+        }
+        return (
+          <Flex direction="row" align="center" justify="start" gap="small">
+            <LuSquareKanban />
+            <span>{state.pipeline.name}</span>
+            <Tag color={tagColor}>{state.name}</Tag>
+          </Flex>
+        );
+      },
+    },
+    { field: "bid.value",headerName: "Deal Value"},
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
+  ],
+
 
   PLACEMENTS_CREATED: [
     { field: "reference", headerName: "#REF" },
@@ -304,6 +402,21 @@ export const activityColumnMap = {
       onCellClicked: (params) => viewRecord(params, "JOB"),
     },
     { field: "title", headerName: "Title" },
+    { field: "", headerName: "Pulse" },
+    { field: "owner.label", headerName: "Owner" },
+    {
+      field: "createdOn", headerName: "Created Date", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      valueGetter: function(params) {
+        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+      }
+    },
+    { field: "commissionDetails", headerName: "Fees",
+      valueGetter: (params) => {
+        const commissionAmount = params.data.commissionAmount;
+        const commissionValue = params.data.commissionValue?.currency?.name;
+        return `${commissionAmount} ${commissionValue}`;
+      },
+    },
     { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter,
       cellRenderer: (params) => (
         <>
@@ -320,20 +433,6 @@ export const activityColumnMap = {
       ),
       onCellClicked: (params) => viewRecord(params, "JOB"),
     },
-    { field: "commissionDetails", headerName: "Value",
-      valueGetter: (params) => {
-        const commissionAmount = params.data.commissionAmount;
-        const commissionValue = params.data.commissionValue?.currency?.name;
-        return `${commissionAmount} ${commissionValue}`;
-      },
-    },
-    { field: "owner.label", headerName: "Owner" },
-    {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-      valueGetter: function(params) {
-        return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-      }
-    }
   ],
   SPEC_CVSHARE:[
     { field: "shareName", headerName: "Title" },
@@ -347,14 +446,42 @@ export const activityColumnMap = {
   ],
 
   JOBS_CREATED :[
-    { field: "reference", headerName: "#REF" },
+    { field: "reference", headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "title", headerName: "Title" },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "commissionDetails", headerName: "Fees",
+      valueGetter: (params) => {
+        const commissionAmount = params.data.commissionAmount;
+        const commissionValue = params.data.commissionValue?.currency?.name;
+        return `${commissionAmount} ${commissionValue}`;
+      },
+    },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.company.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.contact.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "status.name", headerName: "Status" },
     { field: "owner.label", headerName: "Owner" },
     {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      field: "createdOn", headerName: "Created Date", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
         return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
