@@ -112,7 +112,7 @@ export const activityColumnMap = {
       headerName: "#REF",
       cellRenderer: (params) => (
         <>
-          {renderClickableField(params, params.data.reference)}
+          {renderClickableField(params, params.data?.reference)}
         </>
       ),
       onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
@@ -170,7 +170,7 @@ export const activityColumnMap = {
       headerName: "#REF",
       cellRenderer: (params) => (
         <>
-          {renderClickableField(params, params.data.reference)}
+          {renderClickableField(params, params.data?.reference)}
         </>
       ),
       onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
@@ -228,7 +228,7 @@ export const activityColumnMap = {
       headerName: "#REF",
       cellRenderer: (params) => (
         <>
-          {renderClickableField(params, params.data.reference)}
+          {renderClickableField(params, params.data?.reference)}
         </>
       ),
       onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
@@ -446,14 +446,42 @@ export const activityColumnMap = {
   ],
 
   JOBS_CREATED :[
-    { field: "reference", headerName: "#REF" },
+    { field: "reference", headerName: "#REF",
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.reference)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "title", headerName: "Title" },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
+    { field: "commissionDetails", headerName: "Fees",
+      valueGetter: (params) => {
+        const commissionAmount = params.data.commissionAmount;
+        const commissionValue = params.data.commissionValue?.currency?.name;
+        return `${commissionAmount} ${commissionValue}`;
+      },
+    },
+    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.company.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
+    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter,
+      cellRenderer: (params) => (
+        <>
+          {renderClickableField(params, params.data?.contact.label)}
+        </>
+      ),
+      onCellClicked: (params) => viewRecord(params, "JOB"),
+    },
     { field: "status.name", headerName: "Status" },
     { field: "owner.label", headerName: "Owner" },
     {
-      field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
+      field: "createdOn", headerName: "Created Date", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
       valueGetter: function(params) {
         return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
       }
