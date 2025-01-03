@@ -378,23 +378,61 @@ export const activityColumnMap = {
       field: "attendees.label",
       headerName: "Attendees",
       valueGetter: (params) => {
-        let attendees = "";
+        let attendees = [];
 
         if (params.data.attendees && params.data.attendees.length > 0) {
           params.data.attendees.forEach((attendee) => {
-
-            if (attendee.type === "USER" || attendee.type === "UNRECORDED") {
-              return;
-            }
-
-            if (attendees === "") {
-              attendees = attendee.label;
-            } else {
-              attendees += ", " + attendee.label;
+            if (attendee.type !== "USER" && attendee.type !== "UNRECORDED") {
+              attendees.push(attendee.label);
             }
           });
         }
-        return attendees || "";
+
+        return attendees.join(", ") || "";
+      },
+      cellRenderer: (params) => {
+        const attendees = params.data.attendees || [];
+
+        const attendeeElements = attendees.map((attendee, index) => {
+          if (attendee.type === "USER" || attendee.type === "UNRECORDED") {
+            return <span key={index}>{attendee.label}</span>;
+          }
+
+          return (
+            <span
+              key={index}
+              style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+              onClick={() => {
+                const candidateId = attendee._id;
+                console.log("candidateId", candidateId);
+                if (candidateId) {
+                  window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
+                }
+              }}
+            >
+          {attendee.label}
+        </span>
+          );
+        });
+
+
+        return attendeeElements.length > 0
+          ? attendeeElements.reduce((prev, curr) => [prev, ", ", curr])
+          : null;
+      },
+    },
+
+    {
+      field: "attendees.type",
+      headerName: "Attendees Type",
+      valueGetter: (params) => {
+
+        if (params.data.attendees && params.data.attendees.length > 0) {
+          return params.data.attendees
+            .map((attendee) => attendee.type)
+            .join(", ");
+        }
+        return "";
       },
     },
     {
