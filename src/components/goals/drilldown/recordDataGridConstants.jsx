@@ -37,9 +37,9 @@ const viewRecord = (params, recordType) => {
   }
 };
 const renderClickableField = (params, fieldName) => {
-  if (!params.data) return ""; // Return an empty string if data is missing
+  if (!params.data) return "";
 
-  const isClickable = !!params.data._id; // Check if the record is clickable
+  const isClickable = !!params.data._id;
 
   return (
     <span
@@ -396,6 +396,15 @@ export const activityColumnMap = {
         }
         return attendees || "";
       },
+    },
+    {
+      field: "notes",
+      headerName: "Notes",
+      valueGetter: (params) => {
+
+        const notes = params.data?.notes || "";
+        return notes.replace(/<\/?[^>]+(>|$)/g, "");
+      }
     },
     { field: "organiser.label", headerName: "Organiser" },
     {
