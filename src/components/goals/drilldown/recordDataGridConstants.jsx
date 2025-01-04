@@ -1215,7 +1215,7 @@ export const activityColumnMap = {
         },
         {
             field: "journalLinkedTo.label",
-            headerName: "JournalLinked Records",
+            headerName: "Linked Records",
             valueGetter: (params) => {
                 let journalLinkedTo = [];
 
