@@ -536,51 +536,37 @@ export const activityColumnMap = {
             field: "attendees.label",
             headerName: "Attendees",
             valueGetter: (params) => {
-
-                let attendees = [];
-
-                if (params.data.attendees && params.data.attendees.length > 0) {
-                    params.data.attendees.forEach((attendee) => {
-
-
-                        if (attendee.type !== "USER" && attendee.type !== "UNRECORDED") {
-                            attendees.push(attendee.label);
-                        }
-                    });
-                }
-
-
-                return attendees.join(", ") || "";
+                return params.data.attendees?.map((attendee) => attendee.label).join(", ") || "N/A";
             },
             cellRenderer: (params) => {
                 const attendees = params.data.attendees || [];
 
-                const attendeeElements = attendees.map((attendee, index) => {
+                const attendeeElements = attendees.map((attendee) => {
+                    const key = attendee._id || attendee.label; // Preferably use attendee._id as key
+
                     if (attendee.type === "USER" || attendee.type === "UNRECORDED") {
-                        return <span key={index}>{attendee.label}</span>;
+                        return <span key={key}>{attendee.label}</span>;
                     }
 
                     return (
-                        <span
-                            key={index}
-                            style={{ color: "blue", cursor: "pointer"}}
-                            onClick={() => {
-                                const candidateId = attendee._id;
-                                console.log("candidateId", candidateId);
-                                if (candidateId) {
-                                    window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
-                                }
-                            }}
-                        >
-          {attendee.label}
-        </span>
+                      <span
+                        key={key}
+                        style={{ color: "blue", cursor: "pointer" }}
+                        onClick={() => {
+                            console.log("Entity ID:", attendee._id, "Entity Type:", attendee.type);
+                            if (typeof window.COOLUTIL !== "undefined" && typeof window.COOLUTIL.viewRecordPopupByType === "function") {
+                                window.COOLUTIL.viewRecordPopupByType(attendee.type, attendee._id);
+                            } else {
+                                console.error("window.COOLUTIL or viewRecordPopupByType is not defined");
+                            }
+                        }}
+                      >
+              {attendee.label}
+            </span>
                     );
                 });
 
-
-                return attendeeElements.length > 0
-                    ? attendeeElements.reduce((prev, curr) => [prev, ", ", curr])
-                    : null;
+                return attendeeElements.length > 0 ? attendeeElements.reduce((prev, curr) => [prev, ", ", curr]) : null;
             },
         },
         {
@@ -819,35 +805,37 @@ export const activityColumnMap = {
             field: "toList",
             headerName: "Linked Records",
             valueGetter: (params) => {
-                return params.data.toList?.map(data => data.label).join(", ") || "N/A";
+                return params.data.toList?.map((data) => data.label).join(", ") || "N/A";
             },
             cellRenderer: (params) => {
                 const toList = params.data.toList || [];
 
-                const toListElements = toList.map((data, index) => {
+                const toListElements = toList.map((data) => {
+                    const key = data._id || data.label;
+
                     if (data.type === "USER" || data.type === "UNRECORDED") {
-                        return <span key={index}>{data.label}</span>;
+                        return <span key={key}>{data.label}</span>;
                     }
 
                     return (
-                        <span
-                            key={index}
-                            style={{ color: "blue", cursor: "pointer" }}
-                            onClick={() => {
-                                const candidateId = data._id;
-                                if (candidateId) {
-                                    window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
-                                }
-                            }}
-                        >
-          {data.label}
-        </span>
+                      <span
+                        key={key}
+                        style={{ color: "blue", cursor: "pointer" }}
+                        onClick={() => {
+                            console.log("Entity ID:", data._id, "Entity Type:", data.type);
+                            if (typeof window.COOLUTIL !== "undefined" && typeof window.COOLUTIL.viewRecordPopupByType === "function") {
+                                window.COOLUTIL.viewRecordPopupByType(data.type, data._id);
+                            } else {
+                                console.error("window.COOLUTIL or viewRecordPopupByType is not defined");
+                            }
+                        }}
+                      >
+              {data.label}
+            </span>
                     );
                 });
 
-                return toListElements.length > 0
-                    ? toListElements.reduce((prev, curr) => [prev, ", ", curr])
-                    : null;
+                return toListElements.length > 0 ? toListElements.reduce((prev, curr) => [prev, ", ", curr]) : null;
             },
         },
         {
@@ -1233,49 +1221,40 @@ export const activityColumnMap = {
             field: "journalLinkedTo.label",
             headerName: "Linked Records",
             valueGetter: (params) => {
-                let journalLinkedTo = [];
-
-                if (params.data.journalLinkedTo && params.data.journalLinkedTo.length > 0) {
-                    params.data.journalLinkedTo.forEach((journalLinkedTos) => {
-                        if (journalLinkedTos.type !== "USER" && journalLinkedTos.type !== "UNRECORDED") {
-                            journalLinkedTo.push(journalLinkedTos.label);
-                        }
-                    });
-                }
-
-                return journalLinkedTo.join(", ") || "";
+                return params.data.journalLinkedTo?.map((journalLinkedTo) => journalLinkedTo.label).join(", ") || "N/A";
             },
             cellRenderer: (params) => {
                 const journalLinkedTo = params.data.journalLinkedTo || [];
 
-                const journalLinkedTosElements = journalLinkedTo.map((journalLinkedTos, index) => {
-                    if (journalLinkedTos.type === "USER" || journalLinkedTos.type === "UNRECORDED") {
-                        return <span key={index}>{journalLinkedTos.label}</span>;
+                const journalLinkedToElements = journalLinkedTo.map((journalLinkedToItem) => {
+                    const key = journalLinkedToItem._id || journalLinkedToItem.label;
+
+                    if (journalLinkedToItem.type === "USER" || journalLinkedToItem.type === "UNRECORDED") {
+                        return <span key={key}>{journalLinkedToItem.label}</span>;
                     }
 
                     return (
-                        <span
-                            key={index}
-                            style={{ color: "blue", cursor: "pointer" }}
-                            onClick={() => {
-                                const candidateId = journalLinkedTos._id;
-                                console.log("candidateId", candidateId);
-                                if (candidateId) {
-                                    window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
-                                }
-                            }}
-                        >
-          {journalLinkedTos.label}
-        </span>
+                      <span
+                        key={key}
+                        style={{ color: "blue", cursor: "pointer" }}
+                        onClick={() => {
+                            console.log("Entity ID:", journalLinkedToItem._id, "Entity Type:", journalLinkedToItem.type);
+                            if (typeof window.COOLUTIL !== "undefined" && typeof window.COOLUTIL.viewRecordPopupByType === "function") {
+                                window.COOLUTIL.viewRecordPopupByType(journalLinkedToItem.type, journalLinkedToItem._id);
+                            } else {
+                                console.error("window.COOLUTIL or viewRecordPopupByType is not defined");
+                            }
+                        }}
+                      >
+              {journalLinkedToItem.label}
+            </span>
                     );
                 });
 
-
-                return journalLinkedTosElements.length > 0
-                    ? journalLinkedTosElements.reduce((prev, curr) => [prev, ", ", curr])
-                    : null;
+                return journalLinkedToElements.length > 0 ? journalLinkedToElements.reduce((prev, curr) => [prev, ", ", curr]) : null;
             },
         },
+
         {
             field: "journalDate",
             headerName: "Activity Date",
