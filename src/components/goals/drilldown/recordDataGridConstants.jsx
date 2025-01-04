@@ -947,7 +947,11 @@ export const activityColumnMap = {
             field: "candidateLabel",
             headerName: "Candidate",
             cellRenderer: (params) => <>{renderClickableField(params, params.data.candidateLabel)}</>,
-            onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+            onCellClicked: (params) => {
+              if (params.data && params.data.candidateId) {
+                 window.COOLUTIL.viewRecordPopupByType("CANDIDATE", params.data.candidateId);
+              }
+            },
         },
         {field: "candidateEmail", headerName: "Email"},
         {field: "candidateMobile", headerName: "Mobile"},
@@ -1016,7 +1020,11 @@ export const activityColumnMap = {
             field: "candidateLabel",
             headerName: "Candidate",
             cellRenderer: (params) => <>{renderClickableField(params, params.data.candidateLabel)}</>,
-            onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+            onCellClicked: (params) => {
+              if (params.data && params.data.candidateId) {
+                window.COOLUTIL.viewRecordPopupByType("CANDIDATE", params.data.candidateId);
+              }
+            },
         },
         {field: "candidateEmail", headerName: "Email"},
         {
@@ -1071,7 +1079,11 @@ export const activityColumnMap = {
             field: "candidateLabel",
             headerName: "Candidate",
             cellRenderer: (params) => <>{renderClickableField(params, params.data.candidateLabel)}</>,
-            onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+            onCellClicked: (params) => {
+              if (params.data && params.data.candidateId) {
+                window.COOLUTIL.viewRecordPopupByType("CANDIDATE", params.data.candidateId);
+              }
+            },
         },
         {field: "candidateEmail", headerName: "Email"},
         {
