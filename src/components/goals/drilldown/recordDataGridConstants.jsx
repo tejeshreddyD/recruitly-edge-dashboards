@@ -1125,14 +1125,22 @@ export const activityColumnMap = {
             headerName: "Candidate",
             valueGetter: sysrecordCandidateGetter,
             cellRenderer: (params) => <>{renderClickableField(params, params.data.candidate.label)}</>,
-            onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+            onCellClicked: (params) => {
+              if (params.data?.candidate?._id) {
+                 window.COOLUTIL.viewRecordPopupByType("CANDIDATE",params.data.candidate._id);
+              }
+            },
         },
         {
             field: "company._id",
             headerName: "Company",
             valueGetter: sysrecordCompanyGetter,
             cellRenderer: (params) => <>{renderClickableField(params, params.data.company.label)}</>,
-            onCellClicked: (params) => viewRecord(params, "COMPANY"),
+            onCellClicked: (params) => {
+              if (params.data?.company?._id) {
+                window.COOLUTIL.viewRecordPopupByType("COMPANY",params.data.company._id);
+              }
+            },
         },
 
         {field: "owner.label", headerName: "Owner"},
