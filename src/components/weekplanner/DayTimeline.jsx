@@ -64,7 +64,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         return (<><Link href={`${VISTA_URL}/reminders?type=REMINDER&date=${item.time}`} style={timelineTextStyle}>{item.count} reminder(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>
         {item.records.length > 0 ? item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
           <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
-            {rec.name}
+            {rec.label}
           </Tag>
         </Tooltip>)):""}</>);
       case "CUSTOM_ACTION":
