@@ -1,26 +1,26 @@
-import { Flex, Tag } from "antd";
-import { LuSquareKanban } from "react-icons/lu";
+import {Flex, Tag} from "antd";
+import {LuSquareKanban} from "react-icons/lu";
 
-import { formatGlobalDate, formatGlobalDateWithTime,getLocalizedDateString } from "@utils/dateUtil.js";
+import {formatGlobalDate, formatGlobalDateWithTime, getLocalizedDateString} from "@utils/dateUtil.js";
 
-const nameGetter = function(params) {
+const nameGetter = function (params) {
     return `${params.data.firstName || ""} ${params.data.surname || ""}`.trim();
 };
-const sysrecordCandidateGetter = function(params) {
+const sysrecordCandidateGetter = function (params) {
     if (!params.data.candidate) {
         return "";
     }
     return `${params.data.candidate.label || ""}`.trim();
 };
 
-const sysrecordContactGetter = function(params) {
+const sysrecordContactGetter = function (params) {
     if (!params.data.contact) {
         return "";
     }
     return `${params.data.contact.label || ""}`.trim();
 };
 
-const sysrecordCompanyGetter = function(params) {
+const sysrecordCompanyGetter = function (params) {
     if (!params.data.company) {
         return "";
     }
@@ -28,7 +28,7 @@ const sysrecordCompanyGetter = function(params) {
 };
 
 const getAttendeeField = (params, type, field) => {
-    const attendee = params.data.attendees?.find(attendee => attendee.type === type);
+    const attendee = params.data.attendees?.find((attendee) => attendee.type === type);
     return attendee ? attendee[field] : "";
 };
 const viewRecord = (params, recordType) => {
@@ -48,178 +48,284 @@ const renderClickableField = (params, fieldName) => {
                 cursor: isClickable ? "pointer" : "default",
             }}
         >
-      {fieldName }
+      {fieldName}
     </span>
     );
 };
-
-
-const fetchOpportunitiesColumns = () => [
-    {
-        field: "reference",
-        headerName: "#REF",
-        cellRenderer: (params) => (
-            <>
-                {renderClickableField(params, params.data.reference)}
-            </>
-        ),
-        onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
-    },
-
-
-    {
-        field: "name",
-        headerName: "Name",
-        cellRenderer: (params) => (
-            <>
-                {renderClickableField(params, `${params.data.name} `)}
-            </>
-        ),
-        onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
-    },
-
-
-    { field: "bid.value", headerName: "Value" },
-    { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-    { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-    {
-        field: "state",
-        headerName: "Pipeline",
-        sortable: false,
-        cellRenderer: function (params) {
-            const { state } = params.data;
-            if (!state || !state.pipeline) {
-                return null;
-            }
-
-
-            let tagColor;
-            if (["WON", "CONVERTED"].includes(state.name)) {
-                tagColor = "green";
-            } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
-                tagColor = "red";
-            } else {
-                tagColor = "default";
-            }
-
-            return (
-                <Flex direction="row" align="center" justify="start" gap="small">
-                    <LuSquareKanban />
-                    <span>{state.pipeline.name}</span>
-                    <Tag color={tagColor}>{state.name}</Tag>
-                </Flex>
-            );
-        },
-    },
-    { field: "owner.label", headerName: "Owner" },
-    {
-        field: "createdOn",
-        headerName: "Created At",
-        type: "date",
-        sort: "desc",
-        sortedAt: 0,
-        valueGetter: function(params) {
-            return formatGlobalDate(params.data.createdOn);
-        }
-    },
-];
 
 export const activityColumnMap = {
     LEADS_CREATED: [
         {
             field: "reference",
             headerName: "#REF",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data?.reference)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "LEAD"),
         },
         {
             field: "firstName",
             headerName: "Name",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, `${params.data.firstName} ${params.data.surname}`)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, `${params.data.firstName} ${params.data.surname}`)}</>,
             onCellClicked: (params) => viewRecord(params, "LEAD"),
         },
 
-        { field: "email", headerName: "Email" },
-        { field: "mobile", headerName: "Mobile" },
-        { field: "owner.label", headerName: "Owner" },
+        {field: "email", headerName: "Email"},
+        {field: "mobile", headerName: "Mobile"},
+        {field: "owner.label", headerName: "Owner"},
         {
-            field: "status", headerName: "Pipeline", sortable: false, cellRenderer: function(params) {
+            field: "status",
+            headerName: "Pipeline",
+            sortable: false,
+            cellRenderer: function (params) {
                 const status = params.data.status;
                 if (!status || !status.pipeline) {
                     return null;
                 }
                 return (
                     <Flex direction="row" align="center" justify="start" gap="small">
-                        <LuSquareKanban />
+                        <LuSquareKanban/>
                         <span>{status.pipeline.name}</span>
                         <Tag color={status.type.code === "CLOSED" ? "default" : "success"}>{status.name}</Tag>
                     </Flex>
                 );
-            }
+            },
         },
         {
             field: "createdOn",
-            headerName: "Created At",
+            headerName: "Created Date",
             type: "date",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
-                return formatGlobalDate(params.data.createdOn);
-            }
-        }
+            valueGetter: function (params) {
+                return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+            },
+        },
+        {field: "companyName", headerName: "Company Name"},
     ],
 
-    OPPORTUNITIES_CREATED:fetchOpportunitiesColumns(),
+    OPPORTUNITIES_CREATED: [
+        {
+            field: "reference",
+            headerName: "#REF",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
+            onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
+        },
+        {
+            field: "name",
+            headerName: "Title",
+        },
+        {field: "", headerName: "Pulse"},
+        {field: "owner.label", headerName: "Owner"},
+        {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
+                return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+            },
+        },
+        {
+            field: "state",
+            headerName: "Pipeline",
+            sortable: false,
+            cellRenderer: function (params) {
+                const {state} = params.data;
+                if (!state || !state.pipeline) {
+                    return null;
+                }
+                let tagColor;
+                if (["WON", "CONVERTED"].includes(state.name)) {
+                    tagColor = "green";
+                } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
+                    tagColor = "red";
+                } else {
+                    tagColor = "default";
+                }
+                return (
+                    <Flex direction="row" align="center" justify="start" gap="small">
+                        <LuSquareKanban/>
+                        <span>{state.pipeline.name}</span>
+                        <Tag color={tagColor}>{state.name}</Tag>
+                    </Flex>
+                );
+            },
+        },
+        {field: "bid.value", headerName: "Deal Value"},
+        {field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter},
+        {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter},
+    ],
 
-    OPPORTUNITIES_VALUE: fetchOpportunitiesColumns(),
+    OPPORTUNITIES_VALUE: [
+        {
+            field: "reference",
+            headerName: "#REF",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
+            onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
+        },
+        {
+            field: "name",
+            headerName: "Title",
+        },
+        {field: "", headerName: "Pulse"},
+        {field: "owner.label", headerName: "Owner"},
+        {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
+                return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+            },
+        },
+        {
+            field: "state",
+            headerName: "Pipeline",
+            sortable: false,
+            cellRenderer: function (params) {
+                const {state} = params.data;
+                if (!state || !state.pipeline) {
+                    return null;
+                }
+                let tagColor;
+                if (["WON", "CONVERTED"].includes(state.name)) {
+                    tagColor = "green";
+                } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
+                    tagColor = "red";
+                } else {
+                    tagColor = "default";
+                }
+                return (
+                    <Flex direction="row" align="center" justify="start" gap="small">
+                        <LuSquareKanban/>
+                        <span>{state.pipeline.name}</span>
+                        <Tag color={tagColor}>{state.name}</Tag>
+                    </Flex>
+                );
+            },
+        },
+        {field: "bid.value", headerName: "Deal Value"},
+        {field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter},
+        {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter},
+    ],
 
-    OPPORTUNITIES_PIPELINE_VALUE: fetchOpportunitiesColumns(),
+    OPPORTUNITIES_PIPELINE_VALUE: [
+        {
+            field: "reference",
+            headerName: "#REF",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
+            onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
+        },
+        {
+            field: "name",
+            headerName: "Title",
+        },
+        {field: "", headerName: "Pulse"},
+        {field: "owner.label", headerName: "Owner"},
+        {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
+                return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+            },
+        },
+        {
+            field: "state",
+            headerName: "Pipeline",
+            sortable: false,
+            cellRenderer: function (params) {
+                const {state} = params.data;
+                if (!state || !state.pipeline) {
+                    return null;
+                }
+                let tagColor;
+                if (["WON", "CONVERTED"].includes(state.name)) {
+                    tagColor = "green";
+                } else if (["LOST", "SUSPENDED", "ABANDONED"].includes(state.name)) {
+                    tagColor = "red";
+                } else {
+                    tagColor = "default";
+                }
+                return (
+                    <Flex direction="row" align="center" justify="start" gap="small">
+                        <LuSquareKanban/>
+                        <span>{state.pipeline.name}</span>
+                        <Tag color={tagColor}>{state.name}</Tag>
+                    </Flex>
+                );
+            },
+        },
+        {field: "bid.value", headerName: "Deal Value"},
+        {field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter},
+        {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter},
+    ],
 
     PLACEMENTS_CREATED: [
-        { field: "reference", headerName: "#REF" },
-        { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
-        { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-        { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-        { field: "owner.label", headerName: "Owner" },
+        {field: "reference", headerName: "#REF"},
+        {field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter},
+        {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter},
+        {field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter},
+        {field: "owner.label", headerName: "Owner"},
         {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
-        }
+            },
+        },
     ],
     PLACEMENTS_VALUE: [
-        { field: "reference", headerName: "#REF" },
-        { field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter },
-        { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-        { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-        { field: "placementValue", headerName: "Value" },
-        { field: "owner.label", headerName: "Owner" },
+        {field: "reference", headerName: "#REF"},
+        {field: "job.label", headerName: "Title"},
+        {field: "employmentType.name", headerName: "Type"},
+        {field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter},
+        {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter},
+        {field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter},
+        {field: "placementValue", headerName: "Billing Amount"},
         {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
+            field: "placementDate",
+            headerName: "Placement Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            valueGetter: function (params) {
+                return formatGlobalDate(params.data.placementDate);
+            },
+        },
+        {
+            field: "startDate",
+            headerName: "Start Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
-        }
+            },
+        },
+        {field: "owner.label", headerName: "Owner"},
+        {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
+                return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+            },
+        },
     ],
     CANDIDATES_CREATED: [
-
         {
             field: "reference",
             headerName: "#REF",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.reference)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
         },
 
@@ -227,33 +333,29 @@ export const activityColumnMap = {
             field: "firstName",
             headerName: "Name",
             valueGetter: nameGetter,
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, `${params.data.firstName} `)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, `${params.data.firstName} `)}</>,
             onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
         },
-        { field: "email", headerName: "Email" },
-        { field: "mobile", headerName: "Mobile" },
-        { field: "owner.label", headerName: "Recruiter" },
+        {field: "email", headerName: "Email"},
+        {field: "mobile", headerName: "Mobile"},
+        {field: "owner.label", headerName: "Owner"},
         {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
-        }
+            },
+        },
     ],
     CONTACTS_CREATED: [
-
         {
             field: "reference",
             headerName: "#REF",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.reference)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "CONTACT"),
         },
 
@@ -261,115 +363,155 @@ export const activityColumnMap = {
             field: "firstName",
             headerName: "Name",
             valueGetter: nameGetter,
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, `${params.data.firstName} `)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, `${params.data.firstName} `)}</>,
             onCellClicked: (params) => viewRecord(params, "CONTACT"),
         },
-        { field: "email", headerName: "Email" },
-        { field: "mobile", headerName: "Mobile" },
-        { field: "owner.label", headerName: "Contact Owner" },
+        {field: "email", headerName: "Email"},
+        {field: "mobile", headerName: "Mobile"},
+        {field: "owner.label", headerName: "Owner"},
         {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
-        }
+            },
+        },
     ],
-    JOBS_ADVERTISED:[
-        { field: "job.label", headerName: "Job" },
-        { field: "advert.postingAccount", headerName: "Posting Account" },
-        { field: "lookupJobBoard.name", headerName: "Job Board" },
-        { field: "userName", headerName: "Publisher" },
+    JOBS_ADVERTISED: [
+        {field: "job.label", headerName: "Job"},
+        {field: "advert.postingAccount", headerName: "Posting Account"},
+        {field: "lookupJobBoard.name", headerName: "Job Board"},
+        {field: "userName", headerName: "Publisher"},
         {
             field: "createdOn",
             headerName: "Posting Date",
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
+            },
         },
     ],
 
-    OPEN_JOBS_VALUE:[
+    OPEN_JOBS_VALUE: [
         {
             field: "reference",
             headerName: "#REF",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data?.reference)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "JOB"),
         },
-        { field: "title", headerName: "Title" },
-        { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter,
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data?.company.label)}
-                </>
-            ),
+        {field: "title", headerName: "Title"},
+        {field: "", headerName: "Pulse"},
+        {field: "owner.label", headerName: "Owner"},
+        {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
+                return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+            },
+        },
+        {
+            field: "commissionDetails",
+            headerName: "Fees",
+            valueGetter: (params) => {
+                const commissionAmount = params.data.commission;
+                const commissionValue = params.data.commissionValue?.currency?.name;
+                return `${commissionAmount} ${commissionValue}`;
+            },
+        },
+        {
+            field: "company._id",
+            headerName: "Company",
+            valueGetter: sysrecordCompanyGetter,
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.company.label)}</>,
             onCellClicked: (params) => viewRecord(params, "JOB"),
         },
-        { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter,
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data?.contact.label)}
-                </>
-            ),
+        {
+            field: "contact._id",
+            headerName: "Contact",
+            valueGetter: sysrecordContactGetter,
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.contact.label)}</>,
             onCellClicked: (params) => viewRecord(params, "JOB"),
         },
-        { field: "commissionDetails", headerName: "Value",
+    ],
+    SPEC_CVSHARE: [
+        {field: "shareName", headerName: "Title"},
+        {field: "candidateOwner", headerName: "Candidate Owner"},
+        {
+            field: "shareDate",
+            headerName: "Shared On",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
+                return params.data.shareDate ? formatGlobalDate(params.data.shareDate) : "";
+            },
+        },
+    ],
+
+    JOBS_CREATED: [
+        {
+            field: "reference",
+            headerName: "#REF",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
+            onCellClicked: (params) => viewRecord(params, "JOB"),
+        },
+        {field: "title", headerName: "Title"},
+        {
+            field: "commissionDetails",
+            headerName: "Fees",
             valueGetter: (params) => {
                 const commissionAmount = params.data.commissionAmount;
                 const commissionValue = params.data.commissionValue?.currency?.name;
                 return `${commissionAmount} ${commissionValue}`;
             },
         },
-        { field: "owner.label", headerName: "Owner" },
         {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
+            field: "company._id",
+            headerName: "Company",
+            valueGetter: sysrecordCompanyGetter,
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.company.label)}</>,
+            onCellClicked: (params) => viewRecord(params, "JOB"),
+        },
+        {
+            field: "contact._id",
+            headerName: "Contact",
+            valueGetter: sysrecordContactGetter,
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.contact.label)}</>,
+            onCellClicked: (params) => viewRecord(params, "JOB"),
+        },
+        {field: "status.name", headerName: "Status"},
+        {field: "owner.label", headerName: "Owner"},
+        {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
-        }
+            },
+        },
     ],
-    SPEC_CVSHARE:[
-        { field: "shareName", headerName: "Title" },
-        { field: "candidateOwner", headerName: "Candidate Owner" },
+    EVENTS_SCHEDULED: [
         {
-            field: "shareDate", headerName: "Shared On", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
-                return params.data.shareDate ? formatGlobalDate(params.data.shareDate) : "";
-            }
-        }
-    ],
-
-    JOBS_CREATED :[
-        { field: "reference", headerName: "#REF" },
-        { field: "title", headerName: "Title" },
-        { field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter },
-        { field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter },
-        { field: "status.name", headerName: "Status" },
-        { field: "owner.label", headerName: "Owner" },
-        {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
-                return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
-        }
-    ],
-    EVENTS_SCHEDULED:[
-        { field: "title",
-            headerName: "Title" ,
+            field: "title",
+            headerName: "Title",
             cellRenderer: (params) => {
                 const title = params.data?.title || "";
                 const type = params.data?.type || "";
                 return (
-                    <Flex direction="row" align="center" justify="start" gap="small" >
+                    <Flex direction="row" align="center" justify="start" gap="small">
                         <span>{title}</span>
-                        <Tag >{type}</Tag>
+                        <Tag>{type}</Tag>
                     </Flex>
                 );
             },
@@ -378,15 +520,19 @@ export const activityColumnMap = {
             field: "attendees.label",
             headerName: "Attendees",
             valueGetter: (params) => {
+
                 let attendees = [];
 
                 if (params.data.attendees && params.data.attendees.length > 0) {
                     params.data.attendees.forEach((attendee) => {
+
+
                         if (attendee.type !== "USER" && attendee.type !== "UNRECORDED") {
                             attendees.push(attendee.label);
                         }
                     });
                 }
+
 
                 return attendees.join(", ") || "";
             },
@@ -401,7 +547,7 @@ export const activityColumnMap = {
                     return (
                         <span
                             key={index}
-                            style={{ color: "blue", cursor: "pointer" }}
+                            style={{ color: "blue", cursor: "pointer"}}
                             onClick={() => {
                                 const candidateId = attendee._id;
                                 console.log("candidateId", candidateId);
@@ -421,18 +567,15 @@ export const activityColumnMap = {
                     : null;
             },
         },
-
-
         {
             field: "notes",
             headerName: "Notes",
             valueGetter: (params) => {
-
                 const notes = params.data?.notes || "";
                 return notes.replace(/<\/?[^>]+(>|$)/g, "");
-            }
+            },
         },
-        { field: "organiser.label", headerName: "Organiser" },
+        {field: "organiser.label", headerName: "Organiser"},
         {
             field: "eventStartDate",
             headerName: "Event Start Date",
@@ -440,9 +583,9 @@ export const activityColumnMap = {
             dateFormat: "dd/MM/yy HH:mm",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
-            }
+            },
         },
         {
             field: "eventEndDate",
@@ -451,19 +594,23 @@ export const activityColumnMap = {
             dateFormat: "dd/MM/yy HH:mm",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
-            }
+            },
         },
         {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-
-            }
+            },
         },
     ],
-    INTERVIEWS_SCHEDULED : [
+    INTERVIEWS_SCHEDULED: [
         {
             field: "title",
             headerName: "Title",
@@ -481,14 +628,10 @@ export const activityColumnMap = {
         {
             field: "label",
             headerName: "Candidate",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, getAttendeeField(params, 'CANDIDATE', 'label'))}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, getAttendeeField(params, "CANDIDATE", "label"))}</>,
             onCellClicked: (params) => {
-                const candidateId = getAttendeeField(params, 'CANDIDATE', '_id');
-                console.log("candidateId",candidateId);
+                const candidateId = getAttendeeField(params, "CANDIDATE", "_id");
+                console.log("candidateId", candidateId);
                 if (candidateId) {
                     window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
                 }
@@ -499,14 +642,12 @@ export const activityColumnMap = {
             headerName: "Contact Name",
             cellRenderer: (params) => (
                 <>
-                    {renderClickableField(params, getAttendeeField(params, 'CONTACT', 'reference'))}
-                    {" "}
-                    {renderClickableField(params, getAttendeeField(params, 'CONTACT', 'label'))}
+                    {renderClickableField(params, getAttendeeField(params, "CONTACT", "reference"))} {renderClickableField(params, getAttendeeField(params, "CONTACT", "label"))}
                 </>
             ),
             onCellClicked: (params) => {
-                const contactId = getAttendeeField(params, 'CONTACT', '_id');
-                console.log("contactId",contactId);
+                const contactId = getAttendeeField(params, "CONTACT", "_id");
+                console.log("contactId", contactId);
                 if (contactId) {
                     window.COOLUTIL.viewRecordPopupByType("CONTACT", contactId);
                 }
@@ -516,34 +657,39 @@ export const activityColumnMap = {
             field: "companyName",
             headerName: "Company",
             valueGetter: (params) => {
-                const contact = params.data.attendees?.find(attendee => attendee.type === 'CONTACT');
+                const contact = params.data.attendees?.find((attendee) => attendee.type === "CONTACT");
                 return contact ? contact.params.companyName : "";
-            }
+            },
         },
         {
             field: "mobile",
             headerName: "Contact Mobile",
-            valueGetter: (params) => getAttendeeField(params, 'CONTACT', 'mobile')
+            valueGetter: (params) => getAttendeeField(params, "CONTACT", "mobile"),
         },
         {
-            field:"eventStartDate",headerName: "Interview StartDate",type: "date",
+            field: "eventStartDate",
+            headerName: "Interview StartDate",
+            type: "date",
             dateFormat: "dd/MM/yy HH:mm",
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
-            }
+            },
         },
         {
-            field:"eventEndDate",headerName: "Interview EndDate",type: "date",  dateFormat: "dd/MM/yy HH:mm",
-            valueGetter: function(params) {
+            field: "eventEndDate",
+            headerName: "Interview EndDate",
+            type: "date",
+            dateFormat: "dd/MM/yy HH:mm",
+            valueGetter: function (params) {
                 return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
-            }
-        }
+            },
+        },
     ],
-    INTERVIEW_SCHEDULED_VALUE : [
-
+    INTERVIEW_SCHEDULED_VALUE: [
         {
             field: "job.reference",
-            headerName: "Job Reference",},
+            headerName: "Job Reference",
+        },
         {
             field: "title",
             headerName: "Title",
@@ -560,19 +706,16 @@ export const activityColumnMap = {
         },
         {
             field: "owner.label",
-            headerName: "PipeCard Owner"},
+            headerName: "PipeCard Owner",
+        },
 
         {
             field: "label",
             headerName: "Candidate",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, getAttendeeField(params, 'CANDIDATE', 'label'))}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, getAttendeeField(params, "CANDIDATE", "label"))}</>,
             onCellClicked: (params) => {
-                const candidateId = getAttendeeField(params, 'CANDIDATE', '_id');
-                console.log("candidateId",candidateId);
+                const candidateId = getAttendeeField(params, "CANDIDATE", "_id");
+                console.log("candidateId", candidateId);
                 if (candidateId) {
                     window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
                 }
@@ -582,50 +725,52 @@ export const activityColumnMap = {
             field: "companyName",
             headerName: "Company",
             valueGetter: (params) => {
-                const contact = params.data.attendees?.find(attendee => attendee.type === 'CONTACT');
+                const contact = params.data.attendees?.find((attendee) => attendee.type === "CONTACT");
                 return contact ? contact.params.companyName : "";
-            }
+            },
         },
         {
             field: "label",
             headerName: "Contact Name",
             cellRenderer: (params) => (
                 <>
-                    {renderClickableField(params, getAttendeeField(params, 'CONTACT', 'reference'))}
-                    {" "}
-                    {renderClickableField(params, getAttendeeField(params, 'CONTACT', 'label'))}
+                    {renderClickableField(params, getAttendeeField(params, "CONTACT", "reference"))} {renderClickableField(params, getAttendeeField(params, "CONTACT", "label"))}
                 </>
             ),
             onCellClicked: (params) => {
-                const contactId = getAttendeeField(params, 'CONTACT', '_id');
-                console.log("contactId",contactId);
+                const contactId = getAttendeeField(params, "CONTACT", "_id");
+                console.log("contactId", contactId);
                 if (contactId) {
                     window.COOLUTIL.viewRecordPopupByType("CONTACT", contactId);
                 }
             },
         },
 
-
         {
-            field:"eventStartDate",headerName: "Interview StartDate",type: "date",
+            field: "eventStartDate",
+            headerName: "Interview StartDate",
+            type: "date",
             dateFormat: "dd/MM/yy HH:mm",
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.eventStartDate ? formatGlobalDateWithTime(params.data.eventStartDate) : "";
-            }
+            },
         },
         {
-            field:"eventEndDate",headerName: "Interview EndDate",type: "date",  dateFormat: "dd/MM/yy HH:mm",
-            valueGetter: function(params) {
+            field: "eventEndDate",
+            headerName: "Interview EndDate",
+            type: "date",
+            dateFormat: "dd/MM/yy HH:mm",
+            valueGetter: function (params) {
                 return params.data.eventEndDate ? formatGlobalDateWithTime(params.data.eventEndDate) : "";
-            }
+            },
         },
         {
-            field:"location.cityName",headerName: "Interview Location",
-
+            field: "location.cityName",
+            headerName: "Interview Location",
         },
         {
-            field:"interviewPipeline.state.name",headerName: "Interview Stage",
-
+            field: "interviewPipeline.state.name",
+            headerName: "Interview Stage",
         },
         {
             field: "interviewPipeline.rejected",
@@ -649,16 +794,14 @@ export const activityColumnMap = {
                 );
             },
         },
-
-
     ],
-    EMAILS_SENT:[
-        { field: "fromName", headerName: "FromName" },
-        { field: "fromEmail", headerName: "FromEmail" },
-        { field: "subject", headerName: "Subject" },
+    EMAILS_SENT: [
+        {field: "fromName", headerName: "FromName"},
+        {field: "fromEmail", headerName: "FromEmail"},
+        {field: "subject", headerName: "Subject"},
         {
             field: "toList",
-            headerName: "ToList",
+            headerName: "Linked Records",
             valueGetter: (params) => {
                 return params.data.toList?.map(data => data.label).join(", ") || "N/A";
             },
@@ -676,7 +819,6 @@ export const activityColumnMap = {
                             style={{ color: "blue", cursor: "pointer" }}
                             onClick={() => {
                                 const candidateId = data._id;
-                                console.log("candidateId", candidateId);
                                 if (candidateId) {
                                     window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
                                 }
@@ -692,102 +834,100 @@ export const activityColumnMap = {
                     : null;
             },
         },
-
         {
             field: "createdOn",
             headerName: "Time Sent",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 const timestamp = params.data.createdOn;
                 if (!timestamp) {
                     return null;
                 }
                 return getLocalizedDateString(timestamp, "DD/MM/YYYY HH:mm:ss");
-            }
-        }
+            },
+        },
     ],
-    LEADS_CLOSED:[
+    LEADS_CLOSED: [
         {
             field: "reference",
             headerName: "#REF",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.reference)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "LEAD"),
         },
         {
             field: "firstName",
             headerName: "Name",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, `${params.data.firstName} ${params.data.surname}`)}
-                </>
-            ),
+            cellRenderer: (params) => <>{renderClickableField(params, `${params.data.firstName} ${params.data.surname}`)}</>,
             onCellClicked: (params) => viewRecord(params, "LEAD"),
         },
-        { field: "email", headerName: "Email" },
-        { field: "mobile", headerName: "Mobile" },
-        { field: "owner.label", headerName: "Owner" },
+        {field: "email", headerName: "Email"},
+        {field: "mobile", headerName: "Mobile"},
+        {field: "owner.label", headerName: "Owner"},
         {
-            field: "status", headerName: "Pipeline", sortable: false, cellRenderer: function(params) {
+            field: "status",
+            headerName: "Pipeline",
+            sortable: false,
+            cellRenderer: function (params) {
                 const status = params.data.status;
                 if (!status || !status.pipeline) {
                     return null;
                 }
                 return (
                     <Flex direction="row" align="center" justify="start" gap="small">
-                        <LuSquareKanban />
+                        <LuSquareKanban/>
                         <span>{status.pipeline.name}</span>
                         <Tag color={status.type.code === "CLOSED" ? "default" : "success"}>{status.name}</Tag>
                     </Flex>
                 );
-            }
+            },
         },
         {
             field: "status",
             headerName: "Status",
-            valueGetter: (params) => params.data.statusLog?.[0]?.current?.name || ''
+            valueGetter: (params) => params.data.statusLog?.[0]?.current?.name || "",
         },
         {
             field: "createdOn",
-            headerName: "Created At",
+            headerName: "Created Date",
             type: "date",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
+            },
         },
         {
             field: "addedOn",
             headerName: "Closing Date",
             type: "date",
-            valueGetter: (params) => formatGlobalDate(params.data.statusLog?.[0]?.addedOn)
-        }
+            valueGetter: (params) => formatGlobalDate(params.data.statusLog?.[0]?.addedOn),
+        },
     ],
-    CAMPAIGNS_SENT:[
-        { field: "name", headerName: "Name",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data?.name)}
-                </>
-            ),
+    CAMPAIGNS_SENT: [
+        {
+            field: "name",
+            headerName: "Name",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data?.name)}</>,
             onCellClicked: (params) => viewRecord(params, "EMAIL_CAMPAIGN"),
         },
-        { field: "subject", headerName: "Subject" },
-        { field: "template.name", headerName: "Template" },
-        { field: "owner.label", headerName: "Owner" },
+        {field: "subject", headerName: "Subject"},
+        {field: "template.name", headerName: "Template"},
+        {field: "owner.label", headerName: "Owner"},
         {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
-        }
+            },
+        },
     ],
-    CANDIDATES_SHORTLISTED : [
+    CANDIDATES_SHORTLISTED: [
+        {field: "candidateRef", headerName: "Candidate Ref"},
         {
             field: "statusName",
             headerName: "Status",
@@ -802,36 +942,41 @@ export const activityColumnMap = {
                 );
             },
         },
-        { field: "candidateLabel", headerName: "Candidate",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.candidateLabel)}
-                </>
-            ),
-            onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+        {
+            field: "candidateLabel",
+            headerName: "Candidate",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.candidateLabel)}</>,
+            onCellClicked: (params) => {
+                if (params.data && params.data.candidateId) {
+                    window.COOLUTIL.viewRecordPopupByType("CANDIDATE", params.data.candidateId);
+                }
+            },
         },
-        { field: "candidateEmail", headerName: "Email" },
-        { field: "contactName", headerName: "Contact Name",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.contactName)}
-                </>
-            ),
+        {field: "candidateEmail", headerName: "Email"},
+        {field: "candidateMobile", headerName: "Mobile"},
+        {field: "ownerName", headerName: "Owner"},
+        {field: "jobRef", headerName: "Job Ref"},
+        {field: "jobTitle", headerName: "Job Title"},
+        {
+            field: "jobCommissionValue",
+            headerName: "Value",
+            valueGetter: (params) => {
+                const value = params.data.jobCommissionValue?.value;
+                const currencyName = params.data.jobCommissionValue?.currency?.name;
+                return `${value} ${currencyName}`;
+            },
+        },
+        {field: "companyLabel", headerName: "Company"},
+        {
+            field: "contactName",
+            headerName: "Contact Name",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.contactName)}</>,
             onCellClicked: (params) => {
                 if (params.data && params.data.contactRef) {
                     window.COOLUTIL.viewRecordPopupByType("CONTACT", params.data.contactRef);
                 }
             },
         },
-        { field: "jobCommissionValue", headerName: "Value",
-            valueGetter: (params) => {
-                const value = params.data.jobCommissionValue?.value;
-                const currencyName  = params.data.jobCommissionValue?.currency?.name;
-                return `${value} ${currencyName }`;
-            },
-        },
-        { field: "companyLabel", headerName: "Company"},
-        { field: "jobTitle", headerName: "Job" },
         {
             field: "shortlistDate",
             headerName: "ShortlistDate",
@@ -839,12 +984,23 @@ export const activityColumnMap = {
             dateFormat: "dd/MM/yy",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.shortlistDate ? formatGlobalDate(params.data.shortlistDate) : "";
-            }
-        }
+            },
+        },
+        {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
+                return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
+            },
+        },
     ],
-    PIPELINE_CVSENT : [
+    PIPELINE_CVSENT: [
         {
             field: "statusName",
             headerName: "Status",
@@ -859,36 +1015,38 @@ export const activityColumnMap = {
                 );
             },
         },
-        { field: "candidateLabel", headerName: "Candidate",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.candidateLabel)}
-                </>
-            ),
-            onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
-        },
-        { field: "candidateEmail", headerName: "Email" },
-        { field: "contactName", headerName: "Contact Name",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.contactName)}
-                </>
-            ),
+        {
+            field: "candidateLabel",
+            headerName: "Candidate",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.candidateLabel)}</>,
             onCellClicked: (params) => {
-                if (params.data && params.data._id) {
-                    window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+                if (params.data && params.data.candidateId) {
+                    window.COOLUTIL.viewRecordPopupByType("CANDIDATE", params.data.candidateId);
                 }
             },
         },
-        { field: "jobCommissionValue", headerName: "Value",
-            valueGetter: (params) => {
-                const value = params.data.jobCommissionValue?.value;
-                const currencyName  = params.data.jobCommissionValue?.currency?.name;
-                return `${value} ${currencyName }`;
+        {field: "candidateEmail", headerName: "Email"},
+        {
+            field: "contactName",
+            headerName: "Contact Name",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.contactName)}</>,
+            onCellClicked: (params) => {
+                if (params.data && params.data.contactRef) {
+                    window.COOLUTIL.viewRecordPopupByType("CONTACT", params.data.contactRef);
+                }
             },
         },
-        { field: "companyLabel", headerName: "Company"},
-        { field: "jobTitle", headerName: "Job" },
+        {
+            field: "jobCommissionValue",
+            headerName: "Value",
+            valueGetter: (params) => {
+                const value = params.data.jobCommissionValue?.value;
+                const currencyName = params.data.jobCommissionValue?.currency?.name;
+                return `${value} ${currencyName}`;
+            },
+        },
+        {field: "companyLabel", headerName: "Company"},
+        {field: "jobTitle", headerName: "Job"},
         {
             field: "cvSentDate",
             headerName: "CVSentDate",
@@ -896,12 +1054,12 @@ export const activityColumnMap = {
             dateFormat: "dd/MM/yy",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.cvSentDate ? formatGlobalDate(params.data.cvSentDate) : "";
-            }
-        }
+            },
+        },
     ],
-    PIPELINE_OFFER : [
+    PIPELINE_OFFER: [
         {
             field: "status",
             headerName: "Status",
@@ -916,36 +1074,38 @@ export const activityColumnMap = {
                 );
             },
         },
-        { field: "candidateLabel", headerName: "Candidate",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.candidateLabel)}
-                </>
-            ),
-            onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
-        },
-        { field: "candidateEmail", headerName: "Email" },
-        { field: "contactName", headerName: "Contact Name",
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.contactName)}
-                </>
-            ),
+        {
+            field: "candidateLabel",
+            headerName: "Candidate",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.candidateLabel)}</>,
             onCellClicked: (params) => {
-                if (params.data && params.data._id) {
-                    window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+                if (params.data && params.data.candidateId) {
+                    window.COOLUTIL.viewRecordPopupByType("CANDIDATE", params.data.candidateId);
                 }
             },
         },
-        { field: "jobCommissionValue", headerName: "Value",
-            valueGetter: (params) => {
-                const value = params.data.jobCommissionValue?.value;
-                const currencyName  = params.data.jobCommissionValue?.currency?.name;
-                return `${value} ${currencyName }`;
+        {field: "candidateEmail", headerName: "Email"},
+        {
+            field: "contactName",
+            headerName: "Contact Name",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.contactName)}</>,
+            onCellClicked: (params) => {
+                if (params.data && params.data.contactRef) {
+                    window.COOLUTIL.viewRecordPopupByType("CONTACT", params.data.contactRef);
+                }
             },
         },
-        { field: "companyLabel", headerName: "Company"},
-        { field: "jobTitle", headerName: "Job" },
+        {
+            field: "jobCommissionValue",
+            headerName: "Value",
+            valueGetter: (params) => {
+                const value = params.data.jobCommissionValue?.value;
+                const currencyName = params.data.jobCommissionValue?.currency?.name;
+                return `${value} ${currencyName}`;
+            },
+        },
+        {field: "companyLabel", headerName: "Company"},
+        {field: "jobTitle", headerName: "Job"},
         {
             field: "offerDate",
             headerName: "OfferDate",
@@ -953,47 +1113,50 @@ export const activityColumnMap = {
             dateFormat: "dd/MM/yy",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.offerDate ? formatGlobalDate(params.data.offerDate) : "";
-            }
-        }
+            },
+        },
     ],
-    PIPELINE_VALUE : [
-
-
+    PIPELINE_VALUE: [
         {
             field: "candidate._id",
             headerName: "Candidate",
             valueGetter: sysrecordCandidateGetter,
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.candidate.label)}
-                </>
-            ),
-            onCellClicked: (params) => viewRecord(params, "CANDIDATE"),
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.candidate.label)}</>,
+            onCellClicked: (params) => {
+                if (params.data?.candidate?._id) {
+                    window.COOLUTIL.viewRecordPopupByType("CANDIDATE",params.data.candidate._id);
+                }
+            },
         },
         {
             field: "company._id",
             headerName: "Company",
             valueGetter: sysrecordCompanyGetter,
-            cellRenderer: (params) => (
-                <>
-                    {renderClickableField(params, params.data.company.label)}
-                </>
-            ),
-            onCellClicked: (params) => viewRecord(params, "COMPANY"),
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.company.label)}</>,
+            onCellClicked: (params) => {
+                if (params.data?.company?._id) {
+                    window.COOLUTIL.viewRecordPopupByType("COMPANY",params.data.company._id);
+                }
+            },
         },
 
-        { field: "owner.label", headerName: "Owner" },
+        {field: "owner.label", headerName: "Owner"},
 
         {
-            field: "createdOn", headerName: "Created At", type: "date", dateFormat: "dd/MM/yy", sort: "desc", sortedAt: 0,
-            valueGetter: function(params) {
+            field: "createdOn",
+            headerName: "Created Date",
+            type: "date",
+            dateFormat: "dd/MM/yy",
+            sort: "desc",
+            sortedAt: 0,
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
+            },
         },
-        { field: "status.name", headerName: "Pipeline Status" },
-        { field: "state.name", headerName: "Pipeline SubStatus" },
+        {field: "status.name", headerName: "Pipeline Status"},
+        {field: "state.name", headerName: "Pipeline SubStatus"},
         {
             field: "rejected",
             headerName: "Rejected Flag",
@@ -1016,12 +1179,9 @@ export const activityColumnMap = {
                 );
             },
         },
-
-
-
     ],
-    JOURNAL : [
-        {field: "journalFrom.label", headerName: "User" },
+    JOURNAL: [
+        {field: "journalFrom.label", headerName: "User"},
         {
             field: "journalActivityLabel",
             headerName: "Activity Type",
@@ -1100,7 +1260,6 @@ export const activityColumnMap = {
                     : null;
             },
         },
-
         {
             field: "journalDate",
             headerName: "Activity Date",
@@ -1108,15 +1267,15 @@ export const activityColumnMap = {
             dateFormat: "dd/MM/yy",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.journalDate ? formatGlobalDate(params.data.journalDate) : "";
-            }
-        }
+            },
+        },
     ],
     DEFAULT: [
-        { field: "reference", headerName: "#REF" },
-        { field: "name", headerName: "Record" },
-        { field: "owner.label", headerName: "Owner" },
+        {field: "reference", headerName: "#REF"},
+        {field: "name", headerName: "Record"},
+        {field: "owner.label", headerName: "Owner"},
         {
             field: "createdOn",
             headerName: "Created At",
@@ -1124,9 +1283,9 @@ export const activityColumnMap = {
             dateFormat: "dd/MM/yy",
             sort: "desc",
             sortedAt: 0,
-            valueGetter: function(params) {
+            valueGetter: function (params) {
                 return params.data.createdOn ? formatGlobalDate(params.data.createdOn) : "";
-            }
-        }
-    ]
+            },
+        },
+    ],
 };
