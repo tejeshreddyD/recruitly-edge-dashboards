@@ -691,6 +691,12 @@ export const activityColumnMap = {
         {
             field: "job.reference",
             headerName: "Job Reference",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.job.reference)}</>,
+            onCellClicked: (params) => {
+                if (params.data?.job._id) {
+                    window.COOLUTIL.viewRecordPopupByType("JOB", params.data.job._id);
+                }
+            }
         },
         {
             field: "title",
@@ -717,7 +723,6 @@ export const activityColumnMap = {
             cellRenderer: (params) => <>{renderClickableField(params, getAttendeeField(params, "CANDIDATE", "label"))}</>,
             onCellClicked: (params) => {
                 const candidateId = getAttendeeField(params, "CANDIDATE", "_id");
-                console.log("candidateId", candidateId);
                 if (candidateId) {
                     window.COOLUTIL.viewRecordPopupByType("CANDIDATE", candidateId);
                 }
@@ -741,7 +746,6 @@ export const activityColumnMap = {
             ),
             onCellClicked: (params) => {
                 const contactId = getAttendeeField(params, "CONTACT", "_id");
-                console.log("contactId", contactId);
                 if (contactId) {
                     window.COOLUTIL.viewRecordPopupByType("CONTACT", contactId);
                 }
@@ -1050,7 +1054,14 @@ export const activityColumnMap = {
             },
         },
         {field: "companyLabel", headerName: "Company"},
-        {field: "jobTitle", headerName: "Job"},
+        {field: "jobTitle", headerName: "Job",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.jobTitle)}</>,
+            onCellClicked: (params) => {
+                if (params.data?.jobId) {
+                    window.COOLUTIL.viewRecordPopupByType("JOB", params.data.jobId);
+                }
+            }
+        },
         {
             field: "cvSentDate",
             headerName: "CVSentDate",
@@ -1109,7 +1120,14 @@ export const activityColumnMap = {
             },
         },
         {field: "companyLabel", headerName: "Company"},
-        {field: "jobTitle", headerName: "Job"},
+        {field: "jobTitle", headerName: "Job",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.jobTitle)}</>,
+            onCellClicked: (params) => {
+                if (params.data?.jobId) {
+                    window.COOLUTIL.viewRecordPopupByType("JOB", params.data.jobId);
+                }
+            }
+        },
         {
             field: "offerDate",
             headerName: "OfferDate",
