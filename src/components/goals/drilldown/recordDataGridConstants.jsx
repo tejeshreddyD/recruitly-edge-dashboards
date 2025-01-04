@@ -430,14 +430,22 @@ export const activityColumnMap = {
             headerName: "Company",
             valueGetter: sysrecordCompanyGetter,
             cellRenderer: (params) => <>{renderClickableField(params, params.data?.company.label)}</>,
-            onCellClicked: (params) => viewRecord(params, "JOB"),
+            onCellClicked: (params) => {
+                if (params.data?.company?._id) {
+                    window.COOLUTIL.viewRecordPopupByType("COMPANY", params.data.company._id);
+                }
+            }
         },
         {
             field: "contact._id",
             headerName: "Contact",
             valueGetter: sysrecordContactGetter,
             cellRenderer: (params) => <>{renderClickableField(params, params.data?.contact.label)}</>,
-            onCellClicked: (params) => viewRecord(params, "JOB"),
+            onCellClicked: (params) => {
+                if (params.data?.contact?._id) {
+                    window.COOLUTIL.viewRecordPopupByType("CONTACT", params.data.contact._id);
+                }
+            }
         },
     ],
     SPEC_CVSHARE: [
@@ -478,14 +486,22 @@ export const activityColumnMap = {
             headerName: "Company",
             valueGetter: sysrecordCompanyGetter,
             cellRenderer: (params) => <>{renderClickableField(params, params.data?.company.label)}</>,
-            onCellClicked: (params) => viewRecord(params, "JOB"),
+            onCellClicked: (params) => {
+                if (params.data?.company?._id) {
+                    window.COOLUTIL.viewRecordPopupByType("COMPANY",params.data.company._id);
+                }
+            }
         },
         {
             field: "contact._id",
             headerName: "Contact",
             valueGetter: sysrecordContactGetter,
             cellRenderer: (params) => <>{renderClickableField(params, params.data?.contact.label)}</>,
-            onCellClicked: (params) => viewRecord(params, "JOB"),
+            onCellClicked: (params) => {
+                if (params.data?.contact?._id) {
+                    window.COOLUTIL.viewRecordPopupByType("CONTACT",params.data.contact._id);
+                }
+            }
         },
         {field: "status.name", headerName: "Status"},
         {field: "owner.label", headerName: "Owner"},
