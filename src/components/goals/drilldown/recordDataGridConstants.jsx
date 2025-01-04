@@ -966,8 +966,8 @@ export const activityColumnMap = {
       headerName: "Contact Name",
       cellRenderer: (params) => <>{renderClickableField(params, params.data.contactName)}</>,
       onCellClicked: (params) => {
-        if (params.data && params.data._id) {
-          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        if (params.data && params.data.contactRef) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.data.contactRef);
         }
       },
     },
@@ -1021,8 +1021,8 @@ export const activityColumnMap = {
       headerName: "Contact Name",
       cellRenderer: (params) => <>{renderClickableField(params, params.data.contactName)}</>,
       onCellClicked: (params) => {
-        if (params.data && params.data._id) {
-          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.contactRef);
+        if (params.data && params.data.contactRef) {
+          window.COOLUTIL.viewRecordPopupByType("CONTACT", params.data.contactRef);
         }
       },
     },
