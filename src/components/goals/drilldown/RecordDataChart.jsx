@@ -10,6 +10,7 @@ const RecordDataChart = ({apiServer, apiKey, activityId, activityType, selectedP
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [data, setData] = useState([]);
+    const [chartKey, setChartKey] = useState(0); // Key to force chart refresh
 
     useEffect(() => {
         const fetchRecordDataMetrics = async () => {
@@ -45,14 +46,14 @@ const RecordDataChart = ({apiServer, apiKey, activityId, activityType, selectedP
             } catch (error) {
                 setErrorMessage("Error fetching chart data.");
                 console.error("Error fetching chart data:", error);
+                setData([]); // Ensure graph is reset on error
             } finally {
                 setLoading(false); // Loading complete
+                setChartKey((prev) => prev + 1); // Force chart refresh
             }
         };
 
-        fetchRecordDataMetrics().then(() => {
-            setLoading(false);
-        });
+        fetchRecordDataMetrics();
     }, [apiServer, apiKey, activityId, activityType, selectedPeriod]);
 
     return (
@@ -63,6 +64,7 @@ const RecordDataChart = ({apiServer, apiKey, activityId, activityType, selectedP
                 </Flex>
                 <Card>
                     <AgCharts
+                        key={chartKey} // Use key to force re-render when data changes
                         options={{
                             theme: "ag-polychroma",
                             data: data,
