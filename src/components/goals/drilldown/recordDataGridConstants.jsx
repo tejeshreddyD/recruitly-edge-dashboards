@@ -58,19 +58,22 @@ export const activityColumnMap = {
         {
             field: "reference",
             headerName: "#REF",
+            minWidth:100,
+            maxWidth:100,
             cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "LEAD"),
         },
         {
             field: "firstName",
             headerName: "Name",
+            minWidth:170,maxWidth:170,
             cellRenderer: (params) => <>{renderClickableField(params, `${params.data.firstName} ${params.data.surname}`)}</>,
             onCellClicked: (params) => viewRecord(params, "LEAD"),
         },
 
-        {field: "email", headerName: "Email"},
-        {field: "mobile", headerName: "Mobile"},
-        {field: "owner.label", headerName: "Owner"},
+        {field: "email", headerName: "Email",minWidth:300,maxWidth:300},
+        {field: "mobile", headerName: "Mobile",minWidth:150,maxWidth:150},
+        {field: "owner.label", headerName: "Owner",minWidth:150,maxWidth:150},
         {
             field: "status",
             headerName: "Pipeline",
@@ -92,6 +95,7 @@ export const activityColumnMap = {
         {
             field: "createdOn",
             headerName: "Created Date",
+            minWidth:150,maxWidth:150,
             type: "date",
             sort: "desc",
             sortedAt: 0,
@@ -225,18 +229,26 @@ export const activityColumnMap = {
         {
             field: "reference",
             headerName: "#REF",
+            minWidth:100,
+            maxWidth:100,
             cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
         },
         {
             field: "name",
             headerName: "Title",
+            minWidth:300,
+            maxWidth:300,
         },
-        {field: "", headerName: "Pulse"},
-        {field: "owner.label", headerName: "Owner"},
+        {field: "", headerName: "Pulse", minWidth:100,
+            maxWidth:100,},
+        {field: "owner.label", headerName: "Owner", minWidth:120,
+            maxWidth:120,},
         {
             field: "createdOn",
             headerName: "Created Date",
+            minWidth:160,
+            maxWidth:160,
             type: "date",
             sort: "desc",
             sortedAt: 0,
@@ -247,6 +259,8 @@ export const activityColumnMap = {
         {
             field: "state",
             headerName: "Pipeline",
+            minWidth:250,
+            maxWidth:250,
             sortable: false,
             cellRenderer: function (params) {
                 const {state} = params.data;
@@ -270,7 +284,8 @@ export const activityColumnMap = {
                 );
             },
         },
-        {field: "bid.value", headerName: "Deal Value"},
+        {field: "bid.value", headerName: "Deal Value", minWidth:100,
+            maxWidth:100,},
         {field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter},
         {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter},
     ],
@@ -410,11 +425,15 @@ export const activityColumnMap = {
         {
             field: "reference",
             headerName: "#REF",
+            minWidth:100,
+            maxWidth:100,
             cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "JOB"),
         },
-        {field: "title", headerName: "Title"},
-        {field: "", headerName: "Pulse"},
+        {field: "title", headerName: "Title", minWidth:300,
+            maxWidth:300,},
+        {field: "", headerName: "Pulse", minWidth:100,
+            maxWidth:100,},
         {field: "owner.label", headerName: "Owner"},
         {
             field: "createdOn",
