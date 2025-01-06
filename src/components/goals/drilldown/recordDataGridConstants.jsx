@@ -160,18 +160,27 @@ export const activityColumnMap = {
         {
             field: "reference",
             headerName: "#REF",
+            minwidth:100,
+            maxWidth:100,
             cellRenderer: (params) => <>{renderClickableField(params, params.data?.reference)}</>,
             onCellClicked: (params) => viewRecord(params, "OPPORTUNITY"),
         },
         {
             field: "name",
             headerName: "Title",
+            minwidth:300,
+            maxWidth:300,
         },
-        {field: "", headerName: "Pulse"},
-        {field: "owner.label", headerName: "Owner"},
+        {field: "", headerName: "Pulse" , minwidth:150,
+            maxWidth:150,},
+        {field: "owner.label", headerName: "Owner",minwidth:150,
+            maxWidth:150,},
+
         {
             field: "createdOn",
             headerName: "Created Date",
+            minwidth:150,
+            maxWidth:150,
             type: "date",
             sort: "desc",
             sortedAt: 0,
@@ -205,9 +214,11 @@ export const activityColumnMap = {
                 );
             },
         },
-        {field: "bid.value", headerName: "Deal Value"},
+        {field: "bid.value", headerName: "Deal Value",minwidth:100,
+            maxWidth:100,},
         {field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter},
-        {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter},
+        {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter, minwidth:200,
+            maxWidth:200,},
     ],
 
     OPPORTUNITIES_PIPELINE_VALUE: [
@@ -283,13 +294,13 @@ export const activityColumnMap = {
         },
     ],
     PLACEMENTS_VALUE: [
-        {field: "reference", headerName: "#REF"},
-        {field: "job.label", headerName: "Title"},
-        {field: "employmentType.name", headerName: "Type"},
+        {field: "reference", headerName: "#REF",minWidth:100,maxWidth:100},
+        {field: "job.label", headerName: "Title",minWidth:250,maxWidth:250},
+        {field: "employmentType.name", headerName: "Type",minWidth:100,maxWidth:100},
         {field: "company._id", headerName: "Company", valueGetter: sysrecordCompanyGetter},
         {field: "contact._id", headerName: "Contact", valueGetter: sysrecordContactGetter},
         {field: "candidate._id", headerName: "Candidate", valueGetter: sysrecordCandidateGetter},
-        {field: "placementValue", headerName: "Billing Amount"},
+        {field: "placementValue", headerName: "Billing Amount",minWidth:120,maxWidth:120},
         {
             field: "placementDate",
             headerName: "Placement Date",
@@ -719,6 +730,8 @@ export const activityColumnMap = {
         {
             field: "job.reference",
             headerName: "Job Reference",
+            minWidth:110,
+            maxWidth:110,
             cellRenderer: (params) => <>{renderClickableField(params, params.data.job.reference)}</>,
             onCellClicked: (params) => {
                 if (params.data?.job._id) {
@@ -729,6 +742,8 @@ export const activityColumnMap = {
         {
             field: "title",
             headerName: "Title",
+            minWidth:320,
+            maxWidth:320,
             cellRenderer: (params) => {
                 const title = params.data?.title || "";
                 const type = params.data?.type || "";
@@ -759,6 +774,8 @@ export const activityColumnMap = {
         {
             field: "companyName",
             headerName: "Company",
+            minWidth:120,
+            maxWidth:120,
             valueGetter: (params) => {
                 const contact = params.data.attendees?.find((attendee) => attendee.type === "CONTACT");
                 return contact ? contact.params.companyName : "";
@@ -783,6 +800,8 @@ export const activityColumnMap = {
         {
             field: "eventStartDate",
             headerName: "Interview StartDate",
+            minWidth:170,
+            maxWidth:170,
             type: "date",
             dateFormat: "dd/MM/yy HH:mm",
             valueGetter: function (params) {
@@ -792,6 +811,8 @@ export const activityColumnMap = {
         {
             field: "eventEndDate",
             headerName: "Interview EndDate",
+            minWidth:170,
+            maxWidth:170,
             type: "date",
             dateFormat: "dd/MM/yy HH:mm",
             valueGetter: function (params) {
@@ -934,11 +955,17 @@ export const activityColumnMap = {
             },
         },
         {
-            field: "addedOn",
+            field: "statusLog.0.addedOn",
             headerName: "Closing Date",
             type: "date",
-            valueGetter: (params) => formatGlobalDate(params.data.statusLog?.[0]?.addedOn),
+            valueGetter: function (params) {
+                // Make sure statusLog exists and the first entry has the addedOn date
+                return params.data?.statusLog?.[0]?.addedOn ? formatGlobalDate(params.data.statusLog[0].addedOn) : "";
+            },
         },
+
+
+
     ],
     CAMPAIGNS_SENT: [
         {
