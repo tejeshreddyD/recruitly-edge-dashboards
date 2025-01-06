@@ -144,7 +144,7 @@ export const getDateStringByUserTimeZone = (timestamp, format) => {
 
 export function formatGlobalDate(dateString) {
   const date = new Date(dateString);
-  const formatString = isThisYear(date) ? "do MMM" : "do MMM yyyy";
+  const formatString = isThisYear(date) ? "do MMM yyyy" : "do MMM yyyy";
   return format(date, formatString);
 }
 
