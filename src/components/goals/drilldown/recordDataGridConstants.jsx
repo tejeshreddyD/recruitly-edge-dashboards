@@ -449,8 +449,31 @@ export const activityColumnMap = {
         },
     ],
     SPEC_CVSHARE: [
-        {field: "shareName", headerName: "Title"},
-        {field: "candidateOwner", headerName: "Candidate Owner"},
+        {field: "shareName", headerName: "Share",
+            cellRenderer: (params) => <>{renderClickableField(params, params.data.shareName)}</>,
+            onCellClicked: (params) => {
+                if (params.data?.candidateId) {
+                    window.COOLUTIL.viewRecordPopupByType("CANDIDATE", params.data.candidateId);
+                }
+            }
+        },
+        {field: "candidateDetails", headerName: "Candidate",
+            valueGetter: ({ data }) => data.candidateRef && data.candidateName
+              ? `${data.candidateRef} ${data.candidateName}`
+              : "",
+        },
+        {field: "companyDetails", headerName: "Company",
+            valueGetter: ({ data }) => data.companyRef && data.companyName
+              ? `${data.companyRef} ${data.companyName}`
+              : "",
+        },
+        {field: "contactDetails", headerName: "Contact",
+            valueGetter: ({ data }) => data.contactRef && data.contactName
+              ? `${data.contactRef} ${data.contactName}`
+              : "",
+        },
+        {field: "status", headerName: "Status"},
+        {field: "sharedByName",headerName: "Shared By"},
         {
             field: "shareDate",
             headerName: "Shared On",
@@ -462,6 +485,11 @@ export const activityColumnMap = {
                 return params.data.shareDate ? formatGlobalDate(params.data.shareDate) : "";
             },
         },
+        {field: "expiryDate",headerName: "Expiry Date",type: "date",dateFormat: "dd/MM/yy",
+            valueGetter: function (params) {
+                return params.data.expiryDate ? formatGlobalDate(params.data.expiryDate) : "";
+            },
+        }
     ],
 
     JOBS_CREATED: [
