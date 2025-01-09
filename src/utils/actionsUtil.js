@@ -6,6 +6,10 @@ export const dashboardActionCode = {
 
 export const recordType = (ref) =>{
 
+  if(!ref || ref === ''){
+    return "";
+  }
+
   const code = ref.trim().split('-')[0];
 
   switch(code){
