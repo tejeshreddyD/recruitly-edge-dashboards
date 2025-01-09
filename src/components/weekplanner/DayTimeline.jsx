@@ -10,7 +10,7 @@ import { RiCalendarView } from "react-icons/ri";
 
 import { VISTA_URL } from "@constants";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
-import { dashboardAction, dashboardActionCode } from "@utils/actionsUtil.js";
+import { dashboardAction, dashboardActionCode, recordType } from "@utils/actionsUtil.js";
 
 const { Text, Link } = Typography;
 
@@ -57,7 +57,12 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
     switch (item.type) {
       case "TASK":
-        return <Link href={`${VISTA_URL}/reminders?type=TASK&date=${item.dueDate}`} style={timelineTextStyle}>{item.count} Task(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
+        return (<><Link href={'#'} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_TASK,{records:[{id:item.id}]})} style={timelineTextStyle}>{item.count} task(s) is due</Link>
+          {item.records.length > 0 ? item.records.map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${recordType(rec.reference).toLowerCase()}`}>
+            <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.id,type:recordType(rec.reference)})} href={"#"}>
+              {rec.name}
+            </Tag>
+          </Tooltip>)):""}</>);
       case "OVERDUE_TASK":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_TASK&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "REMINDER":
