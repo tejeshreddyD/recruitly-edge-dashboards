@@ -79,7 +79,6 @@ export const activityColumnMap = {
     {
       field: "status",
       headerName: "Pipeline",
-      sortable: false,
       cellRenderer: function (params) {
         const status = params.data.status;
         if (!status || !status.pipeline) {
@@ -134,7 +133,6 @@ export const activityColumnMap = {
     {
       field: "state",
       headerName: "Pipeline",
-      sortable: false,
       cellRenderer: function (params) {
         const { state } = params.data;
         if (!state || !state.pipeline) {
@@ -225,7 +223,6 @@ export const activityColumnMap = {
     {
       field: "state",
       headerName: "Pipeline",
-      sortable: false,
       cellRenderer: function (params) {
         const { state } = params.data;
         if (!state || !state.pipeline) {
@@ -324,7 +321,6 @@ export const activityColumnMap = {
       headerName: "Pipeline",
       minWidth: 250,
       maxWidth: 250,
-      sortable: false,
       cellRenderer: function (params) {
         const { state } = params.data;
         if (!state || !state.pipeline) {
@@ -1184,7 +1180,6 @@ export const activityColumnMap = {
     {
       field: "status",
       headerName: "Pipeline",
-      sortable: false,
       cellRenderer: function (params) {
         const status = params.data.status;
         if (!status || !status.pipeline) {
