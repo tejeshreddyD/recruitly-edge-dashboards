@@ -1,7 +1,9 @@
 import React from "react";
-import { Col,Divider, Row, Space, Typography } from "antd";
+import { Button, Col, Divider, Row, Space, Typography } from "antd";
 
 import { getDateMoment } from "@utils/dateUtil.js";
+import { FaRegEdit } from "react-icons/fa";
+import { dashboardAction, dashboardActionCode } from "@utils/actionsUtil.js";
 
 const { Text, Link } = Typography;
 
@@ -22,8 +24,20 @@ const ReminderViewer = ({ data }) => {
     window.COOLUTIL.viewRecordPopupByType(record.type, record._id);
   };
 
+
+
   return (
-    <div style={{ padding: "8px"}}>
+    <div style={{ padding: "8px",position: "relative" }}>
+      <Button
+        type="default"
+        onClick={(e) => dashboardAction(e,dashboardActionCode.EDIT_NOTE,{records:[{id:reminder_data._id}]})}
+        style={{
+          right: "8px",
+        }}
+        icon={<FaRegEdit size={16}/>}
+      >
+        Edit
+      </Button>
       <Divider orientation="left" style={{ margin: "8px 0" }}>
         Notes
       </Divider>

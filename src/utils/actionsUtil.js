@@ -1,7 +1,8 @@
 export const dashboardActionCode = {
   VIEW_CALENDAR_EVENT:"VIEW_CALENDAR_EVENT",
   VIEW_PIPELINE_SIDEBAR:"VIEW_PIPELINE_SIDEBAR",
-  VIEW_TASK:'VIEW_TASK'
+  VIEW_TASK:'VIEW_TASK',
+  EDIT_NOTE:'EDIT_NOTE',
 }
 
 export const recordType = (ref) =>{
