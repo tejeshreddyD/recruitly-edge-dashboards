@@ -58,27 +58,27 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
     switch (item.type) {
       case "TASK":
         return (<><Link href={'#'} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_TASK,{records:[{id:item.id}]})} style={timelineTextStyle}>{item.count} task(s) is due with subject <Text style={{fontWeight:500}}>{item?.subject}</Text></Link>
-          {item.records.length > 0 ? item.records.map((rec, index) => (rec.reference ? <Tooltip key={index} style={{fontSize:10}} title={`View ${recordType(rec.reference).toLowerCase()}`}>
+          {item.records.length > 0 ? <div>{item.records.map((rec, index) => (rec.reference ? <Tooltip key={index} style={{fontSize:10}} title={`View ${recordType(rec.reference).toLowerCase()}`}>
             <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.id,type:recordType(rec.reference)})} href={"#"}>
               {rec.name}
             </Tag>
-          </Tooltip>:'')):""}</>);
+          </Tooltip>:''))}</div>:""}</>);
       case "OVERDUE_TASK":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_TASK&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "REMINDER":
         return (<><Link href={'#'} onClick={(e) => reminderViewer(e,item.id[0])} style={timelineTextStyle}>{item.count} reminder(s) is due</Link>
-        {item.records.length > 0 ? item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
+        {item.records.length > 0 ? <div>{item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
           <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
             {rec.label}
           </Tag>
-        </Tooltip>)):""}</>);
+        </Tooltip>))}</div>:""}</>);
       case "CUSTOM_ACTION":
         return (<><Link href={`${VISTA_URL}/reminders?type=NEXT_ACTION&date=${item.time}`} style={timelineTextStyle}>{item.count} custom next action(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>
-          {item.records.length > 0 ? item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
+          {item.records.length > 0 ? <div>{item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
               <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
                 {rec.name}
               </Tag>
-            </Tooltip>)):""}</>);
+          </Tooltip>))}</div>:""}</>);
       case "OVERDUE_REMINDER":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_REMINDER&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "CALL":
