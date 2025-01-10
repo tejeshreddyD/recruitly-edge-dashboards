@@ -3,12 +3,12 @@ import { Alert, Card, Drawer, Flex, Segmented } from "antd";
 import { BsFunnel } from "react-icons/bs";
 import { RiFocus2Line } from "react-icons/ri";
 
+import userDashboardPlannerDataStore from "@api/userDashboardPlannerDataStore.js";
 import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
 import DayTimeline from "@components/weekplanner/DayTimeline.jsx";
+import ReminderViewer from "@components/weekplanner/ReminderViewer.jsx";
 import { aggregateData, categorizeData } from "@components/weekplanner/util/plannerUtil.js";
 import { Spinner } from "@phosphor-icons/react";
-import ReminderViewer from "@components/weekplanner/ReminderViewer.jsx";
-import userDashboardPlannerDataStore from "@api/userDashboardPlannerDataStore.js";
 
 const CardUserWeekPlanner = () => {
   const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
@@ -19,7 +19,6 @@ const CardUserWeekPlanner = () => {
   const [filteredPlanner, setFilteredPlanner] = useState([]);
 
   const [isReminderViewerOpen, setReminderViewerOpen] = useState(false);
-  const [isReminderLoading, setIsReminderLoading] = useState(false);
 
   useEffect(() => {
     fetchUserPlannerData();
@@ -37,20 +36,14 @@ const CardUserWeekPlanner = () => {
     }
   }, [data, selectedPlannerType]);
 
-  const handleReminderViewer = (id) => {
+  const handleReminderViewer = (e,id) => {
 
-    console.log(id);
+    e.preventDefault();
 
     fetchUserReminderData({id:id})
 
     setReminderViewerOpen(true);
   }
-
-  useEffect(() => {
-
-
-
-  },[reminderData])
 
   return (
     <div>

@@ -1,16 +1,12 @@
 import React from "react";
-import { Card, Typography, Space, Divider } from "antd";
+import { Typography, Space, Divider, Row, Col } from "antd";
 import { getDateMoment } from "@utils/dateUtil.js";
 
 const { Text, Link } = Typography;
 
 const ReminderViewer = ({ data }) => {
   if (!data || data.length === 0) {
-    return (
-      <Card>
-        <Text>No reminder data available.</Text>
-      </Card>
-    );
+    return <Text>No reminder data available.</Text>;
   }
 
   const reminder_data = data[0];
@@ -26,46 +22,65 @@ const ReminderViewer = ({ data }) => {
   };
 
   return (
-    <div>
-      {/* Details and Linked Records */}
-      <Card style={{ marginBottom: "16px" }}>
-        <Divider orientation="left">Details</Divider>
-        <Space direction="vertical" size="small">
-          <Text>
-            <Text strong>Reminder Date:</Text> {getDateMoment(reminder_data.reminderDate)}
+    <div style={{ padding: "8px"}}>
+      <Divider orientation="left" style={{ margin: "8px 0" }}>
+        Notes
+      </Divider>
+      <div
+        style={{
+          fontSize: "14px",
+          lineHeight: "1.6",
+          background: "#f9f9f9",
+          padding: "12px",
+          borderRadius: "4px",
+        }}
+        dangerouslySetInnerHTML={{
+          __html: reminder_data.notes || "<p>No notes available.</p>",
+        }}
+      />
+      <Divider orientation="left" style={{ marginBottom: "8px" }}>
+        Details
+      </Divider>
+      <Row gutter={16} style={{ marginBottom: "8px" }}>
+        <Col span={12}>
+          <Text strong style={{ fontSize: "16px" }}>
+            Reminder Date:
           </Text>
-          <Text>
-            <Text strong>Activity Type:</Text> {reminder_data.type?.name || "N/A"}
+          <br />
+          <Text style={{ fontSize: "14px", color: "#555" }}>
+            {getDateMoment(reminder_data.reminderDate)}
           </Text>
-        </Space>
+        </Col>
+        <Col span={12}>
+          <Text strong style={{ fontSize: "16px" }}>
+            Activity Type:
+          </Text>
+          <br />
+          <Text style={{ fontSize: "14px", color: "#555" }}>
+            {reminder_data.type?.name || "N/A"}
+          </Text>
+        </Col>
+      </Row>
 
-        <Divider orientation="left">Linked Records</Divider>
+      <Divider orientation="left" style={{ margin: "8px 0" }}>
+        Linked Records
+      </Divider>
+      <Space direction="vertical" size="small" style={{ display: "block", marginBottom: "8px" }}>
         {reminder_data.links && reminder_data.links.length > 0 ? (
-          <Space direction="vertical" size="small">
-            {reminder_data.links.map((link) => (
-              <Link
-                key={link.id}
-                href="#"
-                onClick={(e) => handleLinkClick(e, link)}
-              >
-                {link.reference} {link.label}
-              </Link>
-            ))}
-          </Space>
+          reminder_data.links.map((link) => (
+            <Link
+              key={link.id}
+              href="#"
+              onClick={(e) => handleLinkClick(e, link)}
+              style={{ display: "inline-block", margin: "4px 0" }}
+            >
+              {link.reference} {link.label}
+            </Link>
+          ))
         ) : (
           <Text>No linked records available.</Text>
         )}
-      </Card>
-
-      {/* Notes */}
-      <Card>
-        <Divider orientation="left">Notes</Divider>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: reminder_data.notes || "<p>No notes available.</p>",
-          }}
-        />
-      </Card>
+      </Space>
     </div>
   );
 };
