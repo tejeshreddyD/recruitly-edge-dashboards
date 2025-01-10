@@ -34,6 +34,7 @@ const ReminderViewer = ({ data }) => {
         style={{
           right: "8px",
         }}
+        size={"small"}
         icon={<FaRegEdit size={16}/>}
       >
         Edit
