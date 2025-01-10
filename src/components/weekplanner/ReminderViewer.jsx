@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Space, Divider, Row, Col } from "antd";
+import { Col,Divider, Row, Space, Typography } from "antd";
+
 import { getDateMoment } from "@utils/dateUtil.js";
 
 const { Text, Link } = Typography;
