@@ -169,7 +169,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       }
       style={{
         backgroundColor: color,
-        width: "350px",
+        width: title === 'Today' ? "600px":"350px",
         overflowWrap: "break-word",
         paddingRight:"10px",
         marginBottom: 10,
@@ -177,9 +177,9 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
         textAlign: timelineItems.length > 0 ? "":"center",
       }}
     >
-      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0",minWidth:"330px",paddingRight:'10px' }} /> : (<><Card
+      {timelineItems.length > 0 ? <Timeline items={timelineItems} mode="left" style={{ margin: "20px 0",minWidth:title === 'Today' ? "580px":"330px",paddingRight:'10px' }} /> : (<><Card
         bordered={false}
-        style={{ width: "320px",boxShadow: "none", alignContent: "center" }}
+        style={{ width: title === 'Today' ? "570px":"320px",boxShadow: "none", alignContent: "center" }}
         cover={<GiEmptyHourglass size={100} color={"lightblue"} />}
       >
         <Text color={"lightgray"} style={{fontSize:"14px", color:"#c4b1b1"}}>No activity found for this date.</Text>

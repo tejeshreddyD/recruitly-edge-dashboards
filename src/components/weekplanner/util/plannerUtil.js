@@ -143,16 +143,28 @@ export const aggregateData = (respData,plannerType) => {
   }
 
   const data = Array.from(uniqueDayMap.values()).map((dayEntry) => {
+
+    console.log(dayEntry.times.values())
+
     return {
       due_date: dayEntry.day,
       data: Array.from(dayEntry.times.entries())
-        .map(([time, items]) => ({
-          time,
-          formatted_time:extractTimeFromTimestamp(time),
-          items,
-        }))
+        .map(([time, items]) => {
+          const isTimedEvent =
+            items && items.length > 0 &&
+            ['CALL', 'MEETING', 'INTERVIEW'].includes(items[0].type);
+
+          return {
+            time,
+            formatted_time: isTimedEvent
+              ? `${extractTimeFromTimestamp(items[0].startDate)} - ${extractTimeFromTimestamp(items[0].endDate)}`
+              : extractTimeFromTimestamp(time, items),
+            items,
+          };
+        })
         .sort((a, b) => a.time - b.time),
     };
+
   });
 
   data.sort((a, b) => a.due_date - b.due_date);
