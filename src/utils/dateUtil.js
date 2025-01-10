@@ -82,9 +82,7 @@ export const calculateDaysBetween = (date1, date2) => {
   return moment(date1).diff(moment(date2), "days");
 };
 
-export const extractTimeFromTimestamp = (timestamp,items) => {
-
-  console.log("extractTimeFromTimestamp",items);
+export const extractTimeFromTimestamp = (timestamp) => {
 
   if (!timestamp) {
     return timestamp;

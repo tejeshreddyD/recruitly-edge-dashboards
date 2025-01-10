@@ -144,8 +144,6 @@ export const aggregateData = (respData,plannerType) => {
 
   const data = Array.from(uniqueDayMap.values()).map((dayEntry) => {
 
-    console.log(dayEntry.times.values())
-
     return {
       due_date: dayEntry.day,
       data: Array.from(dayEntry.times.entries())
@@ -158,7 +156,7 @@ export const aggregateData = (respData,plannerType) => {
             time,
             formatted_time: isTimedEvent
               ? `${extractTimeFromTimestamp(items[0].startDate)} - ${extractTimeFromTimestamp(items[0].endDate)}`
-              : extractTimeFromTimestamp(time, items),
+              : extractTimeFromTimestamp(time),
             items,
           };
         })
