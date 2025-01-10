@@ -3,24 +3,26 @@ import { create } from "zustand";
 import {
   fetchUserPlannerCalendarEvents,
   fetchUserPlannerPendingJobApplications,
-  fetchUserPlannerStats,
-  fetchUserPlannerTasksByDate
+  fetchUserReminderById
 } from "../api/dashboardDataApi.js";
 
 const useUserPlannerDataStore = create((set, getState) => ({
   data: [],
   loading: false,
   error: null,
-  fetchUserPlannerTasksData: async ({start_date, end_date}) => {
+  reminderData: [],
+  reminderLoading: false,
+  reminderError: null,
+  fetchUserReminderData: async ({id}) => {
 
-    if (!getState().loading) {
+    if (!getState().reminderLoading) {
 
-      set({ loading: true, error: null });
+      set({ reminderLoading: true, reminderError: null });
       try {
-        const data = await fetchUserPlannerTasksByDate({start_date, end_date});
-        set({ data:data.data, loading: false });
+        const data = await fetchUserReminderById({id});
+        set({ reminderData:data.data, reminderLoading: false });
       } catch (error) {
-        set({ error: error.message, loading: false });
+        set({ reminderError: error.message, reminderLoading: false });
       }
     }
   },

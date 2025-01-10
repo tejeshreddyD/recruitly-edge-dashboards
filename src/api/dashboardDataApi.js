@@ -109,6 +109,18 @@ export const fetchUserPlannerTasksByDate = async ({ start_date, end_date }) => {
   }
 };
 
+export const fetchUserReminderById = async ({ id }) => {
+  const apiManager = getApiManager();
+  try {
+    const response = await apiManager.get(`/reminder/by_id?id=${id}`);
+    console.log("fetchUserReminderById ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching planner reminder data for date:", error.message);
+    throw new Error("Failed to fetch planner reminder data. Please try again.");
+  }
+};
+
 export const fetchUserPlannerPendingJobApplications = async ({ page, page_size }) => {
   const apiManager = getApiManager();
   try {

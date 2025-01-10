@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Alert, Card, Flex, Segmented } from "antd";
+import React, { useEffect, useState } from "react";
+import { Alert, Card, Drawer, Flex, Segmented } from "antd";
 import { BsFunnel } from "react-icons/bs";
 import { RiFocus2Line } from "react-icons/ri";
 
@@ -7,12 +7,19 @@ import useUserPlannerDashboardStore from "@api/userDashboardPlannerStore.js";
 import DayTimeline from "@components/weekplanner/DayTimeline.jsx";
 import { aggregateData, categorizeData } from "@components/weekplanner/util/plannerUtil.js";
 import { Spinner } from "@phosphor-icons/react";
+import ReminderViewer from "@components/weekplanner/ReminderViewer.jsx";
+import userDashboardPlannerDataStore from "@api/userDashboardPlannerDataStore.js";
 
 const CardUserWeekPlanner = () => {
   const { data, loading, error, fetchUserPlannerData } = useUserPlannerDashboardStore();
 
+  const {reminderData, reminderLoading, reminderError, fetchUserReminderData} = userDashboardPlannerDataStore();
+
   const [selectedPlannerType, setSelectedPlannerType] = useState("ALL");
   const [filteredPlanner, setFilteredPlanner] = useState([]);
+
+  const [isReminderViewerOpen, setReminderViewerOpen] = useState(false);
+  const [isReminderLoading, setIsReminderLoading] = useState(false);
 
   useEffect(() => {
     fetchUserPlannerData();
@@ -29,6 +36,21 @@ const CardUserWeekPlanner = () => {
       setFilteredPlanner(categorizedData);
     }
   }, [data, selectedPlannerType]);
+
+  const handleReminderViewer = (id) => {
+
+    console.log(id);
+
+    fetchUserReminderData({id:id})
+
+    setReminderViewerOpen(true);
+  }
+
+  useEffect(() => {
+
+
+
+  },[reminderData])
 
   return (
     <div>
@@ -95,10 +117,11 @@ const CardUserWeekPlanner = () => {
             </div>
           </Flex>
           : error ? <Alert message="Error loading data" type="error" /> : filteredPlanner.map((data) => (
-            <DayTimeline title={data.date} date={data.dayTimestamp} key={data.date} color="" items={data.items} />
+            <DayTimeline title={data.date} date={data.dayTimestamp} key={data.date} color="" items={data.items} reminderViewer={handleReminderViewer} />
           ))}
         </div>
       </Card>
+      <Drawer title="Reminder Viewer" width={'40%'} loading={reminderLoading} placement="right" closable={true} onClose={() => setReminderViewerOpen(false)} open={isReminderViewerOpen} key="right">{isReminderViewerOpen && <ReminderViewer data={reminderData}/>}</Drawer>
     </div>
   );
 };

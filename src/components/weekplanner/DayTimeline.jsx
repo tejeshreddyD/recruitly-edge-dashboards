@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { Card, Flex, Tag, Timeline, Tooltip, Typography } from "antd";
+import React, { useMemo, useState } from "react";
+import { Card, Drawer, Flex, Tag, Timeline, Tooltip, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaFileInvoice, FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
@@ -14,7 +14,7 @@ import { dashboardAction, dashboardActionCode, recordType } from "@utils/actions
 
 const { Text, Link } = Typography;
 
-const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = [] }) => {
+const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = [],reminderViewer}) => {
 
   const getTypeIcon = (type) => {
     const iconMap = {
@@ -66,7 +66,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       case "OVERDUE_TASK":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_TASK&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "REMINDER":
-        return (<><Link href={`${VISTA_URL}/reminders?type=REMINDER&date=${item.time}`} style={timelineTextStyle}>{item.count} reminder(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>
+        return (<><Link href={'#'} onClick={(e) => reminderViewer(item.id[0])} style={timelineTextStyle}>{item.count} reminder(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>
         {item.records.length > 0 ? item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
           <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
             {rec.label}
@@ -158,7 +158,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
     [items]
   );
 
-  return (
+  return (<>
     <Card
       styles={{ header: { borderBottom: 0 }}}
       title={
@@ -184,8 +184,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       >
         <Text color={"lightgray"} style={{fontSize:"14px", color:"#c4b1b1"}}>No activity found for this date.</Text>
       </Card></>)}
-    </Card>
-  );
+    </Card></>);
 });
 
 export default DailyTimeline;
