@@ -57,7 +57,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
     switch (item.type) {
       case "TASK":
-        return (<><Link href={'#'} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_TASK,{records:[{id:item.id}]})} style={timelineTextStyle}>{item.count} task(s) is due with subject <Text style={{fontWeight:500}}>{item.subject}</Text></Link>
+        return (<><Link href={'#'} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_TASK,{records:[{id:item.id}]})} style={timelineTextStyle}>{item.count} task(s) is due with subject <Text style={{fontWeight:500}}>{item?.subject}</Text></Link>
           {item.records.length > 0 ? item.records.map((rec, index) => (rec.reference ? <Tooltip key={index} style={{fontSize:10}} title={`View ${recordType(rec.reference).toLowerCase()}`}>
             <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.id,type:recordType(rec.reference)})} href={"#"}>
               {rec.name}
