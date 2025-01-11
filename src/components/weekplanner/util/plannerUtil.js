@@ -124,11 +124,9 @@ export const aggregateData = (respData, plannerType) => {
       due_date: dayEntry.day,
       data: Array.from(dayEntry.times.entries())
         .map(([time, items]) => {
-          const isTimedEvent = items && items.length > 0 && ["CALL", "MEETING", "INTERVIEW"].includes(items[0].type);
-
           return {
             time,
-            formatted_time: isTimedEvent ? `${extractTimeFromTimestamp(items[0].startDate)} - ${extractTimeFromTimestamp(items[0].endDate)}` : extractTimeFromTimestamp(time),
+            formatted_time: extractTimeFromTimestamp(time),
             items,
           };
         })
