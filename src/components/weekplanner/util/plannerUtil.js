@@ -212,7 +212,7 @@ export const categorizeData = (apiResponse) => {
 
   addCategory("Today", todayStart, todayApplications, todayOverdueCount, todayItems);
 
-  if(moment().add(1,'day').day() !== 6 && moment().add(1,'day').day() !== 0){
+  if (moment().add(1, "day").day() !== 6 && moment().add(1, "day").day() !== 0) {
     addCategory("Tomorrow", tomorrowStart, 0, 0, tomorrowItems);
   }
 
