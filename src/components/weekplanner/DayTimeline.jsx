@@ -2,15 +2,18 @@ import React, { useMemo } from "react";
 import { Card, Flex, Tag, Timeline, Tooltip, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
-import { FaFileInvoice, FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
+import { FaFileInvoice, FaFileWord, FaHandshake, FaMicrophone, FaPhoneSquareAlt, FaTasks } from "react-icons/fa";
 import { GiEmptyHourglass } from "react-icons/gi";
 import { IoFlash, IoOpenOutline } from "react-icons/io5";
 import { MdAlarm } from "react-icons/md";
 import { RiCalendarView } from "react-icons/ri";
 
 import { VISTA_URL } from "@constants";
-import { Alarm, PhoneCall } from "@phosphor-icons/react";
+import { Alarm, PhoneCall, PhoneOutgoing } from "@phosphor-icons/react";
 import { dashboardAction, dashboardActionCode, recordType } from "@utils/actionsUtil.js";
+import { GoTasklist } from "react-icons/go";
+import { GrTask, GrTasks } from "react-icons/gr";
+import { FaCalendarDays } from "react-icons/fa6";
 
 const { Text, Link } = Typography;
 
@@ -18,18 +21,18 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
   const getTypeIcon = (type) => {
     const iconMap = {
-      TASK: <FaTasks style={{ fontSize: "16px", color: "#1890ff" }} />,
-      OVERDUE_TASK:<FaTasks style={{ fontSize: "16px", color: "#8bbdee" }} />,
-      CALL: <PhoneCall style={{ fontSize: "16px", color: "#52c41a" }} />,
-      MEETING: <CiCalendarDate style={{ fontSize: "16px", color: "#faad14" }} />,
-      INTERVIEW: <FaMicrophone style={{ fontSize: "16px", color: "#faad14" }} />,
-      REMINDER: <Alarm style={{ fontSize: "16px", color: "#faad14" }} />,
-      OVERDUE_REMINDER: <Alarm style={{ fontSize: "16px", color: "#d8a977" }} />,
-      APPLICATION: <CgWebsite style={{ fontSize: "16px", color: "#722ed1" }} />,
-      PLACEMENT_STARTER: <FaHandshake style={{ fontSize: "16px", color: "#faad14" }} />,
-      CUSTOM_ACTION:<IoFlash style={{ fontSize: "16px", color: "#faad14" }} />,
-      INVOICE_DUE:<FaFileInvoice style={{ fontSize: "16px", color: "#faad14" }} />,
-      DEFAULT: <MdAlarm style={{ fontSize: "16px", color: "#f5222d" }} />,
+      TASK: <GrTask style={{ fontSize: "18px", color: "#1890ff" }} />,
+      OVERDUE_TASK:<FaTasks style={{ fontSize: "18px", color: "#8bbdee" }} />,
+      CALL: <FaPhoneSquareAlt style={{ fontSize: "18px", color: "#2c30ef" }} />,
+      MEETING: <FaCalendarDays style={{ fontSize: "18px", color: "#d64fac" }} />,
+      INTERVIEW: <FaMicrophone style={{ fontSize: "18px", color: "#46b17b" }} />,
+      REMINDER: <Alarm style={{ fontSize: "18px", color: "#faad14" }} />,
+      OVERDUE_REMINDER: <Alarm style={{ fontSize: "18px", color: "#d8a977" }} />,
+      APPLICATION: <FaFileWord style={{ fontSize: "18px", color: "#722ed1" }} />,
+      PLACEMENT_STARTER: <FaHandshake style={{ fontSize: "18px", color: "#faad14" }} />,
+      CUSTOM_ACTION:<IoFlash style={{ fontSize: "18px", color: "#faad14" }} />,
+      INVOICE_DUE:<FaFileInvoice style={{ fontSize: "18px", color: "#faad14" }} />,
+      DEFAULT: <MdAlarm style={{ fontSize: "18px", color: "#f5222d" }} />,
     };
 
     return iconMap[type] || iconMap.DEFAULT;
@@ -57,7 +60,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
     switch (item.type) {
       case "TASK":
-        return (<><Link href={'#'} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_TASK,{records:[{id:item.id}]})} style={timelineTextStyle}>{item.count} task(s) is due with subject <Text style={{fontWeight:500}}>{item?.subject}</Text></Link>
+        return (<><Link href={'#'} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_TASK,{records:[{id:item.id}]})} style={timelineTextStyle}><Text style={{fontWeight:500}}>{item?.subject}</Text></Link>
           {item.records.length > 0 ? <div>{item.records.map((rec, index) => (rec.reference ? <Tooltip key={index} style={{fontSize:10}} title={`View ${recordType(rec.reference).toLowerCase()}`}>
             <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.id,type:recordType(rec.reference)})} href={"#"}>
               {rec.name}
@@ -138,10 +141,10 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
     return (
       <div style={textStyle}>
-        <Text style={{ fontWeight: 500 }}>{itemData.formatted_time}</Text> -{" "}
+        <Text style={{fontWeight:"bold", fontSize:"small", fontFamily:"Courier New", backgroundColor:"#f6f6f6", padding:4, borderRadius:4 }}>{itemData.formatted_time}</Text> -{" "}
         {itemData.items.map((item, index) => (
           <React.Fragment key={index}>
-            {index > 0 && <Text style={{color: "lightgray"}}>{" and "}</Text>}
+            {index > 0 && <Text style={{color: "#9a9a9a"}}>{" and "}</Text>}
             {getTimelineText(itemData,item,index)}
           </React.Fragment>
         ))}
