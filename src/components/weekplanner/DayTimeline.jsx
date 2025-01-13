@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
-import { Card, Flex, List, Tag, Timeline, Tooltip, Typography } from "antd";
+import { Card, Flex, Tag, Timeline, Tooltip, Typography } from "antd";
 import { CgWebsite } from "react-icons/cg";
 import { CiCalendarDate } from "react-icons/ci";
-import { FaFileInvoice, FaHandshake, FaMicrophone, FaRegCheckCircle, FaTasks } from "react-icons/fa";
+import { FaFileInvoice, FaHandshake, FaMicrophone, FaTasks } from "react-icons/fa";
 import { GiEmptyHourglass } from "react-icons/gi";
 import { IoFlash, IoOpenOutline } from "react-icons/io5";
 import { MdAlarm } from "react-icons/md";
@@ -11,8 +11,6 @@ import { RiCalendarView } from "react-icons/ri";
 import { VISTA_URL } from "@constants";
 import { Alarm, PhoneCall } from "@phosphor-icons/react";
 import { dashboardAction, dashboardActionCode, recordType } from "@utils/actionsUtil.js";
-import { FaRegCircleDot } from "react-icons/fa6";
-import { extractTimeFromTimestamp } from "@utils/dateUtil.js";
 
 const { Text, Link } = Typography;
 
@@ -59,7 +57,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
 
     switch (item.type) {
       case "TASK":
-        return (<><Link href={'#'} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_TASK,{records:[{id:item.id}]})} style={timelineTextStyle}>Task is due with subject <Text style={{fontWeight:500}}>{item?.subject}</Text></Link>
+        return (<><Link href={'#'} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_TASK,{records:[{id:item.id}]})} style={timelineTextStyle}>{item.count} task(s) is due with subject <Text style={{fontWeight:500}}>{item?.subject}</Text></Link>
           {item.records.length > 0 ? <div>{item.records.map((rec, index) => (rec.reference ? <Tooltip key={index} style={{fontSize:10}} title={`View ${recordType(rec.reference).toLowerCase()}`}>
             <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.id,type:recordType(rec.reference)})} href={"#"}>
               {rec.name}
@@ -68,18 +66,18 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       case "OVERDUE_TASK":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_TASK&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "REMINDER":
-        return (<><Link href={'#'} onClick={(e) => reminderViewer(e,item.id[0])} style={timelineTextStyle}>Reminder is due</Link>
-        {item.records.length > 0 ? <div>{item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
-          <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
-            {rec.label}
-          </Tag>
-        </Tooltip>))}</div>:""}</>);
+        return (<><Link href={'#'} onClick={(e) => reminderViewer(e,item.id[0])} style={timelineTextStyle}>{item.count} reminder(s) is due</Link>
+          {item.records.length > 0 ? <div>{item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
+            <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
+              {rec.label}
+            </Tag>
+          </Tooltip>))}</div>:""}</>);
       case "CUSTOM_ACTION":
         return (<><Link href={`${VISTA_URL}/reminders?type=NEXT_ACTION&date=${item.time}`} style={timelineTextStyle}>{item.count} custom next action(s) is due<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>
           {item.records.length > 0 ? <div>{item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
-              <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
-                {rec.name}
-              </Tag>
+            <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
+              {rec.name}
+            </Tag>
           </Tooltip>))}</div>:""}</>);
       case "OVERDUE_REMINDER":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_REMINDER&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Reminder(s)<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
@@ -87,25 +85,40 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       case "MEETING":
       case "INTERVIEW":
       case "CAL_EVENT": {
+        let recordType = "colleagues";
+        const label =
+          item.type === "CALL"
+            ? "Call"
+            : item.type === "MEETING"
+              ? "Meeting"
+              : "Interview";
+
+        if (item.attendees && item.attendees.length > 0) {
+          const match = item.attendees.find(
+            (attendee) => attendee.type !== "UNRECORDED" && attendee.type === "CONTACT"
+          );
+          recordType = match ? "Client" : "Candidate";
+        }
 
         return (<>
           <Link href={"#"} onClick={(e) => dashboardAction(e,dashboardActionCode.VIEW_CALENDAR_EVENT,{records:[{id:item.eventId}]})} style={timelineTextStyle}>
-            {item.title}
-          </Link>{item.attendees.length > 0 ? <div><Tag color={"magenta"} style={{fontSize:'10px'}}>{`${extractTimeFromTimestamp(item.startDate)} - ${extractTimeFromTimestamp(item.endDate)}`}</Tag> {item.attendees.map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
-          <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec._id,type:rec.type})} href={"#"}>
-            {rec.label}
-          </Tag>
-        </Tooltip>))}</div>:""}
+            {label} with {recordType}{" "}
+          </Link>{item.attendees.map((rec, index) => (
+
+          <Link key={index} onClick={(e) => handleLinkClick(e, rec)} href={"#"}>
+            {index > 0 ? ", ":''}{rec.label}
+          </Link>
+        ))}
         </>);
       }
 
       case "PLACEMENT_STARTER":
         return (<><Text style={timelineTextStyle}>Follow-up {item.count} Placement(s) starting</Text>
-      {item.placements.map((rec, index) => (
-        <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.placementId,type:'PLACEMENT'})} href={"#"}>
-          {rec.reference}
-        </Tag>
-      ))}</>);
+          {item.placements.map((rec, index) => (
+            <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.placementId,type:'PLACEMENT'})} href={"#"}>
+              {rec.reference}
+            </Tag>
+          ))}</>);
       case "APPLICATION":
         return <Link style={timelineTextStyle} href={`${VISTA_URL}/applications/pending`}>Review your {item.count} pending job applications<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "INVOICE_DUE":
@@ -121,25 +134,18 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       whiteSpace: "normal",
       wordBreak: "break-word",
       overflowWrap: "break-word",
-      boxShadow: "none",
     };
 
     return (
-      <Card style={textStyle} bordered={false} styles={{header:{minHeight:'20px',padding:0,fontWeight:600,fontSize:'14px',border:0},body:{padding:0}}} title={itemData.formatted_time}>
-        <List
-          itemLayout="horizontal"
-          style={{border:0}}
-          dataSource={itemData.items}
-          renderItem={(item, index) => (
-            <List.Item style={{alignItems:'center',justifyContent:"center"}}>
-              <List.Item.Meta
-                avatar={getTypeIcon(item.type)}
-                description={getTimelineText(itemData,item,index)}
-              />
-            </List.Item>
-          )}
-        />
-      </Card>
+      <div style={textStyle}>
+        <Text style={{ fontWeight: 500 }}>{itemData.formatted_time}</Text> -{" "}
+        {itemData.items.map((item, index) => (
+          <React.Fragment key={index}>
+            {index > 0 && <Text style={{color: "lightgray"}}>{" and "}</Text>}
+            {getTimelineText(itemData,item,index)}
+          </React.Fragment>
+        ))}
+      </div>
     );
   };
 
@@ -147,14 +153,14 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
     () =>
       items.map((itemData) => ({
         children: renderPlannerText(itemData),
-        dot: <FaRegCircleDot size={18} color={'#89CFF0'}/>,
+        dot: getTypeIcon(itemData.items[0]?.type),
       })),
     [items]
   );
 
   return (<>
     <Card
-      styles={{ header: { borderBottom: 0,paddingLeft:'10px' }}}
+      styles={{ header: { borderBottom: 0 }}}
       title={
         <Flex direction="row" align={"center"} justify={"start"} gap={"small"}>
           <RiCalendarView />
