@@ -69,7 +69,10 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
       case "OVERDUE_TASK":
         return <Link href={`${VISTA_URL}/reminders?type=OVERDUE_TASK&date=${item.time}`} style={timelineTextStyle}>{index > 0 ?'':'Review'}{' '}{item.count} overdue Task(s)<IoOpenOutline style={{paddingLeft:"2px"}} color={"gray"}/></Link>;
       case "REMINDER":
-        return (<><Link href={'#'} onClick={(e) => reminderViewer(e,item.id[0])} style={timelineTextStyle}>{item.count} reminder(s) is due</Link>
+
+        console.log(item);
+
+        return (<><Link href={'#'} onClick={(e) => reminderViewer(e,item.id[0])} style={timelineTextStyle}>{item.count} reminder(s) {item.activity_type.length > 0 ? '('+item.activity_type[0].name+')' : ''} is due</Link>
           {item.records.length > 0 ? <div>{item.records[0].map((rec, index) => (<Tooltip key={index} style={{fontSize:10}} title={`View ${rec.type.toLowerCase()}`}>
             <Tag color={"blue"} style={{fontSize:10, marginLeft:"1px",cursor:"pointer"}} key={index} onClick={(e) => handleLinkClick(e, {_id:rec.recordId,type:rec.type})} href={"#"}>
               {rec.label}
