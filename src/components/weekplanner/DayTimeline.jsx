@@ -103,6 +103,12 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
           recordType = match ? "Client" : "Candidate";
         }
 
+        let updated_title = item.title ? item.title : label;
+
+        if(item.activityType && item.activityType.name){
+          updated_title = label + " (" + item.activityType.name+")";
+        }
+
         return (<>
           <Link
             href="#"
@@ -113,7 +119,7 @@ const DailyTimeline = React.memo(({ title = "Today", color = "#f0f6ff", items = 
             }
             style={timelineTextStyle}
           >
-            {item.title || label} {!item.title ? `with ${recordType} ` : ""}
+            {updated_title} {!item.title ? `with ${recordType} ` : "with "}
           </Link>{item.attendees.map((rec, index) => (
 
           <Link key={index} onClick={(e) => handleLinkClick(e, rec)} href={"#"}>
