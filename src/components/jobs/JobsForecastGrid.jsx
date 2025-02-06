@@ -75,18 +75,23 @@ const JobForecastGrid = ({ statuses = [] }) => {
     };
 
     // Determine the domain
-    let domain = model.domain || null;
+    let domain = null;
 
-    if (!domain && model.website) {
-      domain = extractDomain(model.website);
-    }
+    if(model){
+      domain = model.domain || null;
 
-    if (!domain && model.emailDomain) {
-      domain = extractDomain(model.emailDomain);
-    }
+      if (!domain && model.website) {
+        domain = extractDomain(model.website);
+      }
 
-    if (domain && !isValidDomain(domain)) {
-      domain = null; // Invalidate if the domain does not match the regex
+      if (!domain && model.emailDomain) {
+        domain = extractDomain(model.emailDomain);
+      }
+
+      if (domain && !isValidDomain(domain)) {
+        domain = null; // Invalidate if the domain does not match the regex
+      }
+
     }
 
     // Determine the image source
@@ -96,7 +101,6 @@ const JobForecastGrid = ({ statuses = [] }) => {
       return <FaBuilding size={25} />; // Use the FaBuilding icon from react-icons for the fallback
     }
   };
-
 
   const getTrends = (model) => {
     const avgDaysInCurrentStage = Math.round(model.avgDaysPerStage);
