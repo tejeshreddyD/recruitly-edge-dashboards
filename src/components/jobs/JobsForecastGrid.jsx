@@ -48,6 +48,7 @@ const JobForecastGrid = ({ statuses = [] }) => {
 
     // Helper function to extract domain from a URL or email
     const extractDomain = (urlOrEmail) => {
+
       try {
         if (urlOrEmail.includes("@")) {
           // Extract domain from email
@@ -64,6 +65,11 @@ const JobForecastGrid = ({ statuses = [] }) => {
 
     // Validate if a string is a proper domain
     const isValidDomain = (domain) => {
+
+      if(!domain){
+        return false;
+      }
+
       const domainRegex = /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)\.[A-Za-z]{2,}$/;
       return domainRegex.test(domain);
     };
