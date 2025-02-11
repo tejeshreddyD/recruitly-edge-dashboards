@@ -17,15 +17,16 @@ const PerformanceTrends = ({ item }) => {
           height: 250,
           theme: "ag-polychroma",
           data: [
-            ...(item.prev || []).reverse().map((prev) => ({
+            ...(item.prev ? [...item.prev].reverse().map((prev) => ({
               monthName: prev?.monthName || "N/A",
               actualValue: prev?.actualValue || 0
-            })),
+            })) : []),
             {
               monthName: item?.monthName || "N/A",
               actualValue: item?.actual || 0
             }
           ],
+
           background: { fill: "transparent" },
           series: [
             {
